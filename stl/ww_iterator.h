@@ -58,16 +58,19 @@ public:
 public:
     reverse_iterator()
         : _current()
-    {}
+    { // 空逆向迭代器
+    }
 
     explicit reverse_iterator(iterator_type x)
         : _current(x)
-    {}
+    {
+    }
 
     template <class U>
     reverse_iterator(const reverse_iterator<U> & u)
         : _current(u._current)
-    {}
+    { // 转换构造函数
+    }
 
 public:
     template <class U>
