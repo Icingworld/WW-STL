@@ -228,8 +228,8 @@ public:
     using const_pointer = const value_type*;
     using iterator = _array_iterator<value_type>;
     using const_iterator = _array_const_iterator<value_type>;
-    using reverse_iterator = mystl::reverse_iterator<iterator>;
-    using const_reverse_iterator = mystl::reverse_iterator<const_iterator>;
+    using reverse_iterator = wwstl::reverse_iterator<iterator>;
+    using const_reverse_iterator = wwstl::reverse_iterator<const_iterator>;
 
 public:
     value_type _data[N];
@@ -553,8 +553,8 @@ public:
     using const_pointer = const value_type*;
     using iterator = _array_iterator<value_type>;
     using const_iterator = _array_const_iterator<value_type>;
-    using reverse_iterator = mystl::reverse_iterator<iterator>;
-    using const_reverse_iterator = mystl::reverse_iterator<const_iterator>;
+    using reverse_iterator = wwstl::reverse_iterator<iterator>;
+    using const_reverse_iterator = wwstl::reverse_iterator<const_iterator>;
 
 public:
     value_type _data[1];        // 不允许声明一个大小为0的数组
