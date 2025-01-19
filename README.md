@@ -14,6 +14,7 @@
 | :---: | :---: | :---: | :---: |
 | memory | ww_memory.h | 分配器部分 | 完成 |
 | iterator | ww_iterator.h | 迭代器 | 完成 |
+| - | ww_heap.h | 堆 | 未完成 |
 | - | ww_hash.h | 哈希 | 未完成 |
 | - | ww_hashtable.h | 哈希表 | 未完成 |
 | - | ww_rbtree.h | 红黑树 | 未完成 |
@@ -50,8 +51,8 @@
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
-| stack | ww_stack.h | 未完成 |
-| queue | ww_queue.h | 未完成 |
+| stack | ww_stack.h | 完成 |
+| queue | ww_queue.h | 完成 |
 | priority_queue | ww_priority_queue.h | 未完成 |
 
 ## 二、设计理念
