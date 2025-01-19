@@ -20,8 +20,8 @@ public:
     using difference_type = std::ptrdiff_t;
     using pointer = const value_type*;
     using reference = const value_type&;
-    using self = _array_const_iterator<value_type>;
 
+    using self = _array_const_iterator<value_type>;
     using _Ptr = value_type*;   // 底层使用非const指针
 
 public:
@@ -132,6 +132,7 @@ public:
     using difference_type = std::ptrdiff_t;
     using pointer = value_type*;
     using reference = value_type&;
+
     using self = _array_iterator<value_type>;
 
 public:
