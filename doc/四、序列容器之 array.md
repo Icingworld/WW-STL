@@ -45,7 +45,7 @@ public:
 
 对于解引用的两个接口，`iterator`分别返回`reference`和`pointer`类型，这是非 const 的，而底层则维护 const 指针，需要使用`const_cast`来去除 const 属性，这样的实践并不好，违反了 const 设计的用意，且使得迭代器实现更复杂。
 
-而在我们的实现中，`const_iterator`同样维护`value_type *`，而在解引用时，会隐式转换为`const value_type *`，不会出现问题。唯一需要注意的是，在`const_itrator`的构造函数中，我们有一个重载：
+`const_iterator`同样维护`value_type *`，而在解引用时，会隐式转换为`const value_type *`，不会出现问题。唯一需要注意的是，在`const_itrator`的构造函数中，我们有一个重载：
 
 ```c++
 explicit _array_const_iterator(pointer ptr)
@@ -55,6 +55,8 @@ explicit _array_const_iterator(pointer ptr)
 ```
 
 它接受一个`const value_type *`类型的指针，然后使用`const_cast`来去除 const 属性，这样在解引用时就不会出现问题。这种情况是少见的，而当我们使用普通的`value_type *`来构造时，也能够匹配`const value_type *`。
+
+使用相同的底层指针，我们单独设计`const_iterator`和`iterator`的解引用会相当顺畅，但 MSVC 实现为了复用基类的接口，还是使用了`const_cast`来去除 const 属性，好吧，作者选择借鉴它的做法。
 
 接下来就是迭代器的接口，是简单的指针操作，无需赘述。需要注意的是，MSVC 在实现 STL 时，对代码的复用令作者大开眼界，体现在迭代器的设计中，它尽可能使用复用，绝不写任何重复的代码，以达到更容易维护的目的。
 
