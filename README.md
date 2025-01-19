@@ -22,9 +22,9 @@
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
-| array | ww_array.h | 未完成 |
-| vector | ww_vector.h | 未完成 |
-| deque | ww_deque.h | 未完成 |
+| array | ww_array.h | 完成 |
+| vector | ww_vector.h | 完成 |
+| deque | ww_deque.h | 完成 |
 | forward_list | ww_forward_list.h | 未完成 |
 | list | ww_list.h | 未完成 |
 
