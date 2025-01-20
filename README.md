@@ -14,8 +14,8 @@
 | iterator | ww_iterator.h | 迭代器 | 完成 |
 | algorithm | ww_algorithm.h | 算法heap部分 | 完成 |
 | - | ww_hash.h | 哈希 | 完成 |
-| - | ww_hashtable.h | 哈希表 | 未完成 |
-| - | ww_rbtree.h | 红黑树 | 未完成 |
+| - | ww_hashtable.h | 哈希表 | 待验证 |
+| - | ww_rbtree.h | 红黑树 | 待验证 |
 
 + 序列型容器：
 
@@ -24,26 +24,26 @@
 | array | ww_array.h | 完成 |
 | vector | ww_vector.h | 完成 |
 | deque | ww_deque.h | 完成 |
-| forward_list | ww_forward_list.h | 未完成 |
-| list | ww_list.h | 未完成 |
+| forward_list | ww_forward_list.h | 待验证 |
+| list | ww_list.h | 待验证 |
 
 + 关联型容器:
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
-| set | ww_set.h | 未完成 |
-| multiset | ww_multiset.h | 未完成 |
-| map | ww_map.h | 未完成 |
-| multimap | ww_multimap.h | 未完成 |
+| set | ww_set.h | 待验证 |
+| multiset | ww_multiset.h | 待验证 |
+| map | ww_map.h | 待验证 |
+| multimap | ww_multimap.h | 待验证 |
 
 + 无序关联型容器：
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
-| unordered_set | ww_unordered_set.h | 未完成 |
-| unordered_multiset | ww_unordered_multiset.h | 未完成 |
-| unordered_map | ww_unordered_map.h | 未完成 |
-| unordered_multimap | ww_unordered_multimap.h | 未完成 |
+| unordered_set | ww_unordered_set.h | 待验证 |
+| unordered_multiset | ww_unordered_multiset.h | 待验证 |
+| unordered_map | ww_unordered_map.h | 待验证 |
+| unordered_multimap | ww_unordered_multimap.h | 待验证 |
 
 + 容器适配器
 
