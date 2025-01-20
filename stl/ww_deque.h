@@ -791,8 +791,7 @@ public:
     void emplace_back(Args&&... args)
     {
         if (_finish._cur != _finish._last - 1) {
-            _allocator.construct(_finish._cur, std::forward<Args>(args)...);
-            ++_finish._cur;
+            _allocator.construct(_finish._cur++, std::forward<Args>(args)...);
         } else {
             _emplace_back(std::forward<Args>(args)...);
         }
@@ -805,8 +804,7 @@ public:
     {
         if (_finish._cur != _finish._first) {
             // 当前位置不在缓冲区起始位置
-            --_finish._cur;
-            _allocator.destroy(_finish._cur);
+            _allocator.destroy(--_finish._cur);
         } else {
             // 在起始位置，先移动到上一个缓冲区
             _finish._set_node(_finish._node - 1);
@@ -835,8 +833,7 @@ public:
     void emplace_front(Args&&... args)
     {
         if (_start._cur != _start._first) {
-            _allocator.construct(_start._cur - 1, std::forward<Args>(args)...);
-            --_start._cur;
+            _allocator.construct(--_start._cur, std::forward<Args>(args)...);
         } else {
             _emplace_front(std::forward<Args>(args)...);
         }
@@ -849,8 +846,7 @@ public:
     {
         if (_start._cur != _start._last - 1) {
             // 当前位置不在缓冲区末尾位置
-            _allocator.destroy(_start._cur);
-            ++_start._cur;
+            _allocator.destroy(_start._cur++);
         } else {
             // 在末尾位置，先销毁
             _allocator.destroy(_start._cur);
