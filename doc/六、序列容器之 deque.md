@@ -4,7 +4,7 @@
 
 我们在使用 vector 时，发现它只提供了`push_back`、`pop_back`等在尾端操作的接口，而没有提供在头部操作的接口，因为在 vector 的头部操作的时间复杂度将是 O(n) ，这是不可接受的，它是一个某种意义上单向的容器；而本节介绍的 deque，即双端队列，是一种双向的容器，它能够以 O(1) 的时间复杂度从头和尾部进行操作。
 
-![vector and deque](./img/vector%20and%20deque.png)
+![deque operation](./img/deque%20operation.png)
 
 ## 二、deque的实现
 
@@ -104,8 +104,6 @@ size_type _buffer_size() const noexcept
 ```
 
 在本实现中，deque 的每个缓冲区，都能存储8个元素，因此`_buffer_size()`函数的返回值为`8 * sizeof(value_type)`。
-
-![deque buffer](./img/deque%20buffer.png)
 
 这样我们就实现了迭代器的向后移动。当我们向前移动时，逻辑与之类似：
 
@@ -402,8 +400,6 @@ void emplace_front(Args&&... args)
 
 对于`emplace_front`函数，首先判断当前位置是否在缓冲区的头部，如果不在，说明可以直接将当前位置向前移动，然后原位构造。如果在，则需要跳跃缓冲区，然后再原位构造。但是在跳跃缓冲区的时候，会遇到一个问题：前面可能没有缓冲区了，因此我们在`_emplace_front()`中，将会对中控器进行检测，如果前面的中控器耗尽，将会调整或扩展中控器。
 
-![deque_emplace_front](./img/deque_emplace_front.png)
-
 ```c++
 /**
  * @brief 在头部插入元素的辅助函数
@@ -507,7 +503,7 @@ if (is_front) {
 
 最后，设置迭代器的起始和末尾节点即可。这样我们就完成了整个在头部插入单个元素的流程，并捋清了全部的细节。
 
-![deque_reallocate](./img/deque_reallocate.png)
+![deque reallocate](./img/deque%20reallocate.png)
 
 当我们在尾部插入元素时，逻辑和上面类似：
 
@@ -527,8 +523,6 @@ void emplace_back(Args&&... args)
 ```
 
 当不在末尾时，直接构造并移动到下一个位置即可，如果在末尾时，需要跳跃缓冲区，因此要调用`_emplace_back()`辅助插入。
-
-![deque_emplace_back](./img/deque_emplace_back.png)
 
 ```c++
 /**
@@ -611,8 +605,6 @@ iterator _emplace(const_iterator pos, Args&&... args)
 该函数的策略其实很简单，就是移动更少的元素：首先计算该位置距离头部有多远，然后判断是前面的元素多，还是后面的元素多，然后根据判断结果整体移动这一部分，最后在该位置插入元素即可。
 
 需要注意的，在函数中我们使用`push_back()`和`push_front()`函数来插入一个元素，这是因为缓冲区中未到达的地方起始是没有初始化的，仅仅申请了空间，如果我们不初始化，那么后续调用`std::copy()`和`std::copy_backward()`时会出现错误，因为它们要求拷贝的目的地已经完成初始化。
-
-![deque_emplace](./img/deque_emplace.png)
 
 到这里我们就完成了一整个插入单个元素的流程。对于插入多个元素，因为不再需要复用逻辑，我们没有必要再分为**头部插入**，**尾部插入**和**中间插入**三种情况了，直接调用`_emplace_n()`插入即可：
 

@@ -41,7 +41,7 @@ allocator_type _allocator;  // 分配器
 
 vector 维护三个指针，分别指向所持有的内存区域的**起始位置**，**结束元素的下一个位置**和**空间末尾的位置**，vector 的内存布局如下图：
 
-![vector内存布局](./img/vector底层布局.png)
+![vector structure](./img/vector%20structure.png)
 
 这三个指针中，前两个指针用于描述已有元素的情况，且是左闭右开的，符合 STL 设计的理念，最后一个指针用于描述容器的容量。
 
