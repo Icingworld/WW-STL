@@ -305,8 +305,8 @@ public:
     using const_pointer = const value_type*;
     using iterator = _deque_iterator<value_type>;
     using const_iterator = _deque_const_iterator<value_type>;
-    using reverse_iterator = mystl::reverse_iterator<iterator>;
-    using const_reverse_iterator = mystl::reverse_iterator<const_iterator>;
+    using reverse_iterator = wwstl::reverse_iterator<iterator>;
+    using const_reverse_iterator = wwstl::reverse_iterator<const_iterator>;
 
     using map_pointer = value_type**;   // 中控器指针类型
     using map_allocator_type = typename allocator_type::template rebind<pointer>::other;    // 中控器分配器类型
