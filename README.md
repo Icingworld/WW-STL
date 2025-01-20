@@ -14,8 +14,8 @@
 | :---: | :---: | :---: | :---: |
 | memory | ww_memory.h | 分配器部分 | 完成 |
 | iterator | ww_iterator.h | 迭代器 | 完成 |
-| - | ww_heap.h | 堆 | 未完成 |
-| - | ww_hash.h | 哈希 | 未完成 |
+| algorithm | ww_algorithm.h | 算法heap部分 | 完成 |
+| - | ww_hash.h | 哈希 | 完成 |
 | - | ww_hashtable.h | 哈希表 | 未完成 |
 | - | ww_rbtree.h | 红黑树 | 未完成 |
 
@@ -53,7 +53,7 @@
 | :---: | :---: | :---: |
 | stack | ww_stack.h | 完成 |
 | queue | ww_queue.h | 完成 |
-| priority_queue | ww_priority_queue.h | 未完成 |
+| priority_queue | ww_priority_queue.h | 完成 |
 
 ## 二、设计理念
 
@@ -64,6 +64,8 @@
 3. 本实现不做过多的抽象封装，在实现 STL 功能的情况下尽可能简洁明了
 
 4. 本实现从《STL源码剖析》（见参考文献 [1]）开始，部分参考 MSVC（见参考文献 [3]） 的 STL 算法设计，将《STL源码剖析》中未完成的接口实现
+
+5. 本实现仅关注容器实现部分，算法方面使用标准库算法
 
 ## 三、项目结构
 
@@ -81,6 +83,7 @@
 + [三、迭代器](./doc/三、迭代器.md)
 + [四、序列容器之 array](./doc/四、序列容器之%20array.md)
 + [五、序列容器之 vector](./doc/五、序列容器之%20vector.md)
++ [六、序列容器之 deque](./doc/六、序列容器之%20deque.md)
 
 ## 五、使用方法
 
