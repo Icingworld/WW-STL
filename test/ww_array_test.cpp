@@ -10,13 +10,13 @@ public:
 };
 
 // 元素访问
-TEST_F(WwArrayTest, Access)
+TEST_F(WwArrayTest, ElementAccess)
 {
     EXPECT_EQ(arr.front(), 1);
     EXPECT_EQ(arr.back(), 10);
     EXPECT_EQ(arr.at(3), 4);
     EXPECT_EQ(arr[6], 7);
-    EXPECT_EQ(*arr.data(), 1);
+    EXPECT_EQ(arr.data()[0], 1);
 
     EXPECT_THROW(arr.at(10), std::out_of_range);
 }
