@@ -88,7 +88,7 @@ template <
  */
 template <class RandomIt>
 void push_heap(RandomIt first, RandomIt last)
-{ mystl::push_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>()); }
+{ wwstl::push_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>()); }
 
 /**
  * @brief 删除堆顶元素后调整
@@ -124,7 +124,7 @@ template <
         return;
 
     while (last - first > 1) {
-        mystl::pop_heap(first, last, comp);
+        wwstl::pop_heap(first, last, comp);
         --last;
     }
 }
