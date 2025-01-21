@@ -979,7 +979,7 @@ public:
      * @brief 返回负载因子
      */
     float load_factor() const
-    { return size() / bucket_count(); }
+    { return static_cast<float>(size()) / static_cast<float>(bucket_count()); }
 
     /**
      * @brief 返回最大负载因子
