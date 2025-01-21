@@ -911,37 +911,37 @@ public:
      * @brief 返回指向指定的桶的开始的迭代器
      */
     local_iterator begin(size_type n)
-    { return local_iterator(_buckets[n], this); }
+    { return local_iterator(_buckets[n]); }
 
     /**
      * @brief 返回指向指定的桶的开始的迭代器
      */
     const_local_iterator begin(size_type n) const
-    { return const_local_iterator(_buckets[n], this); }
+    { return const_local_iterator(_buckets[n]); }
 
     /**
      * @brief 返回指向指定的桶的开始的迭代器
      */
     const_local_iterator cbegin(size_type n) const
-    { return const_local_iterator(_buckets[n], this); }
+    { return const_local_iterator(_buckets[n]); }
 
     /**
      * @brief 返回指向指定的桶的末尾的迭代器
      */
     local_iterator end(size_type n)
-    { return local_iterator(nullptr, this); }
+    { return local_iterator(nullptr); }
 
     /**
      * @brief 返回指向指定的桶的末尾的迭代器
      */
     const_local_iterator end(size_type n) const
-    { return const_local_iterator(nullptr, this); }
+    { return const_local_iterator(nullptr); }
 
     /**
      * @brief 返回指向指定的桶的末尾的迭代器
      */
     const_local_iterator cend(size_type n) const
-    { return const_local_iterator(nullptr, this); }
+    { return const_local_iterator(nullptr); }
 
     /**
      * @brief 返回桶数
