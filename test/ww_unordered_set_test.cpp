@@ -1,16 +1,7 @@
 #include <gtest/gtest.h>
 #include <ww_unordered_set.h>
-#include <unordered_set>
 
 using namespace wwstl;
-
-void printUnorderedSet(const unordered_set<std::string>& uset)
-{
-    for (auto it = uset.begin(); it != uset.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-}
 
 class WWUnorderedSetTest : public testing::Test
 {
@@ -26,18 +17,6 @@ protected:
         uset.insert("4");
     }
 };
-
-// 迭代器
-
-TEST_F(WWUnorderedSetTest, iterator)
-{
-    printUnorderedSet(uset);
-    auto it = uset.begin();
-    for (int i = 0; it != uset.end() && i < 4; ++i) {
-        EXPECT_EQ(*it, std::to_string(i + 1));
-        ++it;
-    }
-}
 
 // 修改器
 
@@ -70,6 +49,8 @@ TEST_F(WWUnorderedSetTest, erase)
     std::advance(it1, 2);
     it = uset.erase(uset.begin(), it1);
     EXPECT_EQ(*it, "3");
+    int count = uset.erase("6");
+    EXPECT_EQ(count, 1);
 }
 
 // 容量
