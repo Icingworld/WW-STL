@@ -661,7 +661,7 @@ public:
         class = std::enable_if_t<wwstl::is_iterator_v<InputIterator>>
     > iterator insert(const_iterator pos, InputIterator first, InputIterator last)
     {
-        size_type n = std::distance(begin(), pos);
+        size_type n = std::distance(cbegin(), pos);
         size_type count = std::distance(first, last);
         _check_newsize(count);
         std::move_backward(_start + n, _finish, _finish + count);
@@ -833,6 +833,7 @@ public:
 
     /**
      * @brief 在pos位置插入count个元素
+     * @details TODO 其逻辑仍需完善
      */
     template <class... Args>
     iterator _emplace_n(const_iterator pos, size_type count, Args&&... args)
@@ -840,7 +841,9 @@ public:
         difference_type offset = pos - begin();
         _check_newsize(count);     // 判断是否需要扩容
         std::move_backward(begin() + offset, end(), end() + count);
-        std::fill_n(begin() + offset, count, std::forward<Args>(args)...);
+        for (size_type i = 0; i < count; ++i) {
+            _allocator.construct(_start + offset + i, std::forward<Args>(args)...);
+        }
         _finish += count;
         return begin() + offset;
     }
