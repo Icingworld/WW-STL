@@ -632,13 +632,28 @@ public:
                 } else {
                     prev->_next = next;
                 }
-                // 更新_begin
-                if (_begin == cur) {
-                    _begin = next;
-                }
                 _destroy_node(cur);
                 --_num_elements;
-                return iterator(next, this);
+
+                if (next != nullptr) {
+                    // 更新_begin
+                    if (_begin == cur) {
+                        _begin = next;
+                    }
+                    return iterator(next, this);
+                }
+                
+                // 寻找下一个非空桶
+                for (size_type i = n + 1; i < bucket_count(); ++i) {
+                    if (_buckets[i] != nullptr) {
+                        // 更新_begin
+                        if (_begin == cur) {
+                            _begin = _buckets[i];
+                        }
+                        return iterator(_buckets[i], this);
+                    }
+                }
+                return end();
             }
         }
     }
@@ -651,7 +666,7 @@ public:
     {
         // 计算[first, last)的桶范围
         size_type first_bucket = _hash_key(_get_key(*first));
-        size_type last_bucket = bucket_size();  // 用于区分last是否为end()，实际上不可访问
+        size_type last_bucket = bucket_count();  // 用于区分last是否为end()，实际上不可访问
         if (last != end()) {
             last_bucket = _hash_key(_get_key(*last));
         }
@@ -698,10 +713,10 @@ public:
             }
             if (prev == nullptr) {
                 // 说明first是桶的第一个节点，直接销毁链表
-                erase(_hash_key(_get_key(*first)));
+                erase(_get_key(*first));
             } else {
                 // 说明first不是桶的第一个节点，从prev开始销毁
-                node_pointer cur = *first;
+                node_pointer cur = first._node;
                 while (cur != nullptr) {
                     node_pointer next = cur->_next;
                     _destroy_node(cur);
@@ -723,7 +738,7 @@ public:
             }
             // last所在的桶，销毁last前面的节点
             cur = _buckets[last_bucket];
-            while (cur != *last) {
+            while (cur != last._node) {
                 node_pointer next = cur->_next;
                 _destroy_node(cur);
                 cur = next;
@@ -731,7 +746,7 @@ public:
             }
             _buckets[last_bucket] = cur;
         }
-        return last;
+        return iterator(last._node, this);
     }
 
     /**
