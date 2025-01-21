@@ -90,6 +90,9 @@
 | :---: | :---: |
 | doc/ | 文档 |
 | stl/ | WW-STL实现 |
+| test/ | 测试用例 |
+| benchmark/ | 性能测试用例 |
+| third-party/ | 第三方库 |
 
 ## 四、使用方法
 
