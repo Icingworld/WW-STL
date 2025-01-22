@@ -829,7 +829,7 @@ template <
     class T,
     class Alloc
 > bool operator==(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()); }
+{ return std::equal(lhs.begin(), lhs.end(), rhs.begin()); }
 
 template <
     class T,
