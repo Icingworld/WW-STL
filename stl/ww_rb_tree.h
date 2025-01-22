@@ -669,7 +669,7 @@ public:
             } else {
                 _right(parent) = next._node;
             }
-            printf("交换完毕\n");
+            my_printf("交换完毕\n");
             erase(const_iterator(node));
             return iterator(next._node);
         }
@@ -868,8 +868,8 @@ public:
                         }
 
                         // 更新双黑节点
-                        node = parent;
-                        parent = _parent(node);
+                        // node = parent;
+                        // parent = _parent(node);
                     }
                 }
             }
