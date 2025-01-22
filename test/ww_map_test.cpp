@@ -85,6 +85,9 @@ TEST_F(WWMapTest, clear)
 
 TEST_F(WWMapTest, insert)
 {
+    auto it = map.insert({2, "5"});
+    EXPECT_FALSE(it.second);
+
     map.insert({
         {5, "5"},
         {6, "6"},
