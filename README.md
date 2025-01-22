@@ -43,8 +43,8 @@
 | array | ww_array.h | 完成 |
 | vector | ww_vector.h | 完成 |
 | deque | ww_deque.h | 完成 |
-| forward_list | ww_forward_list.h | 待验证 |
-| list | ww_list.h | 待验证 |
+| forward_list | ww_forward_list.h | 完成 |
+| list | ww_list.h | 完成 |
 
 + 关联型容器:
 
@@ -140,7 +140,7 @@ make -j4
 
 | 目标 | 完成情况 |
 | :---: | :---: |
-| 使用 Google Test 对容器进行功能测试 | 未完成 |
+| 使用 Google Test 对容器进行功能测试 | 完成 |
 | 使用 Google Benchmark 对容器进行性能测试 | 未完成 |
 
 ## 参考文献
