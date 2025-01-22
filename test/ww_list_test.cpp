@@ -133,6 +133,20 @@ TEST_F(WWListTest, pop_front)
     EXPECT_EQ(wwlist.front(), 3);
 }
 
+TEST_F(WWListTest, resize)
+{
+    wwlist.resize(1);
+    EXPECT_EQ(wwlist.size(), 1);
+
+    wwlist.resize(5, 666);
+    EXPECT_EQ(wwlist.size(), 5);
+    auto it = wwlist.begin();
+    EXPECT_EQ(*it, 1);
+    for (int i = 1; i < 4; ++i) {
+        EXPECT_EQ(*++it, 666);
+    }
+}
+
 // 操作
 
 TEST_F(WWListTest, merge)
