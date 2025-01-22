@@ -2,6 +2,7 @@
 #define __WW_LIST_H__
 
 #include <initializer_list>
+#include "ww_type_traits.h"
 #include "ww_iterator.h"
 #include "ww_memory.h"
 
@@ -551,7 +552,7 @@ public:
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, std::initializer_list<T> ilist)
-    { return insert(ilist.begin(), ilist.end()); }
+    { return insert(pos, ilist.begin(), ilist.end()); }
 
     /**
      * @brief 原位构造元素
@@ -612,13 +613,13 @@ public:
      * @brief 将元素添加到容器末尾
      */
     void push_back(const value_type & value)
-    { insert(end(), value); }
+    { emplace_back(value); }
 
     /**
      * @brief 将元素添加到容器末尾
      */
     void push_back(value_type && value)
-    { insert(end(), std::move(value)); }
+    { push_back(value); }
 
     /**
      * @brief 在容器末尾原位构造元素
@@ -637,13 +638,13 @@ public:
      * @brief 插入元素到容器起始
      */
     void push_front(const value_type & value)
-    { insert(begin(), value); }
+    { emplace_front(value); }
 
     /**
      * @brief 插入元素到容器起始
      */
     void push_front(value_type && value)
-    { insert(begin(), std::move(value)); }
+    { push_front(value); }
 
     /**
      * @brief 在容器头部原位构造元素
