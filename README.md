@@ -50,19 +50,19 @@
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
-| set | ww_set.h | 待验证 |
-| multiset | ww_multiset.h | 待验证 |
-| map | ww_map.h | 待验证 |
-| multimap | ww_multimap.h | 待验证 |
+| set | ww_set.h | 完成 |
+| multiset | ww_multiset.h | 完成 |
+| map | ww_map.h | 完成 |
+| multimap | ww_multimap.h | 完成 |
 
 + 无序关联型容器：
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
-| unordered_set | ww_unordered_set.h | 待验证 |
-| unordered_multiset | ww_unordered_multiset.h | 待验证 |
-| unordered_map | ww_unordered_map.h | 待验证 |
-| unordered_multimap | ww_unordered_multimap.h | 待验证 |
+| unordered_set | ww_unordered_set.h | 完成 |
+| unordered_multiset | ww_unordered_multiset.h | 完成 |
+| unordered_map | ww_unordered_map.h | 完成 |
+| unordered_multimap | ww_unordered_multimap.h | 完成 |
 
 + 容器适配器
 
@@ -96,6 +96,8 @@
 
 ## 四、使用方法
 
+### 1. 使用WW-STL
+
 本实现全部位于`wwstl`命名空间下
 
 1. 包含头文件
@@ -109,6 +111,30 @@
     ```c++
     using namespace wwstl;
     ```
+
+3. 像使用标准库一样使用它
+
+### 2. 运行仓库测试用例
+
+本仓库使用 Google Test 进行功能测试，glone 仓库后，需安装子模块来进行测试：
+
+```bash
+git submodule update --init --recursive
+```
+
+等待子模块下载完成，编译运行：
+
+```bash
+mkdir build && cd build
+cmake ..
+make -j4
+```
+
+运行测试用例：
+
+```bash
+./test/test_all
+```
 
 ## 五、更多工作
 
