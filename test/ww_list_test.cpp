@@ -198,6 +198,14 @@ TEST_F(WWListTest, reverse)
     EXPECT_EQ(wwlist, expect);
 }
 
+TEST_F(WWListTest, unique)
+{
+    list<int> wwlist1 = {1, 2, 2, 2, 3, 3, 4};
+    wwlist1.unique();
+    list<int> expect = {1, 2, 3, 4};
+    EXPECT_EQ(wwlist1, expect);
+}
+
 TEST_F(WWListTest, sort)
 {
     list<int> wwlist1 = {3, 2, 1, 6, 4, 8, 1, 3};
