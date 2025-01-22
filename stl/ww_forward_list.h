@@ -2,6 +2,7 @@
 #define __WW_FORWARD_LIST_H__
 
 #include <initializer_list>
+#include "ww_type_traits.h"
 #include "ww_memory.h"
 
 namespace wwstl
@@ -89,8 +90,8 @@ public:
     using value_type = T;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using pointer = const value_type*;
-    using reference = const value_type&;
+    using pointer = value_type*;
+    using reference = value_type&;
     using self = _forward_list_iterator<value_type>;
     using node_pointer = _forward_list_node<value_type>*;
 
