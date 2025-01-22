@@ -656,6 +656,7 @@ public:
                 return end();
             }
         }
+        return end();
     }
 
     /**
