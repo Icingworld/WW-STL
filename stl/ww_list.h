@@ -673,13 +673,14 @@ public:
         size_type old_size = size();
         if (count == old_size)
             return;
+
         else if (count < old_size)
         {
-            for (size_type i=0; i<old_size-count; ++i) {
+            for (size_type i = 0; i < old_size - count; ++i) {
                 pop_back();
             }
         } else {
-            for (size_type i=0; i<count-old_size; ++i) {
+            for (size_type i = 0; i < count - old_size; ++i) {
                 push_back(value);
             }
         }
