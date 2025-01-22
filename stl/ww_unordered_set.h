@@ -629,20 +629,20 @@ public:
     /**
      * @brief 插入元素
      */
-    std::pair<iterator, bool> insert(value_type && value)
-    { return _ht.emplace_unique(std::move(value)); }
+    iterator insert(value_type && value)
+    { return _ht.emplace_equal(std::move(value)); }
 
     /**
      * @brief 插入元素
      */
-    std::pair<iterator, bool> insert(const_iterator hint, const value_type & value)
-    { return _ht.emplace_hint_unique(hint, value); }
+    iterator insert(const_iterator hint, const value_type & value)
+    { return _ht.emplace_hint_equal(hint, value); }
 
     /**
      * @brief 插入元素
      */
-    std::pair<iterator, bool> insert(const_iterator hint, value_type && value)
-    { return _ht.emplace_hint_unique(hint, std::move(value)); }
+    iterator insert(const_iterator hint, value_type && value)
+    { return _ht.emplace_hint_equal(hint, std::move(value)); }
 
     /**
      * @brief 插入元素
@@ -664,7 +664,7 @@ public:
 
     /**
      * @brief 原位构造元素
-     * @details 调用emplace_unique，不允许重复
+     * @details 调用emplace_equal，允许重复
      */
     template <class... Args>
     iterator emplace(Args&&... args)
