@@ -33,8 +33,8 @@
 | iterator | ww_iterator.h | 迭代器 | 完成 |
 | algorithm | ww_algorithm.h | 算法heap部分 | 完成 |
 | - | ww_hash.h | 哈希 | 完成 |
-| - | ww_hashtable.h | 哈希表 | 待验证 |
-| - | ww_rbtree.h | 红黑树 | 待验证 |
+| - | ww_hashtable.h | 哈希表 | 完成 |
+| - | ww_rbtree.h | 红黑树 | 完成 |
 
 + 序列型容器：
 
