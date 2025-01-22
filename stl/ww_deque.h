@@ -1146,7 +1146,7 @@ public:
             _allocate_nodes((old_start - count)._node, old_start._node);        // 申请该范围的内存
             _start = old_start - count;                                         // 更新起始位置
             std::copy(old_start, p, _start);                                    // 拷贝数据到新的位置
-            std::fill_n(_start, count, value);                                  // 填充数据
+            std::fill_n(_start + nums_before, count, value);                    // 填充数据
         } else {
             // 将pos及后面的元素向后移动，先判断是否需要扩容
             _reserve_map_at_back(count / _deque_buffer_size() + 1);
