@@ -390,7 +390,7 @@ public:
     iterator insert_after(const_iterator pos, size_type count, const value_type & value)
     {
         if (count == 0)
-            return pos;
+            return iterator(pos._node);
         
         forward_list tmp(count, value);
         return _splice_after(pos, tmp, tmp.begin_before(), tmp.end());
@@ -467,6 +467,43 @@ public:
      */
     void pop_front()
     { erase_after(begin_before()); }
+
+    /**
+     * @brief 改变存储元素的个数
+     */
+    void resize(size_type count)
+    { resize(count, value_type()); }
+
+    /**
+     * @brief 改变存储元素的个数
+     */
+    void resize(size_type count, const value_type& value)
+    {
+        size_type n = 0;
+        node_pointer prev = _start;  // 记录前驱节点
+        node_pointer curr = _start->_next;
+
+        // 遍历链表，找到目标节点或链表末尾
+        while (curr != nullptr && n < count) {
+            ++n;
+            prev = curr;
+            curr = curr->_next;
+        }
+
+        if (n == count) {
+            // 超过目标长度，需要销毁后续节点
+            while (curr != nullptr) {
+                node_pointer next = curr->_next;
+                _destroy_node(curr);
+                curr = next;
+            }
+            prev->_next = nullptr;  // 将尾节点正确指向nullptr
+            return;
+        }
+
+        // 链表长度小于目标长度，插入多余的节点
+        insert_after(iterator(prev), count - n, value);
+    }
 
     /**
      * @brief 交换内容
