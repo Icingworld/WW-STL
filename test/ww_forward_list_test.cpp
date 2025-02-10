@@ -28,7 +28,7 @@ TEST_F(WWForwardListTest, front)
 
 TEST_F(WWForwardListTest, Iterator)
 {
-    EXPECT_EQ(++flist.begin_before(), flist.begin());
+    EXPECT_EQ(++flist.before_begin(), flist.begin());
 
     auto it = flist.begin();
     for (int i = 3; i >= 1; --i) {

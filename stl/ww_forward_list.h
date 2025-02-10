@@ -248,7 +248,7 @@ public:
     void assign(size_type count, const value_type & value)
     {
         clear();
-        insert_after(begin_before(), count, value);
+        insert_after(before_begin(), count, value);
     }
 
     /**
@@ -258,7 +258,7 @@ public:
     void assign(InputIt first, InputIt last)
     {
         clear();
-        insert_after(begin_before(), first, last);
+        insert_after(before_begin(), first, last);
     }
 
     /**
@@ -292,13 +292,13 @@ public:
     /**
      * @brief 返回指向容器开头之前的迭代器
      */
-    iterator begin_before() noexcept
+    iterator before_begin() noexcept
     { return iterator(_start); }
 
     /**
      * @brief 返回指向容器开头之前的迭代器
      */
-    const_iterator begin_before() const noexcept
+    const_iterator before_begin() const noexcept
     { return const_iterator(_start); }
 
     /**
@@ -393,7 +393,7 @@ public:
             return iterator(pos._node);
         
         forward_list tmp(count, value);
-        return _splice_after(pos, tmp, tmp.begin_before(), tmp.end());
+        return _splice_after(pos, tmp, tmp.before_begin(), tmp.end());
     }
 
     /**
@@ -406,7 +406,7 @@ public:
             return iterator(pos._node);
         
         forward_list tmp(first, last);
-        return _splice_after(iterator(pos._node), tmp, tmp.begin_before(), tmp.end());
+        return _splice_after(iterator(pos._node), tmp, tmp.before_begin(), tmp.end());
     }
 
     /**
@@ -460,13 +460,13 @@ public:
      */
     template <class... Arg>
     void emplace_front(Arg&&... args)
-    { _emplace(begin_before(), std::forward<Arg>(args)...); }
+    { _emplace(before_begin(), std::forward<Arg>(args)...); }
 
     /**
      * @brief 移除首元素
      */
     void pop_front()
-    { erase_after(begin_before()); }
+    { erase_after(before_begin()); }
 
     /**
      * @brief 改变存储元素的个数
@@ -560,7 +560,7 @@ public:
 
         if (other_cur != nullptr) {
             // other剩下的元素都要插入到this的尾部
-            _splice_after(iterator(this_prev), other, other.begin_before(), other.end());
+            _splice_after(iterator(this_prev), other, other.before_begin(), other.end());
         }
     }
 
@@ -577,7 +577,7 @@ public:
     void splice_after(const_iterator pos, forward_list & other)
     {
         if (this != &other) {
-            _splice_after(iterator(pos._node), other, other.begin_before(), other.end());
+            _splice_after(iterator(pos._node), other, other.before_begin(), other.end());
         }
     }
 
@@ -644,7 +644,7 @@ public:
     template <class UnaryPredicate>
     void remove_if(UnaryPredicate p)
     {
-        iterator prev = begin_before();
+        iterator prev = before_begin();
         iterator cur = begin();
 
         while (cur != end()) {
@@ -727,7 +727,7 @@ public:
      */
     template <class Compare>
     void sort(Compare comp)
-    { _sort(begin_before(), end(), comp, std::distance(begin(), end())); }
+    { _sort(before_begin(), end(), comp, std::distance(begin(), end())); }
 
 public:
     /**
@@ -781,7 +781,7 @@ public:
     template <class InputIt>
     void _init_with_range(InputIt first, InputIt last)
     {
-        iterator cur = begin_before();
+        iterator cur = before_begin();
         for (; first != last; ++first) {
             cur = insert_after(cur, *first);
         }
