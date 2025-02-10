@@ -45,7 +45,8 @@ public:
     template <class Alloc>
     explicit queue(const Alloc & alloc)
         : c(alloc)
-    {
+    {   // TODO
+        // 这里需要底层容器知分配，才能参与重载决议
     }
 
     template <class Alloc>
