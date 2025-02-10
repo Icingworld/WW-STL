@@ -512,13 +512,13 @@ public:
         node_pointer cur = first;
         for (size_type i=1; i<count; ++i) {
             node_pointer tmp = _create_node(value);
-            tmp._prev = cur;
-            cur._next = tmp;
+            tmp->_prev = cur;
+            cur->_next = tmp;
             cur = tmp;
         }
         // 最后合并cur和pos._node
-        cur._next = pos._node;
-        pos._node._prev = cur;
+        cur->_next = pos._node;
+        pos._node->_prev = cur;
         _size += count;
         return iterator(first);
     }
@@ -526,8 +526,10 @@ public:
     /**
      * @brief 插入元素
      */
-    template <class InputIt>
-    iterator insert(const_iterator pos, InputIt first, InputIt last)
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator_v<InputIt>>::type
+    > iterator insert(const_iterator pos, InputIt first, InputIt last)
     {
         if (first == last)
             return iterator(pos._node);
