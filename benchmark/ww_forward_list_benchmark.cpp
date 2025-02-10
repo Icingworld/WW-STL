@@ -2,6 +2,24 @@
 #include <forward_list>
 #include <ww_forward_list.h>
 
+// front
+
+static void BM_ww_forward_list_front(benchmark::State & state) {
+    wwstl::forward_list<int> l(1024);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(l.front());
+    }
+}
+BENCHMARK(BM_ww_forward_list_front);
+
+static void BM_std_forward_list_front(benchmark::State & state) {
+    std::forward_list<int> l(1024);
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(l.front());
+    }
+}
+BENCHMARK(BM_std_forward_list_front);
+
 // iterator
 
 static void BM_ww_forward_list_iterator(benchmark::State & state) {
