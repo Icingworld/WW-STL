@@ -5,6 +5,7 @@
 #include "ww_type_traits.h"
 #include "ww_memory.h"
 #include "ww_iterator.h"
+#include <iostream>
 
 namespace wwstl
 {
@@ -331,20 +332,32 @@ public:
 
     explicit deque(size_type count, const Allocator & alloc = Allocator())
         : deque(alloc)
-    { assign(count, value_type()); }
+    {
+        _initialize_map(count);
+        assign(count, value_type());
+    }
 
     deque(size_type count, const value_type & value, const Allocator & alloc = Allocator())
         : deque(alloc)
-    { assign(count, value); }
+    {
+        _initialize_map(count);
+        assign(count, value);
+    }
 
     template <class InputIterator>
     deque(InputIterator first, InputIterator last, const Allocator & alloc = Allocator())
         : deque(alloc)
-    { assign(first, last); }
+    {
+        _initialize_map(0);
+        assign(first, last);
+    }
 
     deque(const deque & other)
         : deque(other._allocator)
-    { assign(other.begin(), other.end()); }
+    {
+        _initialize_map(other.size());
+        assign(other.begin(), other.end());
+    }
 
     deque(deque && other)
         : _start(std::move(other._start))
@@ -362,7 +375,10 @@ public:
 
     deque(const deque & other, const Allocator & alloc)
         : deque(alloc)
-    { assign(other.begin(), other.end()); }
+    {
+        _initialize_map(other.size());
+        assign(other.begin(), other.end());
+    }
 
     deque(deque && other, const Allocator & alloc)
         : _start(std::move(other._start))
@@ -380,7 +396,10 @@ public:
 
     deque(std::initializer_list<value_type> ilist, const Allocator & alloc = Allocator())
         : deque(alloc)
-    { assign(ilist); }
+    {
+        _initialize_map(ilist.size());
+        assign(ilist);
+    }
 
     ~deque()
     {
