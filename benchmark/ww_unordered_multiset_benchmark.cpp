@@ -194,8 +194,8 @@ BENCHMARK(BM_std_unordered_multiset_bucket_count);
 
 static void BM_ww_unordered_multiset_rehash(benchmark::State & state)
 {
-    wwstl::unordered_multiset<int> s = {1, 2, 3, 3, 3, 4, 5, 6, 7};
     for (auto _ : state) {
+        wwstl::unordered_multiset<int> s = {1, 2, 3, 3, 3, 4, 5, 6, 7};
         s.rehash(1024);
     }
 }
@@ -203,8 +203,8 @@ BENCHMARK(BM_ww_unordered_multiset_rehash);
 
 static void BM_std_unordered_multiset_rehash(benchmark::State & state)
 {
-    std::unordered_multiset<int> s = {1, 2, 3, 3, 3, 4, 5, 6, 7};
     for (auto _ : state) {
+        std::unordered_multiset<int> s = {1, 2, 3, 3, 3, 4, 5, 6, 7};
         s.rehash(1024);
     }
 }

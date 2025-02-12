@@ -194,8 +194,8 @@ BENCHMARK(BM_std_unordered_set_bucket_count);
 
 static void BM_ww_unordered_set_rehash(benchmark::State & state)
 {
-    wwstl::unordered_set<int> s = {1, 2, 3, 4, 5, 6, 7};
     for (auto _ : state) {
+        wwstl::unordered_set<int> s = {1, 2, 3, 4, 5, 6, 7};
         s.rehash(1024);
     }
 }
@@ -203,8 +203,8 @@ BENCHMARK(BM_ww_unordered_set_rehash);
 
 static void BM_std_unordered_set_rehash(benchmark::State & state)
 {
-    std::unordered_set<int> s = {1, 2, 3, 4, 5, 6, 7};
     for (auto _ : state) {
+        std::unordered_set<int> s = {1, 2, 3, 4, 5, 6, 7};
         s.rehash(1024);
     }
 }
