@@ -97,17 +97,19 @@
 
 ### 2. 运行仓库测试用例
 
-本仓库使用 Google Test 进行功能测试，glone 仓库后，需安装子模块来进行测试：
+本仓库使用 Google Test 和 Google Benchmark 进行测试，glone 仓库后，安装子模块来进行测试：
 
 ```bash
 git submodule update --init --recursive
 ```
 
-等待子模块下载完成，编译运行：
+等待子模块下载完成，使用 cmake 编译测试用例：
+
+#### 2.1 Google Test
 
 ```bash
 mkdir build && cd build
-cmake ..
+cmake .. --ENABLE_TEST=ON
 make -j4
 ```
 
@@ -117,12 +119,19 @@ make -j4
 ./test/test_all
 ```
 
-## 五、更多工作
+#### 2.2 Google Benchmark
 
-| 目标 | 完成情况 |
-| :---: | :---: |
-| 使用 Google Test 对容器进行功能测试 | 完成 |
-| 使用 Google Benchmark 对容器进行性能测试 | 未完成 |
+```bash
+mkdir build && cd build
+cmake .. --ENABLE_BENCHMARK=ON
+make -j4
+```
+
+运行性能测试用例：
+
+```bash
+./benchmark/benchmark_all
+```
 
 ## 参考文献
 
