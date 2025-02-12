@@ -1,6 +1,6 @@
 #include <benchmark/benchmark.h>
 #include <queue>
-#include <ww_priority_queue.h>
+#include <ww_queue.h>
 
 // top
 

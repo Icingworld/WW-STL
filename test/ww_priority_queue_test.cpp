@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <ww_priority_queue.h>
+#include <ww_queue.h>
 
 using namespace wwstl;
 
