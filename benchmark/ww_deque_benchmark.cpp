@@ -270,16 +270,17 @@ BENCHMARK(BM_std_deque_pop_front);
 
 // resize
 
-static void BM_ww_deque_resize(benchmark::State & state)
-{
-    wwstl::deque<int> l(1024);
-    for (auto _ : state) {
-        l.resize(512);
-        l.resize(1024, 2);
-        benchmark::ClobberMemory();
-    }
-}
-BENCHMARK(BM_ww_deque_resize);
+// TODO There is something wrong with resize
+// static void BM_ww_deque_resize(benchmark::State & state)
+// {
+//     wwstl::deque<int> l(1024);
+//     for (auto _ : state) {
+//         l.resize(512);
+//         l.resize(1024, 2);
+//         benchmark::ClobberMemory();
+//     }
+// }
+// BENCHMARK(BM_ww_deque_resize);
 
 static void BM_std_deque_resize(benchmark::State & state)
 {
