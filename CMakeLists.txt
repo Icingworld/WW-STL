@@ -10,5 +10,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(stl)
 add_subdirectory(third-party)
-add_subdirectory(test)
-add_subdirectory(benchmark)
+
+option(ENABLE_TEST "Enable Test" OFF)
+option(ENABLE_BENCHMARK "Enable Benchmark" OFF)
+
+if(ENABLE_TEST)
+    add_subdirectory(test)
+endif()
+
+if(ENABLE_BENCHMARK)
+    add_subdirectory(benchmark)
+endif()
