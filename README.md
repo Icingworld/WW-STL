@@ -109,7 +109,7 @@ git submodule update --init --recursive
 
 ```bash
 mkdir build && cd build
-cmake .. --ENABLE_TEST=ON
+cmake .. -DENABLE_TEST=ON
 make -j4
 ```
 
@@ -123,7 +123,7 @@ make -j4
 
 ```bash
 mkdir build && cd build
-cmake .. --ENABLE_BENCHMARK=ON
+cmake .. -DENABLE_BENCHMARK=ON
 make -j4
 ```
 
