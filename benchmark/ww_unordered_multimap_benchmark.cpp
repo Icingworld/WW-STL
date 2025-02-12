@@ -233,5 +233,3 @@ static void BM_std_unordered_multimap_rehash(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_unordered_multimap_rehash);
-
-BENCHMARK_MAIN();

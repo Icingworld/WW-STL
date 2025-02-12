@@ -388,5 +388,3 @@ static void BM_std_list_sort(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_list_sort);
-
-BENCHMARK_MAIN();

@@ -75,5 +75,3 @@ static void BM_std_stack_pop(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_stack_pop);
-
-BENCHMARK_MAIN();

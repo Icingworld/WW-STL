@@ -193,5 +193,3 @@ static void BM_std_set_upper_bound(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_set_upper_bound);
-
-BENCHMARK_MAIN();

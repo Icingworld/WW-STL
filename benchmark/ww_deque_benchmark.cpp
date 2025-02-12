@@ -292,5 +292,3 @@ static void BM_std_deque_resize(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_deque_resize);
-
-BENCHMARK_MAIN();

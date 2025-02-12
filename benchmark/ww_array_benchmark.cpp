@@ -87,5 +87,3 @@ static void BM_std_array_fill(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_array_fill);
-
-BENCHMARK_MAIN();

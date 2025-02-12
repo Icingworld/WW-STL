@@ -97,5 +97,3 @@ static void BM_std_queue_pop(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_queue_pop);
-
-BENCHMARK_MAIN();

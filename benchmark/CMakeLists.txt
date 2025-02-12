@@ -1,4 +1,6 @@
 set(BENCHMARK_FILES
+    benchmark_main.cpp
+    
     ww_array_benchmark.cpp
     ww_vector_benchmark.cpp
     ww_deque_benchmark.cpp

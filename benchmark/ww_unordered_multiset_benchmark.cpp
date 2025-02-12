@@ -209,5 +209,3 @@ static void BM_std_unordered_multiset_rehash(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_unordered_multiset_rehash);
-
-BENCHMARK_MAIN();

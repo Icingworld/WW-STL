@@ -203,5 +203,3 @@ static void BM_std_vector_resize(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_vector_resize);
-
-BENCHMARK_MAIN();

@@ -227,5 +227,3 @@ static void BM_std_multimap_upper_bound(benchmark::State & state)
     }
 }
 BENCHMARK(BM_std_multimap_upper_bound);
-
-BENCHMARK_MAIN();
