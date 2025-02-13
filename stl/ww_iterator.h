@@ -2,10 +2,13 @@
 #define __ITERATOR_H__
 
 #include <cstddef>
-#include <iterator>
+#include "ww_type_traits.h"
 
 namespace wwstl
 {
+
+template <class... Ts>
+using void_t = void;
 
 // 这些在设计algorithm时会使用到，对不同的迭代器类型有不同的行为
 // 本实现中未使用，而是使用标准库中的定义
@@ -35,6 +38,60 @@ public:
     using reference = Reference;
 };
 
+template <
+    class,
+    class = void
+>class iterator_traits_base
+{ // 非法萃取机
+};
+
+template <class Iter>
+class iterator_traits_base<Iter, void_t<
+    typename Iter::iterator_category,
+    typename Iter::value_type,
+    typename Iter::difference_type,
+    typename Iter::pointer,
+    typename Iter::reference
+    >>
+{
+public:
+    using iterator_category = typename Iter::iterator_category;
+    using value_type = typename Iter::value_type;
+    using difference_type = typename Iter::difference_type;
+    using pointer = typename Iter::pointer;
+    using reference = typename Iter::reference;
+};
+
+template <
+    class T,
+    bool = std::is_object<T>::value
+>class iterator_traits_pointer_base
+{
+    // 是有效对象
+    using iterator_category = std::random_access_iterator_tag;
+	using value_type = typename std::remove_cv<T>::type;
+	using difference_type = std::ptrdiff_t;
+	using pointer = T*;
+	using reference = T&;
+};
+
+template <class T>
+class iterator_traits_pointer_base<T, false>
+{ // 不是有效对象
+};
+
+template <class Iter>
+class iterator_traits
+    : public iterator_traits_base<Iter>
+{ // 迭代器版本萃取机
+};
+
+template <class T>
+class iterator_traits<T*>
+    : public iterator_traits_pointer_base<T>
+{ // 原生指针版本萃取机
+};
+
 /**
  * @brief reverse_iterator
  * @details 逆向迭代器，是对正向迭代器的封装
@@ -45,11 +102,11 @@ class reverse_iterator
 {
 public:
     using iterator_type = Iter;     // 迭代器类型
-    using iterator_category = typename std::iterator_traits<Iter>::iterator_category;
-    using value_type = typename std::iterator_traits<Iter>::value_type;
-    using difference_type = typename std::iterator_traits<Iter>::difference_type;
-    using pointer = typename std::iterator_traits<Iter>::pointer;
-    using reference = typename std::iterator_traits<Iter>::reference;
+    using iterator_category = typename iterator_traits<Iter>::iterator_category;
+    using value_type = typename iterator_traits<Iter>::value_type;
+    using difference_type = typename iterator_traits<Iter>::difference_type;
+    using pointer = typename iterator_traits<Iter>::pointer;
+    using reference = typename iterator_traits<Iter>::reference;
 
     using self = reverse_iterator<Iter>;
 
