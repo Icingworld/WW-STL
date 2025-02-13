@@ -22,10 +22,9 @@ public:
     using reference = const value_type&;
 
     using self = _array_const_iterator<value_type>;
-    using _Ptr = value_type*;   // 底层使用非const指针
 
 public:
-    _Ptr _ptr;  // 指向array的指针
+    pointer _ptr;  // 指向array的指针
 
 public:
     _array_const_iterator()
@@ -34,7 +33,7 @@ public:
     }
 
     explicit _array_const_iterator(pointer ptr)
-        : _ptr(const_cast<_Ptr>(ptr))
+        : _ptr(ptr)
     { // 用指针ptr构造一个迭代器
     }
 
