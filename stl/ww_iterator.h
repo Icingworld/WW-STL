@@ -2,21 +2,34 @@
 #define __WW_ITERATOR_H__
 
 #include <cstddef>
-#include "ww_type_traits.h"
 
 namespace wwstl
 {
 
-template <class... Ts>
-using void_t = void;
-
 // 这些在设计algorithm时会使用到，对不同的迭代器类型有不同的行为
 // 本实现中未使用，而是使用标准库中的定义
-struct input_iterator_tag {};
-struct output_iterator_tag {};
-struct forward_iterator_tag : public input_iterator_tag {};
-struct bidirectional_iterator_tag : public forward_iterator_tag {};
-struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+struct input_iterator_tag
+{
+};
+
+struct output_iterator_tag
+{
+};
+
+struct forward_iterator_tag
+    : public input_iterator_tag
+{
+};
+
+struct bidirectional_iterator_tag
+    : public forward_iterator_tag
+{
+};
+
+struct random_access_iterator_tag
+    : public bidirectional_iterator_tag
+{
+};
 
 /**
  * @brief iterator
@@ -38,21 +51,12 @@ public:
     using reference = Reference;
 };
 
-template <
-    class,
-    class = void
->class iterator_traits_base
-{ // 非法萃取机
-};
-
+/**
+ * @brief iterator_traits
+ * @link https://zh.cppreference.com/w/cpp/iterator/iterator_traits
+ */
 template <class Iter>
-class iterator_traits_base<Iter, void_t<
-    typename Iter::iterator_category,
-    typename Iter::value_type,
-    typename Iter::difference_type,
-    typename Iter::pointer,
-    typename Iter::reference
-    >>
+class iterator_traits
 {
 public:
     using iterator_category = typename Iter::iterator_category;
@@ -62,34 +66,34 @@ public:
     using reference = typename Iter::reference;
 };
 
-template <
-    class T,
-    bool = std::is_object<T>::value
->class iterator_traits_pointer_base
-{
-    // 是有效对象
-    using iterator_category = std::random_access_iterator_tag;
-	using value_type = typename std::remove_cv<T>::type;
-	using difference_type = std::ptrdiff_t;
-	using pointer = T*;
-	using reference = T&;
-};
-
-template <class T>
-class iterator_traits_pointer_base<T, false>
-{ // 不是有效对象
-};
-
-template <class Iter>
-class iterator_traits
-    : public iterator_traits_base<Iter>
-{ // 迭代器版本萃取机
-};
-
+/**
+ * @brief iterator_traits
+ * @details 对指针类型的特化
+ */
 template <class T>
 class iterator_traits<T*>
-    : public iterator_traits_pointer_base<T>
-{ // 原生指针版本萃取机
+{
+public:
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T*;
+    using reference = T&;
+};
+
+/**
+ * @brief iterator_traits
+ * @details 对const指针类型的特化
+ */
+template <class T>
+class iterator_traits<const T*>
+{
+public:
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const T*;
+    using reference = const T&;
 };
 
 /**
@@ -139,7 +143,8 @@ public:
     }
 
     iterator_type base() const
-    { return _current;
+    {
+        return _current;
     }
 
     reference operator*() const
@@ -150,11 +155,13 @@ public:
     }
 
     pointer operator->() const
-    { return &(operator*());
+    {
+        return &(operator*());
     }
 
     reference operator[](difference_type n) const
-    { return _current[-n - 1];
+    {
+        return _current[-n - 1];
     }
 
     self & operator++()
@@ -184,7 +191,8 @@ public:
     }
 
     self operator+(difference_type n) const
-    { return self(_current - n);
+    {
+        return self(_current - n);
     }
 
     self & operator+=(difference_type n)
