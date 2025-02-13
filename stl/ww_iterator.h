@@ -1,5 +1,5 @@
-#ifndef __ITERATOR_H__
-#define __ITERATOR_H__
+#ifndef __WW_ITERATOR_H__
+#define __WW_ITERATOR_H__
 
 #include <cstddef>
 #include "ww_type_traits.h"
@@ -139,7 +139,8 @@ public:
     }
 
     iterator_type base() const
-    { return _current; }
+    { return _current;
+    }
 
     reference operator*() const
     {
@@ -149,10 +150,12 @@ public:
     }
 
     pointer operator->() const
-    { return &(operator*()); }
+    { return &(operator*());
+    }
 
     reference operator[](difference_type n) const
-    { return _current[-n - 1]; }
+    { return _current[-n - 1];
+    }
 
     self & operator++()
     {
@@ -181,7 +184,8 @@ public:
     }
 
     self operator+(difference_type n) const
-    { return self(_current - n); }
+    { return self(_current - n);
+    }
 
     self & operator+=(difference_type n)
     {
@@ -190,7 +194,8 @@ public:
     }
 
     self operator-(difference_type n) const
-    { return self(_current + n); }
+    { return self(_current + n);
+    }
 
     self& operator-=(difference_type n)
     {
@@ -207,44 +212,58 @@ template <
     class Iter1,
     class Iter2
 > bool operator==(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
-{ return lhs.base() == rhs.base(); }
+{
+    return lhs.base() == rhs.base();
+}
 
 template <
     class Iter1,
     class Iter2
 > bool operator!=(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
-{ return lhs.base() != rhs.base(); }
+{
+    return lhs.base() != rhs.base();
+}
 
 template <
     class Iter1,
     class Iter2
 > bool operator<(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
-{ return lhs.base() > rhs.base(); }
+{
+    return lhs.base() > rhs.base();
+}
 
 template <
     class Iter1,
     class Iter2
-> bool operator<=(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
-{ return lhs.base() >= rhs.base(); }
+>bool operator<=(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
+{
+    return lhs.base() >= rhs.base();
+}
 
 template <
     class Iter1,
     class Iter2
 > bool operator>(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
-{ return lhs.base() < rhs.base(); }
+{
+    return lhs.base() < rhs.base();
+}
 
 template <
     class Iter1,
     class Iter2
 > bool operator>=(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs)
-{ return lhs.base() <= rhs.base(); }
+{
+    return lhs.base() <= rhs.base();
+}
 
 /**
  * @brief 令迭代器前进
  */
 template <class Iter>
 reverse_iterator<Iter> operator+(typename reverse_iterator<Iter>::difference_type n, const reverse_iterator<Iter> & it)
-{ return reverse_iterator<Iter>(it.base() - n); }
+{
+    return reverse_iterator<Iter>(it.base() - n);
+}
 
 /**
  * @brief 计算两个迭代器之间的距禈
@@ -253,8 +272,10 @@ template <
     class Iter1,
     class Iter2
 > auto operator-(const reverse_iterator<Iter1> & lhs, const reverse_iterator<Iter2> & rhs) -> decltype(rhs.base() - lhs.base())
-{ return rhs.base() - lhs.base(); }
+{
+    return rhs.base() - lhs.base();
+}
 
 } // namespace wwstl
 
-#endif
+#endif // __WW_ITERATOR_H__
