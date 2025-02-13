@@ -798,10 +798,10 @@ public:
     // 操作
 
     void fill(const value_type &)
-    { // do nothing        
+    { // do nothing
     }
 
-    void swap(const array &)
+    void swap(const array &) noexcept
     { // do nothing
     }
 
