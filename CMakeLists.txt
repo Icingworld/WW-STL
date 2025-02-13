@@ -14,6 +14,9 @@ add_subdirectory(third-party)
 option(ENABLE_TEST "Enable Test" OFF)
 option(ENABLE_BENCHMARK "Enable Benchmark" OFF)
 
+message(STATUS "Enable Test")
+message(STATUS "Enable Benchmark")
+
 if(ENABLE_TEST)
     add_subdirectory(test)
 endif()
