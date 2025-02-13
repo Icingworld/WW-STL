@@ -139,6 +139,13 @@ public:
     using const_pointer = const void*;
     using propagate_on_container_move_assignment = std::true_type;
     using is_always_equal = std::true_type;
+
+    template <typename U>
+    class rebind
+    {
+    public:
+        using other = allocator<U>;
+    };
 };
 
 } // namespace wwstl
