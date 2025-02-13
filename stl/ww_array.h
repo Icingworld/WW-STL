@@ -40,10 +40,14 @@ public:
 
 public:
     reference operator*() const
-    { return *_ptr; }
+    {
+        return *_ptr;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
@@ -72,22 +76,34 @@ public:
     }
 
     bool operator==(const self & other) const
-    { return _ptr == other._ptr; }
+    {
+        return _ptr == other._ptr;
+    }
 
     bool operator!=(const self & other) const
-    { return !(*this == other); }
+    {
+        return !(*this == other);
+    }
 
     bool operator<(const self & other) const
-    { return _ptr < other._ptr; }
+    {
+        return _ptr < other._ptr;
+    }
 
     bool operator>(const self & other) const
-    { return other < *this; }
+    {
+        return other < *this;
+    }
 
     bool operator<=(const self & other) const
-    { return !(other < *this); }
+    {
+        return !(other < *this);
+    }
 
     bool operator>=(const self & other) const
-    { return !(*this < other); }
+    {
+        return !(*this < other);
+    }
 
     self & operator+=(const difference_type n)
     {
@@ -96,7 +112,9 @@ public:
     }
 
     self & operator-=(const difference_type n)
-    { return *this += -n; }
+    {
+        return *this += -n;
+    }
 
     self operator+(const difference_type n) const
     {
@@ -111,10 +129,14 @@ public:
     }
 
     difference_type operator-(const self & other) const
-    { return _ptr - other._ptr; }
+    {
+        return _ptr - other._ptr;
+    }
 
     reference operator[](const difference_type n) const
-    { return *(*this + n); }
+    {
+        return *(*this + n);
+    }
 };
 
 /**
@@ -148,10 +170,14 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
@@ -204,10 +230,14 @@ public:
     }
 
     difference_type operator-(const base & other) const
-    { return *(base *)this - other; }
+    {
+        return *(base *)this - other;
+    }
 
     reference operator[](difference_type n) const
-    { return *(*this + n); }
+    {
+        return *(*this + n);
+    }
 };
 
 /**
@@ -264,49 +294,65 @@ public:
      * @brief 访问指定的元素
      */
     reference operator[](size_type pos)
-    { return _data[pos]; }
+    {
+        return _data[pos];
+    }
 
     /**
      * @brief 访问指定的元素
      */
     const_reference operator[](size_type pos) const
-    { return _data[pos]; }
+    {
+        return _data[pos];
+    }
 
     /**
      * @brief 访问第一个元素
      */
     reference front()
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     /**
      * @brief 访问第一个元素
      */
     const_reference front() const
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     reference back()
-    { return _data[N - 1]; }
+    {
+        return _data[N - 1];
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     const_reference back() const
-    { return _data[N - 1]; }
+    {
+        return _data[N - 1];
+    }
 
     /**
      * @brief 直接访问底层连续存储
      */
     pointer data()
-    { return _data; }
+    {
+        return _data;
+    }
 
     /**
      * @brief 直接访问底层连续存储
      */
     const_pointer data() const
-    { return _data; }
+    {
+        return _data;
+    }
 
     // 迭代器
 
@@ -314,73 +360,97 @@ public:
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return iterator(_data); }
+    {
+        return iterator(_data);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return const_iterator(_data); }
+    {
+        return const_iterator(_data);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+        return begin();
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return iterator(_data + N); }
+    {
+        return iterator(_data + N);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return const_iterator(_data + N); }
+    {
+        return const_iterator(_data + N);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+        return end();
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     reverse_iterator rbegin() noexcept
-    { return reverse_iterator(end()); }
+    {
+        return reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator rbegin() const noexcept
-    { return const_reverse_iterator(end()); }
+    {
+        return const_reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator crbegin() const noexcept
-    { return rbegin(); }
+    {
+        return rbegin();
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     reverse_iterator rend() noexcept
-    { return reverse_iterator(begin()); }
+    {
+        return reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator rend() const noexcept
-    { return const_reverse_iterator(begin()); }
+    {
+        return const_reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator crend() const noexcept
-    { return rend(); }
+    {
+        return rend();
+    }
 
     // 容量
 
@@ -388,19 +458,25 @@ public:
      * @brief 检查容器是否为空
      */
     constexpr bool empty() const noexcept
-    { return false; }
+    {
+        return false;
+    }
 
     /**
      * @brief 返回元素数
      */
     constexpr size_type size() const noexcept
-    { return N; }
+    {
+        return N;
+    }
 
     /**
      * @brief 返回最大容量
      */
     constexpr size_type max_size() const noexcept
-    { return size(); }
+    {
+        return size();
+    }
 
     // 操作
 
@@ -408,20 +484,26 @@ public:
      * @brief 以指定值填充容器
      */
     void fill(const value_type & value)
-    { std::fill_n(_data, N, value); }
+    {
+        std::fill_n(_data, N, value);
+    }
 
     /**
      * @brief 交换内容
      */
     void swap(array<T, N> & other) noexcept
-    { std::swap(_data, other._data); }
+    {
+        std::swap(_data, other._data);
+    }
 
 public:
     /**
      * @brief 抛出out_of_range异常
      */
     [[noreturn]] void _throw_out_of_range() const
-    { throw std::out_of_range("invalid array<T, N> subscript"); }
+    {
+        throw std::out_of_range("invalid array<T, N> subscript");
+    }
 };
 
 // 非成员函数
@@ -430,37 +512,49 @@ template <
     class T,
     std::size_t N
 > bool operator==(const array<T, N> & a, const array<T, N> & b)
-{ return std::equal(a.begin(), a.end(), b.begin(), b.end()); }
+{
+    return std::equal(a.begin(), a.end(), b.begin(), b.end());
+}
 
 template <
     class T,
     std::size_t N
 > bool operator!=(const array<T, N> & a, const array<T, N> & b)
-{ return !(a == b); }
+{
+    return !(a == b);
+}
 
 template <
     class T,
     std::size_t N
 > bool operator<(const array<T, N> & a, const array<T, N> & b)
-{ return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end()); }
+{
+    return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end());
+}
 
 template <
     class T,
     std::size_t N
 > bool operator<=(const array<T, N> & a, const array<T, N> & b)
-{ return !(b < a); }
+{
+    return !(b < a);
+}
 
 template <
     class T,
     std::size_t N
 > bool operator>(const array<T, N> & a, const array<T, N> & b)
-{ return b < a; }
+{
+    return b < a;
+}
 
 template <
     class T,
     std::size_t N
 > bool operator>=(const array<T, N> & a, const array<T, N> & b)
-{ return !(a < b); }
+{
+    return !(a < b);
+}
 
 /**
  * @brief 交换两个array
@@ -469,7 +563,9 @@ template <
     class T,
     std::size_t N
 > void swap(array<T, N> & a, array<T, N> & b)
-{ a.swap(b); }
+{
+    a.swap(b);
+}
 
 /**
  * @brief 获取array中第I个元素
@@ -479,7 +575,9 @@ template <
     class T,
     std::size_t N
 > T & get(array<T, N> & a)
-{ return a[I]; }
+{
+    return a[I];
+}
 
 /**
  * @brief 获取array中第I个元素
@@ -489,7 +587,9 @@ template <
     class T,
     std::size_t N
 > T && get(array<T, N> && a)
-{ return std::move(a[I]); }
+{
+    return std::move(a[I]);
+}
 
 /**
  * @brief 获取array中第I个元素
@@ -499,7 +599,9 @@ template <
     class T,
     std::size_t N
 > const T & get(const array<T, N> & a)
-{ return a[I]; }
+{
+    return a[I];
+}
 
 /**
  * @brief 获取array中第I个元素
@@ -509,7 +611,9 @@ template <
     class T,
     std::size_t N
 > const T && get(const array<T, N> && a)
-{ return std::move(a[I]); }
+{
+    return std::move(a[I]);
+}
 
 // 辅助类
 
@@ -564,83 +668,133 @@ public:
     // 元素访问
 
     [[noreturn]] reference at(size_type)
-    { _throw_out_of_range(); }
+    {
+        _throw_out_of_range();
+    }
 
     [[noreturn]] const_reference at(size_type) const
-    { _throw_out_of_range(); }
+    {
+        _throw_out_of_range();
+    }
 
     reference operator[](size_type) noexcept
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     const_reference operator[](size_type) const noexcept
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     reference front()
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     const_reference front() const
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     reference back()
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     const_reference back() const
-    { return _data[0]; }
+    {
+        return _data[0];
+    }
 
     pointer data()
-    { return nullptr; }
+    {
+        return nullptr;
+    }
 
     const_pointer data() const
-    { return nullptr; }
+    {
+        return nullptr;
+    }
 
     // 迭代器
 
     iterator begin() noexcept
-    { return iterator(); }
+    {
+        return iterator();
+    }
 
     const_iterator begin() const noexcept
-    { return const_iterator(); }
+    {
+        return const_iterator();
+    }
 
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+        return begin();
+    }
 
     iterator end() noexcept
-    { return iterator(); }
+    {
+        return iterator();
+    }
 
     const_iterator end() const noexcept
-    { return const_iterator(); }
+    {
+        return const_iterator();
+    }
 
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+        return end();
+    }
 
     reverse_iterator rbegin() noexcept
-    { return reverse_iterator(end()); }
+    {
+        return reverse_iterator(end());
+    }
 
     const_reverse_iterator rbegin() const noexcept
-    { return const_reverse_iterator(end()); }
+    {
+        return const_reverse_iterator(end());
+    }
 
     const_reverse_iterator crbegin() const noexcept
-    { return rbegin(); }
+    {
+        return rbegin();
+    }
 
     reverse_iterator rend() noexcept
-    { return reverse_iterator(begin()); }
+    {
+        return reverse_iterator(begin());
+    }
 
     const_reverse_iterator rend() const noexcept
-    { return const_reverse_iterator(begin()); }
+    {
+        return const_reverse_iterator(begin());
+    }
 
     const_reverse_iterator crend() const noexcept
-    { return rend(); }
+    {
+        return rend();
+    }
 
     // 容量
 
     constexpr bool empty() const noexcept
-    { return true; }
+    {
+        return true;
+    }
 
     constexpr size_type size() const noexcept
-    { return 0; }
+    {
+        return 0;
+    }
 
     constexpr size_type max_size() const noexcept
-    { return 0; }
+    {
+        return 0;
+    }
 
     // 操作
 
@@ -657,7 +811,9 @@ public:
      * @brief 抛出out_of_range异常
      */
     [[noreturn]] void _throw_out_of_range() const
-    { throw std::out_of_range("invalid array<T, 0> subscript"); }
+    {
+        throw std::out_of_range("invalid array<T, 0> subscript");
+    }
 };
 
 } // namespace wwstl
