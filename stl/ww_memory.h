@@ -86,7 +86,9 @@ public:
      */
     template <typename U, typename... Args>
     void construct(U * ptr, Args&&... args)
-    { ::new(ptr) U(std::forward<Args>(args)...); }
+    {
+        ::new(ptr) U(std::forward<Args>(args)...);
+    }
 
     /**
      * @brief 销毁对象
@@ -94,22 +96,34 @@ public:
      */
     template <typename U>
     void destroy(U * ptr)
-    { ptr->~U(); }
+    {
+        ptr->~U();
+    }
 
     size_type max_size() const noexcept
-    { return std::numeric_limits<std::size_t>::max() / sizeof(value_type); }
+    {
+        return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
+    }
 
     pointer address(reference r) const noexcept
-    { return &r; }
+    {
+        return &r;
+    }
 
     const_pointer address(const_reference r) const noexcept
-    { return &r; }
+    {
+        return &r;
+    }
 
     bool operator==(const allocator & other) const noexcept
-    { return true; }
+    {
+        return true;
+    }
 
     bool operator!=(const allocator & other) const noexcept
-    { return false; }
+    {
+        return false;
+    }
 };
 
 /**
