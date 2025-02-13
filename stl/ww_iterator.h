@@ -2,6 +2,7 @@
 #define __ITERATOR_H__
 
 #include <cstddef>
+#include <iterator>
 
 namespace wwstl
 {
@@ -44,11 +45,11 @@ class reverse_iterator
 {
 public:
     using iterator_type = Iter;     // 迭代器类型
-    using iterator_category = typename Iter::iterator_category;
-    using value_type = typename Iter::value_type;
-    using difference_type = typename Iter::difference_type;
-    using pointer = typename Iter::pointer;
-    using reference = typename Iter::reference;
+    using iterator_category = typename std::iterator_traits<Iter>::iterator_category;
+    using value_type = typename std::iterator_traits<Iter>::value_type;
+    using difference_type = typename std::iterator_traits<Iter>::difference_type;
+    using pointer = typename std::iterator_traits<Iter>::pointer;
+    using reference = typename std::iterator_traits<Iter>::reference;
 
     using self = reverse_iterator<Iter>;
 
