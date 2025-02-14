@@ -379,6 +379,67 @@ public:
 
     template <class T>
     using rebind_traits = allocator_traits<rebind_alloc<T>>;
+
+public:
+    /**
+     * @brief 用分配器分配未初始化的存储
+     */
+    static pointer allocate(Alloc & a, size_type n)
+    {
+        return a.allocate(n);
+    };
+
+    /**
+     * @brief 用分配器分配未初始化的存储
+     */
+    static pointer allocate(Alloc & a, size_type n, const_void_pointer hint)
+    {
+        return a.allocate(n, hint);
+    };
+
+    /**
+     * @brief 用分配器解分配存储
+     */
+    static void deallocate(Alloc & a, pointer p, size_type n)
+    {
+        a.deallocate(p, n);
+    }
+
+    /**
+     * @brief 在已分配存储中构造对象
+     */
+    template <
+        class T,
+        class... Args
+    > static void construct(Alloc & a, T * p, Args&&... args)
+    {
+        a.construct(p, std::forward<Args>(args)...);
+    }
+
+    /**
+     * @brief 析构储存于已分配存储中的对象
+     */
+    template <class T>
+    static void destroy(Alloc & a, T * p)
+    {
+        a.destroy(p);
+    }
+
+    /**
+     * @brief 返回分配器所支持的最大对象大小
+     */
+    static size_type max_size(const Alloc & a) noexcept
+    {
+        return a.max_size();
+    }
+
+    /**
+     * @brief 获得复制标准容器后使用的分配器
+     */
+    static Alloc select_on_container_copy_construction(const Alloc & a)
+    {
+        return a.select_on_container_copy_construction();
+    }
 };
 
 } // namespace wwstl
