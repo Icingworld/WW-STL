@@ -369,6 +369,21 @@ public:
     using type = typename Alloc::template rebind<T>::other;
 };
 
+
+template <
+    class = void,
+    class Alloc
+> class _has_allocate_hint
+    : std::false_type
+{
+};
+
+template <class Alloc>
+class _has_allocate_hint<wwstl::void_t<decltype(std::declval<Alloc &>().allocate(0, nullptr))>, Alloc>
+    : std::true_type
+{
+};
+
 template <
     class = void,
     class...
@@ -467,10 +482,23 @@ public:
 
     /**
      * @brief 用分配器分配未初始化的存储
+     * @details Alloc存在allocate_hint
      */
-    static pointer allocate(Alloc & a, size_type n, const_void_pointer hint)
+    static typename std::enable_if<_has_allocate_hint<Alloc>::value, pointer>::type
+    allocate(Alloc & a, size_type n, const_void_pointer hint)
     {
         return a.allocate(n, hint);
+    };
+
+    /**
+     * @brief 用分配器分配未初始化的存储
+     * @details Alloc不存在allocate_hint
+     */
+    static typename std::enable_if<!_has_allocate_hint<Alloc>::value, pointer>::type
+    allocate(Alloc & a, size_type n, const_void_pointer hint)
+    {
+        (void)hint;
+        return a.allocate(n);
     };
 
     /**
