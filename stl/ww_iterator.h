@@ -2,6 +2,7 @@
 #define __WW_ITERATOR_H__
 
 #include <cstddef>
+#include "ww_type_traits.h"
 
 namespace wwstl
 {
@@ -283,6 +284,23 @@ template <
 {
     return rhs.base() - lhs.base();
 }
+
+template <
+    class T,
+    class = void
+> class is_iterator
+    : std::false_type
+{
+};
+
+template <class T>
+class is_iterator<T, wwstl::void_t<typename iterator_traits<T>::iterator_category>>
+    : std::true_type
+{
+};
+
+template <class T>
+constexpr bool is_iterator_v = is_iterator<T>::value;
 
 } // namespace wwstl
 
