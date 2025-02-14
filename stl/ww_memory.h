@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <stdexcept>
+#include "ww_type_traits.h"
 
 namespace wwstl
 {
@@ -146,6 +147,190 @@ public:
     public:
         using other = allocator<U>;
     };
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_pointer_type
+{
+public:
+    using type = typename Alloc::value_type*;
+};
+
+template <class Alloc>
+class _get_pointer_type<Alloc, wwstl::void_t<typename Alloc::pointer>>
+{
+public:
+    using type = typename Alloc::pointer;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_const_pointer_type
+{
+public:
+    using _value_type = typename Alloc::value_type;
+    using _pointer_type = typename _get_pointer_type<Alloc>::type;
+    using type = std::pointer_traits<_pointer_type>::template rebind<const _value_type>;
+};
+
+template <class Alloc>
+class _get_const_pointer_type<Alloc, wwstl::void_t<typename Alloc::const_pointer>>
+{
+public:
+    using type = typename Alloc::const_pointer;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_void_pointer_type
+{
+public:
+    using _pointer_type = typename _get_pointer_type<Alloc>::type;
+    using type = std::pointer_traits<_pointer_type>::template rebind<void>;
+};
+
+template <class Alloc>
+class _get_void_pointer_type<Alloc, wwstl::void_t<typename Alloc::void_pointer>>
+{
+public:
+    using type = typename Alloc::void_pointer;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_const_void_pointer_type
+{
+public:
+    using _pointer_type = typename _get_pointer_type<Alloc>::type;
+    using type = std::pointer_traits<_pointer_type>::template rebind<const void>;
+};
+
+template <class Alloc>
+class _get_const_void_pointer_type<Alloc, wwstl::void_t<typename Alloc::const_void_pointer>>
+{
+public:
+    using type = typename Alloc::const_void_pointer;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_difference_type
+{
+public:
+    using _pointer_type = typename _get_pointer_type<Alloc>::type;
+    using type = std::pointer_traits<_pointer_type>::difference_type;
+};
+
+template <class Alloc>
+class _get_difference_type<Alloc, wwstl::void_t<typename Alloc::difference_type>>
+{
+public:
+    using type = typename Alloc::difference_type;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_size_type
+{
+public:
+    using _difference_type = typename _get_difference_type<Alloc>::type;
+    using type = typename std::make_unsigned<_difference_type>::type;
+};
+
+template <class Alloc>
+class _get_size_type<Alloc, wwstl::void_t<typename Alloc::size_type>>
+{
+public:
+    using type = typename Alloc::size_type;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_propagate_on_container_copy_assignment_type
+{
+public:
+    using type = std::false_type;
+};
+
+template <class Alloc>
+class _get_propagate_on_container_copy_assignment_type<Alloc, wwstl::void_t<typename Alloc::propagate_on_container_copy_assignment>>
+{
+public:
+    using type = typename Alloc::propagate_on_container_copy_assignment;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_propagate_on_container_move_assignment_type
+{
+public:
+    using type = std::false_type;
+};
+
+template <class Alloc>
+class _get_propagate_on_container_move_assignment_type<Alloc, wwstl::void_t<typename Alloc::propagate_on_container_move_assignment>>
+{
+public:
+    using type = typename Alloc::propagate_on_container_move_assignment;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_propagate_on_container_swap_type
+{
+public:
+    using type = std::false_type;
+};
+
+template <class Alloc>
+class _get_propagate_on_container_swap_type<Alloc, wwstl::void_t<typename Alloc::propagate_on_container_swap>>
+{
+public:
+    using type = typename Alloc::propagate_on_container_swap;
+};
+
+template <
+    class Alloc,
+    class = void
+> class _get_is_always_equal_type
+{
+public:
+    using type = typename std::is_empty<Alloc>::type;
+};
+
+template <class Alloc>
+class _get_is_always_equal_type<Alloc, wwstl::void_t<typename Alloc::is_always_equal>>
+{
+public:
+    using type = typename Alloc::is_always_equal;
+};
+
+template <class Alloc>
+class allocator_traits
+{
+public:
+    using allocator_type = Alloc;
+    using value_type = typename Alloc::value_type;
+    using pointer = typename _get_pointer_type<Alloc>::type;
+    using const_pointer = typename _get_const_pointer_type<Alloc>::type;
+    using void_pointer = typename _get_void_pointer_type<Alloc>::type;
+    using const_void_pointer = typename _get_const_void_pointer_type<Alloc>::type;
+    using difference_type = typename _get_difference_type<Alloc>::type;
+    using size_type = typename _get_size_type<Alloc>::type;
+    using propagate_on_container_copy_assignment = typename _get_propagate_on_container_copy_assignment_type<Alloc>::type;
+    using propagate_on_container_move_assignment = typename _get_propagate_on_container_move_assignment_type<Alloc>::type;
+    using propagate_on_container_swap = typename _get_propagate_on_container_swap_type<Alloc>::type;
+    using is_always_equal = typename _get_is_always_equal_type<Alloc>::type;
 };
 
 } // namespace wwstl
