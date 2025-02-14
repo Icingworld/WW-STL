@@ -49,24 +49,6 @@ public:
     /**
      * @brief 分配n个元素的内存
      * @param n 元素个数
-     * @return pointer 内存指针
-     * @exception std::bad_array_new_length 超出最大尺寸
-     * @exception std::bad_alloc 内存分配失败
-     */
-    pointer allocate(size_type n)
-    {
-        if (n > max_size())   // 超出最大尺寸
-            throw std::bad_array_new_length();
-
-        if (n == 0)
-            return nullptr;
-
-        return static_cast<pointer>(::operator new(n * sizeof(value_type)));
-    }
-
-    /**
-     * @brief 分配n个元素的内存
-     * @param n 元素个数
      * @param hint 会在hint附近分配内存，忽略
      * @return pointer 内存指针
      * @exception std::bad_array_new_length 超出最大尺寸
@@ -75,7 +57,13 @@ public:
     pointer allocate(size_type n, const void * hint = nullptr)
     {
         (void)hint;
-        return allocate(n);
+        if (n > max_size())   // 超出最大尺寸
+            throw std::bad_array_new_length();
+
+        if (n == 0)
+            return nullptr;
+
+        return static_cast<pointer>(::operator new(n * sizeof(value_type)));
     }
 
     /**
