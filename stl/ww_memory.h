@@ -359,15 +359,15 @@ public:
 
 
 template <
-    class Void,
-    class Alloc
+    class Alloc,
+    class = void
 > class _has_allocate_hint
     : std::false_type
 {
 };
 
 template <class Alloc>
-class _has_allocate_hint<wwstl::void_t<decltype(std::declval<Alloc &>().allocate(0, nullptr))>, Alloc>
+class _has_allocate_hint<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().allocate(0, nullptr))>>
     : std::true_type
 {
 };
@@ -406,29 +406,29 @@ template <
 };
 
 template <
-    class Void,
-    class Alloc
+    class Alloc,
+    class = void
 > class _has_max_size
     : std::false_type
 {
 };
 
 template <class Alloc>
-class _has_max_size<wwstl::void_t<decltype(std::declval<Alloc &>().max_size())>, Alloc>
+class _has_max_size<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().max_size())>>
     : std::true_type
 {
 };
 
 template <
-    class Void,
-    class Alloc
+    class Alloc,
+    class = void
 > class _has_select_on_container_copy_construction
     : std::false_type
 {
 };
 
 template <class Alloc>
-class _has_select_on_container_copy_construction<wwstl::void_t<decltype(std::declval<Alloc &>().select_on_container_copy_construction())>, Alloc>
+class _has_select_on_container_copy_construction<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().select_on_container_copy_construction())>>
     : std::true_type
 {
 };
