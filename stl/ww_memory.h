@@ -149,6 +149,31 @@ public:
     };
 };
 
+/**
+ * @brief _replace_first_parameter
+ * @details 用于替换第一个模板参数，生成新的模板类
+ * @param T 原模板类
+ * @param NewFirst 新的模板参数
+ */
+template <
+    class NewFirst,
+    class T
+> class _replace_first_parameter
+{
+};
+
+template <
+    class NewFirst,
+    template <class, class...>
+    class T,
+    class RawFirst,
+    class... Res
+> class _replace_first_parameter<NewFirst, T<RawFirst, Res...>>
+{
+public:
+    using type = T<NewFirst, Res...>;
+};
+
 template <
     class Alloc,
     class = void
@@ -315,6 +340,23 @@ public:
     using type = typename Alloc::is_always_equal;
 };
 
+template <
+    class Alloc,
+    class T,
+    class = void
+> class _get_rebind_alloc_type
+{
+public:
+    using type = typename 
+};
+
+template <class Alloc, class T>
+class _get_rebind_alloc_type<Alloc, T, wwstl::void_t<typename Alloc::template rebind<T>::other>>
+{
+public:
+    using type = typename Alloc::template rebind<T>::other;
+};
+
 template <class Alloc>
 class allocator_traits
 {
@@ -331,6 +373,12 @@ public:
     using propagate_on_container_move_assignment = typename _get_propagate_on_container_move_assignment_type<Alloc>::type;
     using propagate_on_container_swap = typename _get_propagate_on_container_swap_type<Alloc>::type;
     using is_always_equal = typename _get_is_always_equal_type<Alloc>::type;
+
+    template <class T>
+    using rebind_alloc = typename _get_rebind_alloc_type<Alloc, T>::type;
+
+    template <class T>
+    using rebind_traits = allocator_traits<rebind_alloc<T>>;
 };
 
 } // namespace wwstl
