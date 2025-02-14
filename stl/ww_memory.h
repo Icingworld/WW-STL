@@ -198,7 +198,7 @@ template <
 public:
     using _value_type = typename Alloc::value_type;
     using _pointer_type = typename _get_pointer_type<Alloc>::type;
-    using type = std::pointer_traits<_pointer_type>::template rebind<const _value_type>;
+    using type = typename std::pointer_traits<_pointer_type>::template rebind<const _value_type>;
 };
 
 template <class Alloc>
@@ -215,7 +215,7 @@ template <
 {
 public:
     using _pointer_type = typename _get_pointer_type<Alloc>::type;
-    using type = std::pointer_traits<_pointer_type>::template rebind<void>;
+    using type = typename std::pointer_traits<_pointer_type>::template rebind<void>;
 };
 
 template <class Alloc>
@@ -232,7 +232,7 @@ template <
 {
 public:
     using _pointer_type = typename _get_pointer_type<Alloc>::type;
-    using type = std::pointer_traits<_pointer_type>::template rebind<const void>;
+    using type = typename std::pointer_traits<_pointer_type>::template rebind<const void>;
 };
 
 template <class Alloc>
@@ -249,7 +249,7 @@ template <
 {
 public:
     using _pointer_type = typename _get_pointer_type<Alloc>::type;
-    using type = std::pointer_traits<_pointer_type>::difference_type;
+    using type = typename std::pointer_traits<_pointer_type>::difference_type;
 };
 
 template <class Alloc>
@@ -347,7 +347,7 @@ template <
 > class _get_rebind_alloc_type
 {
 public:
-    using type = typename 
+    using type = typename _replace_first_parameter<T, Alloc>::type;
 };
 
 template <class Alloc, class T>
@@ -359,7 +359,7 @@ public:
 
 
 template <
-    class = void,
+    class Void,
     class Alloc
 > class _has_allocate_hint
     : std::false_type
@@ -373,7 +373,7 @@ class _has_allocate_hint<wwstl::void_t<decltype(std::declval<Alloc &>().allocate
 };
 
 template <
-    class = void,
+    class Void,
     class...
 > class _has_construct
     : std::false_type
@@ -390,7 +390,7 @@ template <
 };
 
 template <
-    class = void,
+    class Void,
     class...
 > class _has_destroy
     : std::false_type
@@ -406,7 +406,7 @@ template <
 };
 
 template <
-    class = void,
+    class Void,
     class Alloc
 > class _has_max_size
     : std::false_type
@@ -420,7 +420,7 @@ class _has_max_size<wwstl::void_t<decltype(std::declval<Alloc &>().max_size())>,
 };
 
 template <
-    class = void,
+    class Void,
     class Alloc
 > class _has_select_on_container_copy_construction
     : std::false_type
@@ -521,7 +521,7 @@ public:
     construct(Alloc & a, T * p, Args&&... args)
     {
         (void)a;
-        ::new(p) U(std::forward<Args>(args)...);
+        ::new(p) T(std::forward<Args>(args)...);
     }
 
     /**
