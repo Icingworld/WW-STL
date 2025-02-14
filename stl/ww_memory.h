@@ -357,6 +357,70 @@ public:
     using type = typename Alloc::template rebind<T>::other;
 };
 
+template <
+    class = void,
+    class...
+> class _has_construct
+    : std::false_type
+{
+};
+
+template <
+    class Alloc,
+    class Ptr,
+    class... Args
+> class _has_construct<wwstl::void_t<decltype(std::declval<Alloc &>().construct(std::declval<Ptr>(), std::declval<Args>()...))>, Alloc, Ptr, Args...>
+    : std::true_type
+{
+};
+
+template <
+    class = void,
+    class...
+> class _has_destroy
+    : std::false_type
+{
+};
+
+template <
+    class Alloc,
+    class Ptr
+> class _has_destroy<wwstl::void_t<decltype(std::declval<Alloc &>().destroy(std::declval<Ptr>()))>, Alloc, Ptr>
+    : std::true_type
+{
+};
+
+template <
+    class = void,
+    class Alloc
+> class _has_max_size
+    : std::false_type
+{
+};
+
+template <class Alloc>
+class _has_max_size<wwstl::void_t<decltype(std::declval<Alloc &>().max_size())>, Alloc>
+    : std::true_type
+{
+};
+
+template <
+    class = void,
+    class Alloc
+> class _has_select_on_container_copy_construction
+    : std::false_type
+{
+};
+
+template <class Alloc>
+class _has_select_on_container_copy_construction<wwstl::void_t<decltype(std::declval<Alloc &>().select_on_container_copy_construction())>, Alloc>
+    : std::true_type
+{
+};
+
+/**
+ * @brief allocator_traits
+ */
 template <class Alloc>
 class allocator_traits
 {
@@ -407,38 +471,93 @@ public:
 
     /**
      * @brief 在已分配存储中构造对象
+     * @details Alloc存在construct
      */
     template <
         class T,
         class... Args
-    > static void construct(Alloc & a, T * p, Args&&... args)
+    > static typename std::enable_if<_has_construct<Alloc, T*, Args...>::value, void>::type
+    construct(Alloc & a, T * p, Args&&... args)
     {
         a.construct(p, std::forward<Args>(args)...);
     }
 
     /**
+     * @brief 在已分配存储中构造对象
+     * @details Alloc不存在construct
+     */
+    template <
+        class T,
+        class... Args
+    > static typename std::enable_if<!_has_construct<Alloc, T*, Args...>::value, void>::type
+    construct(Alloc & a, T * p, Args&&... args)
+    {
+        (void)a;
+        ::new(p) U(std::forward<Args>(args)...);
+    }
+
+    /**
      * @brief 析构储存于已分配存储中的对象
+     * @details Alloc存在destroy
      */
     template <class T>
-    static void destroy(Alloc & a, T * p)
+    static typename std::enable_if<_has_destroy<Alloc, T*>::value, void>::type
+    destroy(Alloc & a, T * p)
     {
         a.destroy(p);
     }
 
     /**
-     * @brief 返回分配器所支持的最大对象大小
+     * @brief 析构储存于已分配存储中的对象
+     * @details Alloc不存在destroy
      */
-    static size_type max_size(const Alloc & a) noexcept
+    template <class T>
+    static typename std::enable_if<!_has_destroy<Alloc, T*>::value, void>::type
+    destroy(Alloc & a, T * p)
+    {
+        (void)a;
+        p->~T();
+    }
+
+    /**
+     * @brief 返回分配器所支持的最大对象大小
+     * @details Alloc存在max_size
+     */
+    static typename std::enable_if<_has_max_size<Alloc>, size_type>::type
+    max_size(const Alloc & a) noexcept
     {
         return a.max_size();
     }
 
     /**
-     * @brief 获得复制标准容器后使用的分配器
+     * @brief 返回分配器所支持的最大对象大小
+     * @details Alloc不存在max_size
      */
-    static Alloc select_on_container_copy_construction(const Alloc & a)
+    static typename std::enable_if<!_has_max_size<Alloc>, size_type>::type
+    max_size(const Alloc & a) noexcept
+    {
+        (void)a;
+        return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
+    }
+
+    /**
+     * @brief 获得复制标准容器后使用的分配器
+     * @details Alloc存在select_on_container_copy_construction
+     */
+    static typename std::enable_if<_has_select_on_container_copy_construction<Alloc>, Alloc>::type
+    select_on_container_copy_construction(const Alloc & a)
     {
         return a.select_on_container_copy_construction();
+    }
+
+    /**
+     * @brief 获得复制标准容器后使用的分配器
+     * @details Alloc不存在select_on_container_copy_construction
+     */
+    static typename std::enable_if<!_has_select_on_container_copy_construction<Alloc>, Alloc>::type
+    select_on_container_copy_construction(const Alloc & a)
+    {
+        return a;
     }
 };
 
