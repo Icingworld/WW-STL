@@ -7,6 +7,9 @@
 namespace wwstl
 {
 
+template <class... Ts>
+using void_t = void;
+
 template <typename T, typename = void>
 struct is_iterator : std::false_type {};
 
