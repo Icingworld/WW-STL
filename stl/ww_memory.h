@@ -367,15 +367,17 @@ template <
 };
 
 template <class Alloc>
-class _has_allocate_hint<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().allocate(0, nullptr))>>
+class _has_allocate_hint<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().allocate(std::declval<std::size_t>(), std::declval<const void *>()))>>
     : std::true_type
 {
 };
 
 template <
-    class Void,
-    class...
-> class _has_construct
+    class Alloc,
+    class Ptr,
+    class = void,
+    class... Args
+> class _has_construct_aux
     : std::false_type
 {
 };
@@ -384,14 +386,24 @@ template <
     class Alloc,
     class Ptr,
     class... Args
-> class _has_construct<wwstl::void_t<decltype(std::declval<Alloc &>().construct(std::declval<Ptr>(), std::declval<Args>()...))>, Alloc, Ptr, Args...>
+> class _has_construct_aux<Alloc, Ptr, wwstl::void_t<decltype(std::declval<Alloc &>().construct(std::declval<Ptr>(), std::declval<Args>()...))>, Args...>
     : std::true_type
 {
 };
 
 template <
-    class Void,
-    class...
+    class Alloc,
+    class Ptr,
+    class... Args
+> class _has_construct
+    : _has_construct_aux<Alloc, Ptr, void, Args...>
+{
+};
+
+template <
+    class Alloc,
+    class Ptr,
+    class = void
 > class _has_destroy
     : std::false_type
 {
@@ -400,7 +412,7 @@ template <
 template <
     class Alloc,
     class Ptr
-> class _has_destroy<wwstl::void_t<decltype(std::declval<Alloc &>().destroy(std::declval<Ptr>()))>, Alloc, Ptr>
+> class _has_destroy<Alloc, Ptr, wwstl::void_t<decltype(std::declval<Alloc &>().destroy(std::declval<Ptr &>()))>>
     : std::true_type
 {
 };
@@ -472,8 +484,9 @@ public:
      * @brief 用分配器分配未初始化的存储
      * @details Alloc存在allocate_hint
      */
-    static typename std::enable_if<_has_allocate_hint<Alloc>::value, pointer>::type
-    allocate(Alloc & a, size_type n, const_void_pointer hint)
+    template <class Alloc2>
+    static typename std::enable_if<_has_allocate_hint<Alloc2>::value, pointer>::type
+    allocate(Alloc2 & a, size_type n, const_void_pointer hint)
     {
         return a.allocate(n, hint);
     };
@@ -482,8 +495,9 @@ public:
      * @brief 用分配器分配未初始化的存储
      * @details Alloc不存在allocate_hint
      */
-    static typename std::enable_if<!_has_allocate_hint<Alloc>::value, pointer>::type
-    allocate(Alloc & a, size_type n, const_void_pointer hint)
+    template <class Alloc2>
+    static typename std::enable_if<!_has_allocate_hint<Alloc2>::value, pointer>::type
+    allocate(Alloc2 & a, size_type n, const_void_pointer hint)
     {
         (void)hint;
         return a.allocate(n);
@@ -502,10 +516,11 @@ public:
      * @details Alloc存在construct
      */
     template <
+        class Alloc2,
         class T,
         class... Args
-    > static typename std::enable_if<_has_construct<Alloc, T*, Args...>::value, void>::type
-    construct(Alloc & a, T * p, Args&&... args)
+    > static typename std::enable_if<_has_construct<Alloc2, T*, Args...>::value, void>::type
+    construct(Alloc2 & a, T * p, Args&&... args)
     {
         a.construct(p, std::forward<Args>(args)...);
     }
@@ -515,10 +530,11 @@ public:
      * @details Alloc不存在construct
      */
     template <
+        class Alloc2,
         class T,
         class... Args
-    > static typename std::enable_if<!_has_construct<Alloc, T*, Args...>::value, void>::type
-    construct(Alloc & a, T * p, Args&&... args)
+    > static typename std::enable_if<!_has_construct<Alloc2, T*, Args...>::value, void>::type
+    construct(Alloc2 & a, T * p, Args&&... args)
     {
         (void)a;
         ::new(p) T(std::forward<Args>(args)...);
@@ -528,9 +544,11 @@ public:
      * @brief 析构储存于已分配存储中的对象
      * @details Alloc存在destroy
      */
-    template <class T>
-    static typename std::enable_if<_has_destroy<Alloc, T*>::value, void>::type
-    destroy(Alloc & a, T * p)
+    template <
+        class Alloc2, 
+        class T
+    > static typename std::enable_if<_has_destroy<Alloc2, T*>::value, void>::type
+    destroy(Alloc2 & a, T * p)
     {
         a.destroy(p);
     }
@@ -539,9 +557,11 @@ public:
      * @brief 析构储存于已分配存储中的对象
      * @details Alloc不存在destroy
      */
-    template <class T>
-    static typename std::enable_if<!_has_destroy<Alloc, T*>::value, void>::type
-    destroy(Alloc & a, T * p)
+    template <
+        class Alloc2, 
+        class T
+    > static typename std::enable_if<!_has_destroy<Alloc2, T*>::value, void>::type
+    destroy(Alloc2 & a, T * p)
     {
         (void)a;
         p->~T();
@@ -551,8 +571,9 @@ public:
      * @brief 返回分配器所支持的最大对象大小
      * @details Alloc存在max_size
      */
-    static typename std::enable_if<_has_max_size<Alloc>, size_type>::type
-    max_size(const Alloc & a) noexcept
+    template <class Alloc2>
+    static typename std::enable_if<_has_max_size<Alloc2>::value, size_type>::type
+    max_size(const Alloc2 & a) noexcept
     {
         return a.max_size();
     }
@@ -561,8 +582,9 @@ public:
      * @brief 返回分配器所支持的最大对象大小
      * @details Alloc不存在max_size
      */
-    static typename std::enable_if<!_has_max_size<Alloc>, size_type>::type
-    max_size(const Alloc & a) noexcept
+    template <class Alloc2>
+    static typename std::enable_if<!_has_max_size<Alloc2>::value, size_type>::type
+    max_size(const Alloc2 & a) noexcept
     {
         (void)a;
         return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
@@ -572,8 +594,9 @@ public:
      * @brief 获得复制标准容器后使用的分配器
      * @details Alloc存在select_on_container_copy_construction
      */
-    static typename std::enable_if<_has_select_on_container_copy_construction<Alloc>, Alloc>::type
-    select_on_container_copy_construction(const Alloc & a)
+    template <class Alloc2>
+    static typename std::enable_if<_has_select_on_container_copy_construction<Alloc2>::value, Alloc2>::type
+    select_on_container_copy_construction(const Alloc2 & a)
     {
         return a.select_on_container_copy_construction();
     }
@@ -582,8 +605,9 @@ public:
      * @brief 获得复制标准容器后使用的分配器
      * @details Alloc不存在select_on_container_copy_construction
      */
-    static typename std::enable_if<!_has_select_on_container_copy_construction<Alloc>, Alloc>::type
-    select_on_container_copy_construction(const Alloc & a)
+    template <class Alloc2>
+    static typename std::enable_if<!_has_select_on_container_copy_construction<Alloc2>::value, Alloc2>::type
+    select_on_container_copy_construction(const Alloc2 & a)
     {
         return a;
     }
