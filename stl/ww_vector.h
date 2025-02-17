@@ -329,14 +329,21 @@ public:
     }
 
     vector(vector && other, const Allocator & alloc)
-        : _start(other._start)
-        , _finish(other._finish)
-        , _end_of_storage(other._end_of_storage)
-        , _allocator(alloc)
+        : _allocator(alloc)
     {
-        other._start = nullptr;
-        other._finish = nullptr;
-        other._end_of_storage = nullptr;
+        if (_allocator == other._allocator) {
+            _start = other._start;
+            _finish = other._finish;
+            _end_of_storage = other._end_of_storage;
+            other._start = nullptr;
+            other._finish = nullptr;
+            other._end_of_storage = nullptr;
+        } else {
+            _start = nullptr;
+            _finish = nullptr;
+            _end_of_storage = nullptr;
+            assign(other.begin(), other.end());
+        }
     }
 
     vector(std::initializer_list<value_type> init, const Allocator & alloc = Allocator())
@@ -980,14 +987,12 @@ public:
      */
     void _clean()
     {
-        if (_start != nullptr) {
-            for (size_type i = 0; i < size(); ++i) {
-                _allocator.destroy(_start + i);
+        if (_start) {
+            for (pointer p = _finish; p != _start;) {
+                _allocator.destroy(--p);
             }
-            _allocator.deallocate(_start, capacity());
-            _start = nullptr;
-            _finish = nullptr;
-            _end_of_storage = nullptr;
+            _allocator.deallocate(_start, _end_of_storage - _start);
+            _start = _finish = _end_of_storage = nullptr;
         }
     }
 
