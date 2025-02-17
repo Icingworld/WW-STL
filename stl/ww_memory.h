@@ -360,43 +360,37 @@ public:
 
 template <
     class Alloc,
+    class Size,
+    class ConstVoidPointer,
     class = void
 > class _has_allocate_hint
-    : std::false_type
-{
-};
-
-template <class Alloc>
-class _has_allocate_hint<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().allocate(std::declval<std::size_t>(), std::declval<const void *>()))>>
-    : std::true_type
+    : public std::false_type
 {
 };
 
 template <
     class Alloc,
-    class Ptr,
-    class = void,
-    class... Args
-> class _has_construct_aux
-    : std::false_type
+    class Size,
+    class ConstVoidPointer
+> class _has_allocate_hint<Alloc, Size, ConstVoidPointer, wwstl::void_t<decltype(std::declval<Alloc &>().allocate(std::declval<Size>(), std::declval<ConstVoidPointer>()))>>
+    : public std::true_type
 {
 };
 
 template <
-    class Alloc,
-    class Ptr,
-    class... Args
-> class _has_construct_aux<Alloc, Ptr, wwstl::void_t<decltype(std::declval<Alloc &>().construct(std::declval<Ptr>(), std::declval<Args>()...))>, Args...>
-    : std::true_type
-{
-};
-
-template <
-    class Alloc,
-    class Ptr,
+    class,
     class... Args
 > class _has_construct
-    : _has_construct_aux<Alloc, Ptr, void, Args...>
+    : public std::false_type
+{
+};
+
+template <
+    class Alloc,
+    class Ptr,
+    class... Args
+> class _has_construct<wwstl::void_t<decltype(std::declval<Alloc &>().construct(std::declval<Ptr>(), std::declval<Args>()...))>, Alloc, Ptr, Args...>
+    : public std::true_type
 {
 };
 
@@ -405,15 +399,15 @@ template <
     class Ptr,
     class = void
 > class _has_destroy
-    : std::false_type
+    : public std::false_type
 {
 };
 
 template <
     class Alloc,
     class Ptr
-> class _has_destroy<Alloc, Ptr, wwstl::void_t<decltype(std::declval<Alloc &>().destroy(std::declval<Ptr &>()))>>
-    : std::true_type
+> class _has_destroy<Alloc, Ptr, wwstl::void_t<decltype(std::declval<Alloc &>().destroy(std::declval<Ptr>()))>>
+    : public std::true_type
 {
 };
 
@@ -421,13 +415,13 @@ template <
     class Alloc,
     class = void
 > class _has_max_size
-    : std::false_type
+    : public std::false_type
 {
 };
 
 template <class Alloc>
 class _has_max_size<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().max_size())>>
-    : std::true_type
+    : public std::true_type
 {
 };
 
@@ -435,13 +429,13 @@ template <
     class Alloc,
     class = void
 > class _has_select_on_container_copy_construction
-    : std::false_type
+    : public std::false_type
 {
 };
 
 template <class Alloc>
 class _has_select_on_container_copy_construction<Alloc, wwstl::void_t<decltype(std::declval<Alloc &>().select_on_container_copy_construction())>>
-    : std::true_type
+    : public std::true_type
 {
 };
 
@@ -484,24 +478,27 @@ public:
      * @brief 用分配器分配未初始化的存储
      * @details Alloc存在allocate_hint
      */
-    template <class Alloc2>
-    static typename std::enable_if<_has_allocate_hint<Alloc2>::value, pointer>::type
-    allocate(Alloc2 & a, size_type n, const_void_pointer hint)
+    static pointer _allocate(std::true_type, Alloc & a, size_type n, const_void_pointer hint)
     {
         return a.allocate(n, hint);
-    };
+    }
 
     /**
      * @brief 用分配器分配未初始化的存储
      * @details Alloc不存在allocate_hint
      */
-    template <class Alloc2>
-    static typename std::enable_if<!_has_allocate_hint<Alloc2>::value, pointer>::type
-    allocate(Alloc2 & a, size_type n, const_void_pointer hint)
+    static pointer _allocate(std::false_type, Alloc & a, size_type n, const_void_pointer)
     {
-        (void)hint;
         return a.allocate(n);
     };
+
+    /**
+     * @brief 用分配器分配未初始化的存储
+     */
+    static pointer allocate(Alloc & a, size_type n, const_void_pointer hint)
+    {
+        return _allocate(_has_allocate_hint<Alloc, size_type, const_void_pointer>(), a, n, hint);
+    }
 
     /**
      * @brief 用分配器解分配存储
@@ -516,11 +513,9 @@ public:
      * @details Alloc存在construct
      */
     template <
-        class Alloc2,
         class T,
         class... Args
-    > static typename std::enable_if<_has_construct<Alloc2, T*, Args...>::value, void>::type
-    construct(Alloc2 & a, T * p, Args&&... args)
+    > static void _construct(std::true_type, Alloc & a, T * p, Args&&... args)
     {
         a.construct(p, std::forward<Args>(args)...);
     }
@@ -530,25 +525,31 @@ public:
      * @details Alloc不存在construct
      */
     template <
-        class Alloc2,
         class T,
         class... Args
-    > static typename std::enable_if<!_has_construct<Alloc2, T*, Args...>::value, void>::type
-    construct(Alloc2 & a, T * p, Args&&... args)
+    > static void _construct(std::false_type, Alloc & a, T * p, Args&&... args)
     {
         (void)a;
         ::new(p) T(std::forward<Args>(args)...);
     }
 
     /**
+     * @brief 在已分配存储中构造对象
+     */
+    template <
+        class T,
+        class... Args
+    > static void construct(Alloc & a, T * p, Args&&... args)
+    {
+        _construct(_has_construct<Alloc, T*, Args...>(), a, p, std::forward<Args>(args)...);
+    }
+
+    /**
      * @brief 析构储存于已分配存储中的对象
      * @details Alloc存在destroy
      */
-    template <
-        class Alloc2, 
-        class T
-    > static typename std::enable_if<_has_destroy<Alloc2, T*>::value, void>::type
-    destroy(Alloc2 & a, T * p)
+    template <class T>
+    static void _destroy(std::true_type, Alloc & a, T * p)
     {
         a.destroy(p);
     }
@@ -557,23 +558,26 @@ public:
      * @brief 析构储存于已分配存储中的对象
      * @details Alloc不存在destroy
      */
-    template <
-        class Alloc2, 
-        class T
-    > static typename std::enable_if<!_has_destroy<Alloc2, T*>::value, void>::type
-    destroy(Alloc2 & a, T * p)
+    template <class T>
+    static void _destroy(std::false_type, Alloc &, T * p)
     {
-        (void)a;
         p->~T();
+    }
+
+    /**
+     * @brief 析构储存于已分配存储中的对象
+     */
+    template <class T>
+    static void destroy(Alloc & a, T * p)
+    {
+        _destroy(_has_destroy<Alloc, T*>(), a, p);
     }
 
     /**
      * @brief 返回分配器所支持的最大对象大小
      * @details Alloc存在max_size
      */
-    template <class Alloc2>
-    static typename std::enable_if<_has_max_size<Alloc2>::value, size_type>::type
-    max_size(const Alloc2 & a) noexcept
+    static size_type _max_size(std::true_type, const Alloc & a) noexcept
     {
         return a.max_size();
     }
@@ -582,21 +586,24 @@ public:
      * @brief 返回分配器所支持的最大对象大小
      * @details Alloc不存在max_size
      */
-    template <class Alloc2>
-    static typename std::enable_if<!_has_max_size<Alloc2>::value, size_type>::type
-    max_size(const Alloc2 & a) noexcept
+    static size_type _max_size(std::false_type, const Alloc &) noexcept
     {
-        (void)a;
         return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
+    }
+
+    /**
+     * @brief 返回分配器所支持的最大对象大小
+     */
+    static size_type max_size(const Alloc & a) noexcept
+    {
+        return _max_size(_has_max_size<Alloc>(), a);
     }
 
     /**
      * @brief 获得复制标准容器后使用的分配器
      * @details Alloc存在select_on_container_copy_construction
      */
-    template <class Alloc2>
-    static typename std::enable_if<_has_select_on_container_copy_construction<Alloc2>::value, Alloc2>::type
-    select_on_container_copy_construction(const Alloc2 & a)
+    static Alloc select_on_container_copy_construction(std::true_type, const Alloc & a)
     {
         return a.select_on_container_copy_construction();
     }
@@ -605,11 +612,17 @@ public:
      * @brief 获得复制标准容器后使用的分配器
      * @details Alloc不存在select_on_container_copy_construction
      */
-    template <class Alloc2>
-    static typename std::enable_if<!_has_select_on_container_copy_construction<Alloc2>::value, Alloc2>::type
-    select_on_container_copy_construction(const Alloc2 & a)
+    static Alloc _select_on_container_copy_construction(std::false_type, const Alloc & a)
     {
         return a;
+    }
+
+    /**
+     * @brief 获得复制标准容器后使用的分配器
+     */
+    static Alloc select_on_container_copy_construction(const Alloc & a)
+    {
+        return _select_on_container_copy_construction(_has_select_on_container_copy_construction<Alloc>(), a);
     }
 };
 
