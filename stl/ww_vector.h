@@ -119,14 +119,14 @@ public:
 
     self operator+(const difference_type n) const
     {
-        self temp = *this;
-        return temp += n;
+        self tmp = *this;
+        return tmp += n;
     }
 
     self operator-(const difference_type n) const
     {
-        self temp = *this;
-        return temp -= n;
+        self tmp = *this;
+        return tmp -= n;
     }
 
     difference_type operator-(const self & other) const
@@ -220,14 +220,14 @@ public:
 
     self operator+(difference_type n) const
     {
-        self temp = *this;
-        return temp += n;
+        self tmp = *this;
+        return tmp += n;
     }
 
     self operator-(difference_type n) const
     {
-        self temp = *this;
-        return temp -= n;
+        self tmp = *this;
+        return tmp -= n;
     }
 
     difference_type operator-(const base & other) const
@@ -1096,11 +1096,15 @@ template <
 class _bit_proxy
 {
 public:
-    unsigned long * _word;      // 位所在的 word
-    std::size_t _index;         // 位在 word 中的下标
+    using bitset = unsigned long;
+    using size_type = std::size_t;
 
 public:
-    _bit_proxy(unsigned long * word, std::size_t index)
+    bitset * _word;      // 位所在的 word
+    size_type _index;         // 位在 word 中的下标
+
+public:
+    _bit_proxy(bitset * word, size_type index)
         : _word(word)
         , _index(index)
     {
@@ -1126,6 +1130,211 @@ public:
     operator bool() const
     {
         return (*_word >> _index) & 1UL;
+    }
+};
+
+/**
+ * @brief _vector_bool_const_iterator
+ */
+class _vector_bool_const_iterator
+{
+public:
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = bool;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+    using pointer = void;                   // 不允许返回 bool*
+    using reference = const _bit_proxy;     // 返回位代理
+
+    using bitset = unsigned long;
+    using self = _vector_bool_const_iterator;
+
+public:
+    bitset * _data;
+    size_type _index;
+
+public:
+    _vector_bool_const_iterator(bitset * data, size_type index)
+        : _data(data)
+        , _index(index)
+    {
+    }
+
+public:
+    reference operator*() const
+    {
+        return _bit_proxy(_data, _index);
+    }
+
+    self & operator++()
+    {
+        ++_index;
+        if (_index >= sizeof(bitset) * 8) {
+            ++_data;
+            _index = 0;
+        }
+        return *this;
+    }
+
+    self & operator++(int n)
+    {
+        self tmp = *this;
+        ++*this;
+        return tmp;
+    }
+
+    self & operator--()
+    {
+        if (_index == 0) {
+            --_data;
+            _index = sizeof(bitset) * 8 - 1;
+        } else {
+            --_index;
+        }
+        return *this;
+    }
+
+    self & operator--(int n)
+    {
+        self tmp = *this;
+        --*this;
+        return tmp;
+    }
+
+    bool operator==(const self & rhs) const
+    {
+        return _data == rhs._data && _index == rhs._index;
+    }
+
+    bool operator!=(const self & rhs) const
+    {
+        return !(*this == rhs);
+    }
+
+    self & operator+=(const difference_type n)
+    {
+        size_t total_bits = _index + n;
+        _data += total_bits / (sizeof(bitset) * 8);     // 更新数据指针
+        _index = total_bits % (sizeof(bitset) * 8);     // 更新位索引
+        return *this;
+    }
+
+    self & operator-=(const difference_type n)
+    {
+        return *this += -n;
+    }
+
+    self operator+(const difference_type n) const
+    {
+        self tmp = *this;
+        return tmp += n;
+    }
+
+    self operator-(const difference_type n) const
+    {
+        self tmp = *this;
+        return tmp -= n;
+    }
+
+    difference_type operator-(const self & other) const
+    {
+        return (_data - other._data) * sizeof(bitset) * 8 + (_index - other._index);
+    }
+
+    reference operator[](const difference_type n) const
+    {
+        return *(*this + n);
+    }
+};
+
+/**
+ * @brief _vector_bool_iterator
+ */
+class _vector_bool_iterator
+    : public _vector_bool_const_iterator
+{
+public:
+    using base = _vector_bool_const_iterator;
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = bool;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+    using pointer = void;                   // 不允许返回 bool*
+    using reference = _bit_proxy;           // 返回位代理
+
+    using bitset = unsigned long;
+    using self = _vector_bool_iterator;
+
+public:
+    _vector_bool_iterator(bitset * data, size_type index)
+        : base(data, index)
+    {
+    }
+
+public:
+    reference operator*() const
+    {
+        return _bit_proxy(_data, _index);
+    }
+
+    self & operator++()
+    {
+        ++*(base *)this;
+        return *this;
+    }
+
+    self operator++(int)
+    {
+        self tmp = *this;
+        ++*this;
+        return tmp;
+    }
+
+    self & operator--()
+    {
+        --*(base *)this;
+        return *this;
+    }
+
+    self operator--(int)
+    {
+        self tmp = *this;
+        --*this;
+        return tmp;
+    }
+
+    self & operator+=(difference_type n)
+    {
+        *(base *)this += n;
+        return *this;
+    }
+
+    self & operator-=(difference_type n)
+    {
+        *(base *)this -= n;
+        return *this;
+    }
+
+    self operator+(difference_type n) const
+    {
+        self tmp = *this;
+        return tmp += n;
+    }
+
+    self operator-(difference_type n) const
+    {
+        self tmp = *this;
+        return tmp -= n;
+    }
+
+    difference_type operator-(const base & other) const
+    {
+        return *(base *)this - other;
+    }
+
+    reference operator[](difference_type n) const
+    {
+        return *(*this + n);
     }
 };
 
