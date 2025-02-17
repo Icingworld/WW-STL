@@ -927,15 +927,39 @@ public:
 
     /**
      * @brief 重新分配内存
-     * @details 需要保证 new_cap >= size
+     * @details 不支持移动
      */
-    void _reallocate(size_type new_cap)
+    void _reallocate_aux(std::false_type, size_type new_cap)
     {
         size_type old_size = size();
         pointer new_start = _allocator.allocate(new_cap);
         std::uninitialized_copy(begin(), end(), iterator(new_start));
         _clean();
         _set_new_space(new_start, old_size, new_cap);
+    }
+
+    /**
+     * @brief 重新分配内存
+     * @details 支持移动
+     */
+    void _reallocate_aux(std::true_type, size_type new_cap)
+    {
+        size_type old_size = size();
+        pointer new_start = _allocator.allocate(new_cap);
+        for (size_type i = 0; i < old_size; ++i) {
+            _allocator.construct(new_start + i, std::move(*(_start + i)));
+        }
+        _clean();
+        _set_new_space(new_start, old_size, new_cap);
+    }
+
+    /**
+     * @brief 重新分配内存
+     * @details 需要保证 new_cap > size
+     */
+    void _reallocate(size_type new_cap)
+    {
+        _reallocate_aux(std::is_move_constructible<value_type>(), new_cap);
     }
 
     /**
