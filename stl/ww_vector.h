@@ -723,7 +723,8 @@ public:
      */
     void shrink_to_fit()
     {
-        _reallocate(size());
+        if (size() < capacity())
+            _reallocate(size());
     }
 
     // 修改器
