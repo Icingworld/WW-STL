@@ -752,7 +752,7 @@ public:
      */
     iterator insert(const_iterator pos, value_type && value)
     {
-        return _emplace_n(pos, 1, std::move(value));
+        return insert(pos, 1, value);
     }
 
     /**
@@ -818,11 +818,12 @@ public:
             return iterator(last._ptr);
 
         pointer p = first._ptr;
+        size_type count = last._ptr - first._ptr;
         std::move(last._ptr, _finish, p);
         for (pointer q = last._ptr; q != _finish; ++q) {
             _allocator.destroy(q);
         }
-        _finish = _finish - (last._ptr - first._ptr);
+        _finish = _finish - count;
         return iterator(p);
     }
 
@@ -889,7 +890,7 @@ public:
         std::swap(_start, other._start);
         std::swap(_finish, other._finish);
         std::swap(_end_of_storage, other._end_of_storage);
-        if (std::allocator_traits<allocator_type>::propagate_on_container_swap::value) {
+        if (allocator_traits<allocator_type>::propagate_on_container_swap::value) {
             std::swap(_allocator, other._allocator);
         }
     }
