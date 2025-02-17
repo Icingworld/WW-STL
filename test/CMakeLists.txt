@@ -1,7 +1,7 @@
 set(TEST_FILES
-    # ww_memory_test.cpp
+    ww_memory_test.cpp
 
-    ww_array_test.cpp
+    # ww_array_test.cpp
     # ww_vector_test.cpp
     # ww_deque_test.cpp
     # ww_forward_list_test.cpp
