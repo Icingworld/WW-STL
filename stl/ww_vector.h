@@ -317,9 +317,7 @@ public:
         , _end_of_storage(other._end_of_storage)
         , _allocator(std::move(other.get_allocator()))
     {
-        other._start = nullptr;
-        other._finish = nullptr;
-        other._end_of_storage = nullptr;
+        other._set_new_space(nullptr, nullptr, nullptr);
     }
 
     vector(const vector & other, const Allocator & alloc)
@@ -332,16 +330,10 @@ public:
         : _allocator(alloc)
     {
         if (_allocator == other._allocator) {
-            _start = other._start;
-            _finish = other._finish;
-            _end_of_storage = other._end_of_storage;
-            other._start = nullptr;
-            other._finish = nullptr;
-            other._end_of_storage = nullptr;
+            _set_new_space(other._start, other._finish, other._end_of_storage);
+            other._set_new_space(nullptr, nullptr, nullptr);
         } else {
-            _start = nullptr;
-            _finish = nullptr;
-            _end_of_storage = nullptr;
+            _set_new_space(nullptr, nullptr, nullptr);
             assign(other.begin(), other.end());
         }
     }
@@ -382,16 +374,12 @@ public:
             // 销毁原有的资源
             _clean();
             // 移动新的资源
-            _start = other._start;
-            _finish = other._finish;
-            _end_of_storage = other._end_of_storage;
+            _set_new_space(other._start, other._finish, other._end_of_storage);
             if (allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
                 _allocator = std::move(other._allocator);
             }
             // 清空原来的资源
-            other._start = nullptr;
-            other._finish = nullptr;
-            other._end_of_storage = nullptr;
+            other._set_new_space(nullptr, nullptr, nullptr);
         }
         return *this;
     }
@@ -923,6 +911,16 @@ public:
         _start = new_start;
         _finish = new_start + new_size;
         _end_of_storage = new_start + new_cap;
+    }
+
+    /**
+     * @brief 设置新空间指针
+     */
+    void _set_new_space(pointer new_start, pointer new_finish, pointer new_end_of_storage)
+    {
+        _start = new_start;
+        _finish = new_finish;
+        _end_of_storage = new_end_of_storage;
     }
 
     /**
