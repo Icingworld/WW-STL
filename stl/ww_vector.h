@@ -908,7 +908,7 @@ public:
     /**
      * @brief 设置新空间指针
      */
-    void _set_new_space(pointer new_start, size_type new_size, size_type new_cap)
+    void _set_new_space(pointer new_start, size_type new_size, size_type new_cap) noexcept
     {
         _start = new_start;
         _finish = new_start + new_size;
@@ -918,7 +918,7 @@ public:
     /**
      * @brief 设置新空间指针
      */
-    void _set_new_space(pointer new_start, pointer new_finish, pointer new_end_of_storage)
+    void _set_new_space(pointer new_start, pointer new_finish, pointer new_end_of_storage) noexcept
     {
         _start = new_start;
         _finish = new_finish;
