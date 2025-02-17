@@ -4,7 +4,6 @@
 #include <initializer_list>
 #include <memory>
 #include "ww_iterator.h"
-#include "ww_type_traits.h"
 #include "ww_memory.h"
 
 namespace wwstl
@@ -42,10 +41,14 @@ public:
 
 public:
     reference operator*() const
-    { return *_ptr; }
+    {
+        return *_ptr;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
@@ -74,22 +77,34 @@ public:
     }
 
     bool operator==(const self & other) const
-    { return _ptr == other._ptr; }
+    {
+        return _ptr == other._ptr;
+    }
 
     bool operator!=(const self & other) const
-    { return !(*this == other); }
+    {
+        return !(*this == other);
+    }
 
     bool operator<(const self & other) const
-    { return _ptr < other._ptr; }
+    {
+        return _ptr < other._ptr;
+    }
 
     bool operator>(const self & other) const
-    { return other < *this; }
+    {
+        return other < *this;
+    }
 
     bool operator<=(const self & other) const
-    { return !(other < *this); }
+    {
+        return !(other < *this);
+    }
 
     bool operator>=(const self & other) const
-    { return !(*this < other); }
+    {
+        return !(*this < other);
+    }
 
     self & operator+=(const difference_type n)
     {
@@ -98,7 +113,9 @@ public:
     }
 
     self & operator-=(const difference_type n)
-    { return *this += -n; }
+    {
+        return *this += -n;
+    }
 
     self operator+(const difference_type n) const
     {
@@ -113,10 +130,14 @@ public:
     }
 
     difference_type operator-(const self & other) const
-    { return _ptr - other._ptr; }
+    {
+        return _ptr - other._ptr;
+    }
 
     reference operator[](const difference_type n) const
-    { return *(*this + n); }
+    {
+        return *(*this + n);
+    }
 };
 
 /**
@@ -150,10 +171,14 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
@@ -206,10 +231,14 @@ public:
     }
 
     difference_type operator-(const base & other) const
-    { return *(base *)this - other; }
+    {
+        return *(base *)this - other;
+    }
 
     reference operator[](difference_type n) const
-    { return *(*this + n); }
+    {
+        return *(*this + n);
+    }
 };
 
 /**
@@ -254,20 +283,28 @@ public:
 
     explicit vector(size_type count, const Allocator & alloc = Allocator())
         : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
-    { assign(count, value_type()); }
+    {
+        assign(count, value_type());
+    }
 
     vector(size_type count, const value_type & value, const Allocator & alloc = Allocator())
         : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
-    { assign(count, value); }
+    {
+        assign(count, value);
+    }
 
     template <class InputIt>
     vector(InputIt first, InputIt last, const Allocator & alloc = Allocator())
         : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
-    { assign(first, last); }
+    {
+        assign(first, last);
+    }
 
     vector(const vector & other)
         : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(other.get_allocator())
-    { assign(other.begin(), other.end()); }
+    {
+        assign(other.begin(), other.end());
+    }
 
     vector(vector && other)
         : _start(other._start), _finish(other._finish), _end_of_storage(other._end_of_storage), _allocator(std::move(other.get_allocator()))
@@ -279,7 +316,9 @@ public:
 
     vector(const vector & other, const Allocator & alloc)
         : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
-    { assign(other.begin(), other.end()); }
+    {
+        assign(other.begin(), other.end());
+    }
 
     vector(vector && other, const Allocator & alloc)
         : _start(other._start), _finish(other._finish), _end_of_storage(other._end_of_storage), _allocator(alloc)
@@ -291,10 +330,14 @@ public:
 
     vector(std::initializer_list<value_type> init, const Allocator & alloc = Allocator())
         : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
-    { assign(init); }
+    {
+        assign(init);
+    }
 
     ~vector()
-    { _clean(); }
+    {
+        _clean();
+    }
 
 public:
     // 成员函数
@@ -425,13 +468,17 @@ public:
      * @brief 将值赋给容器
      */
     void assign(std::initializer_list<value_type> ilist)
-    { assign(ilist.begin(), ilist.end()); }
+    {
+        assign(ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 返回关联的分配器
      */
     allocator_type get_allocator() const noexcept
-    { return _allocator; }
+    {
+        return _allocator;
+    }
 
     // 元素访问
 
@@ -461,49 +508,65 @@ public:
      * @brief 访问指定的元素
      */
     reference operator[](size_type pos)
-    { return *(_start + pos); }
+    {
+        return *(_start + pos);
+    }
 
     /**
      * @brief 访问指定的元素
      */
     const_reference operator[](size_type pos) const
-    { return *(_start + pos); }
+    {
+        return *(_start + pos);
+    }
 
     /**
      * @brief 访问第一个元素
      */
     reference front()
-    { return *_start; }
+    {
+        return *_start;
+    }
 
     /**
      * @brief 访问第一个元素
      */
     const_reference front() const
-    { return *_start; }
+    {
+        return *_start;
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     reference back()
-    { return *(_finish - 1); }
+    {
+        return *(_finish - 1);
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     const_reference back() const
-    { return *(_finish - 1); }
+    {
+        return *(_finish - 1);
+    }
 
     /**
      * @brief 直接访问底层连续存储
      */
     pointer data()
-    { return _start; }
+    {
+        return _start;
+    }
 
     /**
      * @brief 直接访问底层连续存储
      */
     const_pointer data() const
-    { return _start; }
+    {
+        return _start;
+    }
 
     // 迭代器
 
@@ -511,73 +574,97 @@ public:
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return iterator(_start); }
+    {
+        return iterator(_start);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return const_iterator(_start); }
+    {
+        return const_iterator(_start);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+        return begin();
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return iterator(_finish); }
+    {
+        return iterator(_finish);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return const_iterator(_finish); }
+    {
+        return const_iterator(_finish);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+        return end();
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     reverse_iterator rbegin() noexcept
-    { return reverse_iterator(end()); }
+    {
+        return reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator rbegin() const noexcept
-    { return const_reverse_iterator(end()); }
+    {
+        return const_reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator crbegin() const noexcept
-    { return rbegin(); }
+    {
+        return rbegin();
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     reverse_iterator rend() noexcept
-    { return reverse_iterator(begin()); }
+    {
+        return reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator rend() const noexcept
-    { return const_reverse_iterator(begin()); }
+    {
+        return const_reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator crend() const noexcept
-    { return rend(); }
+    {
+        return rend();
+    }
 
     // 容量
 
@@ -585,19 +672,25 @@ public:
      * @brief 检查容器是否为空
      */
     bool empty() const noexcept
-    { return _start == _finish; }
+    {
+        return _start == _finish;
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const noexcept
-    { return _finish - _start; }
+    {
+        return _finish - _start;
+    }
 
     /**
      * @brief 返回可容纳的最大元素数
      */
     size_type max_size() const noexcept
-    { return std::numeric_limits<difference_type>::max(); }
+    {
+        return std::numeric_limits<difference_type>::max();
+    }
 
     /**
      * @brief 预留存储空间
@@ -616,13 +709,17 @@ public:
      * @brief 返回当前存储空间能够容纳的元素数
      */
     size_type capacity() const noexcept
-    { return _end_of_storage - _start; }
+    {
+        return _end_of_storage - _start;
+    }
 
     /**
      * @brief 通过释放未使用的内存减少内存的使用
      */
     void shrink_to_fit()
-    { _reallocate(size()); }
+    {
+        _reallocate(size());
+    }
 
     // 修改器
 
@@ -639,19 +736,25 @@ public:
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, const value_type & value)
-    { return _emplace_n(pos, 1, value); }
+    {
+        return _emplace_n(pos, 1, value);
+    }
 
     /**
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, value_type && value)
-    { return _emplace_n(pos, 1, std::move(value)); }
+    {
+        return _emplace_n(pos, 1, std::move(value));
+    }
 
     /**
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, size_type count, const value_type & value)
-    { return _emplace_n(pos, count, value); }
+    {
+        return _emplace_n(pos, count, value);
+    }
 
     /**
      * @brief 插入元素
@@ -674,14 +777,18 @@ public:
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, std::initializer_list<value_type> ilist)
-    { return insert(pos, ilist.begin(), ilist.end()); }
+    {
+        return insert(pos, ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 原位构造元素
      */
     template <class... Args>
     iterator emplace(const_iterator pos, Args&&... args)
-    { return _emplace_n(pos, 1, std::forward<Args>(args)...); }
+    {
+        return _emplace_n(pos, 1, std::forward<Args>(args)...);
+    }
 
     /**
      * @brief 擦除元素
@@ -716,26 +823,34 @@ public:
      * @brief 将元素添加到容器末尾
      */
     void push_back(const value_type & value)
-    { emplace_back(value); }
+    {
+        emplace_back(value);
+    }
 
     /**
      * @brief 将元素添加到容器末尾
      */
     void push_back(value_type && value)
-    { emplace_back(std::move(value)); }
+    {
+        emplace_back(std::move(value));
+    }
 
     /**
      * @brief 在容器末尾原位构造元素
      */
     template <class... Args>
     void emplace_back(Args&&... args)
-    { emplace(end(), std::forward<Args>(args)...); }
+    {
+        emplace(end(), std::forward<Args>(args)...);
+    }
 
     /**
      * @brief 改变存储元素的个数
      */
     void resize(size_type count) 
-    { resize(count, value_type()); }
+    {
+        resize(count, value_type());
+    }
 
     /**
      * @brief 改变存储元素的个数
@@ -755,7 +870,9 @@ public:
      * @brief 移除末元素
      */
     void pop_back()
-    { erase(end() - 1); }
+    {
+        erase(end() - 1);
+    }
 
     /**
      * @brief 交换内容
@@ -865,10 +982,14 @@ public:
     }
 
     [[noreturn]] void _throw_out_of_range() const
-    { throw std::out_of_range("invalid vector<T, Allocator> subscript"); }
+    {
+        throw std::out_of_range("invalid vector<T, Allocator> subscript");
+    }
 
     [[noreturn]] void _throw_length_error() const
-    { throw std::length_error("vector<T, Allocator> too long"); }
+    {
+        throw std::length_error("vector<T, Allocator> too long");
+    }
 };
 
 // 非成员函数
@@ -877,43 +998,57 @@ template <
     class T,
     class Alloc
 > bool operator==(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
-{ return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()); }
+{
+    return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
 
 template <
     class T,
     class Alloc
 > bool operator!=(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
-{ return !(lhs == rhs); }
+{
+    return !(lhs == rhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator<(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
-{ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); }
+{
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
 
 template <
     class T,
     class Alloc
 > bool operator>(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
-{ return rhs < lhs; }
+{
+    return rhs < lhs;
+}
 
 template <
     class T,
     class Alloc
 > bool operator<=(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
-{ return !(rhs < lhs); }
+{
+    return !(rhs < lhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator>=(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
-{ return !(lhs < rhs); }
+{
+    return !(lhs < rhs);
+}
 
 template <
     class T,
     class Alloc
 > void swap(vector<T, Alloc> & lhs, vector<T, Alloc> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 
