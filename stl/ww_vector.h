@@ -1089,6 +1089,46 @@ template <
     lhs.swap(rhs);
 }
 
+/**
+ * @brief _bit_proxy
+ * @details 位代理，提供访问位的能力
+ */
+class _bit_proxy
+{
+public:
+    unsigned long * _word;      // 位所在的 word
+    std::size_t _index;         // 位在 word 中的下标
+
+public:
+    _bit_proxy(unsigned long * word, std::size_t index)
+        : _word(word)
+        , _index(index)
+    {
+    }
+
+public:
+    /**
+     * @brief 写入 bool
+     */
+    _bit_proxy & operator=(bool value)
+    {
+        if (value) {
+            *_word |= 1UL << _index;
+        } else {
+            *_word &= ~(1UL << _index);
+        }
+        return *this;
+    }
+
+    /**
+     * @brief 读取 bool
+     */
+    operator bool() const
+    {
+        return (*_word >> _index) & 1UL;
+    }
+};
+
 } // namespace wwstl
 
 #endif // __WW_VECTOR_H__
