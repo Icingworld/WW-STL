@@ -277,37 +277,45 @@ public:
     }
 
     explicit vector(const Allocator & alloc)
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
+        : _start(nullptr)
+        , _finish(nullptr)
+        , _end_of_storage(nullptr)
+        , _allocator(alloc)
     {
     }
 
     explicit vector(size_type count, const Allocator & alloc = Allocator())
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
+        : vector(alloc)
     {
         assign(count, value_type());
     }
 
     vector(size_type count, const value_type & value, const Allocator & alloc = Allocator())
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
+        : vector(alloc)
     {
         assign(count, value);
     }
 
-    template <class InputIt>
-    vector(InputIt first, InputIt last, const Allocator & alloc = Allocator())
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > vector(InputIt first, InputIt last, const Allocator & alloc = Allocator())
+        : vector(alloc)
     {
         assign(first, last);
     }
 
     vector(const vector & other)
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(other.get_allocator())
+        : vector(allocator_traits<Allocator>::select_on_container_copy_construction(other.get_allocator()))
     {
         assign(other.begin(), other.end());
     }
 
     vector(vector && other)
-        : _start(other._start), _finish(other._finish), _end_of_storage(other._end_of_storage), _allocator(std::move(other.get_allocator()))
+        : _start(other._start)
+        , _finish(other._finish)
+        , _end_of_storage(other._end_of_storage)
+        , _allocator(std::move(other.get_allocator()))
     {
         other._start = nullptr;
         other._finish = nullptr;
@@ -315,13 +323,16 @@ public:
     }
 
     vector(const vector & other, const Allocator & alloc)
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
+        : vector(alloc)
     {
         assign(other.begin(), other.end());
     }
 
     vector(vector && other, const Allocator & alloc)
-        : _start(other._start), _finish(other._finish), _end_of_storage(other._end_of_storage), _allocator(alloc)
+        : _start(other._start)
+        , _finish(other._finish)
+        , _end_of_storage(other._end_of_storage)
+        , _allocator(alloc)
     {
         other._start = nullptr;
         other._finish = nullptr;
@@ -329,9 +340,8 @@ public:
     }
 
     vector(std::initializer_list<value_type> init, const Allocator & alloc = Allocator())
-        : _start(nullptr), _finish(nullptr), _end_of_storage(nullptr), _allocator(alloc)
+        : vector(init.begin(), init.end(), alloc)
     {
-        assign(init);
     }
 
     ~vector()
@@ -349,7 +359,7 @@ public:
     {
         if (this != &other) {
             assign(other.begin(), other.end());
-            if (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value) {
+            if (allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value) {
                 _allocator = other._allocator;
             }
         }
@@ -368,7 +378,7 @@ public:
             _start = other._start;
             _finish = other._finish;
             _end_of_storage = other._end_of_storage;
-            if (std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
+            if (allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
                 _allocator = std::move(other._allocator);
             }
             // 清空原来的资源
