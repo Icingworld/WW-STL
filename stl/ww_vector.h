@@ -425,7 +425,7 @@ public:
      */
     template <
         class InputIterator,
-        class = std::enable_if_t<wwstl::is_iterator_v<InputIterator>>
+        class = typename std::enable_if<wwstl::is_iterator<InputIterator>::value>::type
     > void assign(InputIterator first, InputIterator last)
     {
         size_type count =  std::distance(first, last);
@@ -761,7 +761,7 @@ public:
      */
     template <
         class InputIterator,
-        class = std::enable_if_t<wwstl::is_iterator_v<InputIterator>>
+        class = typename std::enable_if<wwstl::is_iterator<InputIterator>::value>::type
     > iterator insert(const_iterator pos, InputIterator first, InputIterator last)
     {
         size_type n = std::distance(cbegin(), pos);
