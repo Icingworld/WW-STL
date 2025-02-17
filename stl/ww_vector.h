@@ -1338,6 +1338,33 @@ public:
     }
 };
 
+/**
+ * @brief vector<bool>
+ * @details bool 特化
+ * @link 
+ */
+template <class Allocator>
+class vector<bool, Allocator>
+{
+public:
+    using value_type = bool;
+    using allocator_type = Allocator;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+    using reference = _bit_proxy&;
+    using const_reference = bool;
+    using pointer = void;
+    using const_pointer = const void;
+    using iterator = _vector_bool_iterator;
+    using const_iterator = _vector_bool_const_iterator;
+    using reverse_iterator = wwstl::reverse_iterator<iterator>;
+    using const_reverse_iterator = wwstl::reverse_iterator<const_iterator>;
+
+public:
+    wwstl::vector<unsigned long> _data;     // 存储 bit 的 vector
+    size_type _size;                        // bit 的个数
+};
+
 } // namespace wwstl
 
 #endif // __WW_VECTOR_H__
