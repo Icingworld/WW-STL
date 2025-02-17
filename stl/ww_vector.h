@@ -706,7 +706,8 @@ public:
             if (new_cap > max_size()) {
                 _throw_length_error();
             }
-            _reallocate(new_cap);
+            size_type growth = std::max(new_cap, capacity() * 2);
+            _reallocate(growth);
         }
     }
 
