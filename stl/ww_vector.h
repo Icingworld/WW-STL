@@ -1609,21 +1609,33 @@ public:
 
     // 操作
 
+    /**
+     * @brief 清除内容
+     */
     void clear() noexcept
     {
         _data.clear();
     }
 
+    /**
+     * @brief 插入元素
+     */
     iterator insert(const_iterator pos, const value_type & value)
     {
         return insert(pos, 1, value);
     }
 
+    /**
+     * @brief 插入元素
+     */
     iterator insert(const_iterator pos, value_type && value)
     {
         return insert(pos, 1, value);
     }
 
+    /**
+     * @brief 插入元素
+     */
     iterator insert(const_iterator pos, size_type n, const value_type & value)
     {
         return _emplace_n(pos, n, value);
@@ -1742,9 +1754,31 @@ public:
     }
 
     template <class... Args>
-    iterator _emplace_n(const_iterator pos, Args&&... args)
+    iterator _emplace_n(const_iterator pos, size_type count, Args&&... args)
     {
-        
+        difference_type index = pos - begin();
+
+        // 计算一共需要多少个 bitset
+        size_type new_size = _size + count;
+        size_type bitset_require = (new_size + (sizeof(bitset) * 8 - 1)) / (sizeof(bitset) * 8);
+
+        if (bitset_require > 0) {
+            // 空间不足，需要扩展 bitset_require 个 bitset
+            _data.resize(bitset_require, 0UL);
+        }
+
+        // 将原来的元素后移
+        for (size_type i = _size; i > index; --i) {
+            (*this)[i + count - 1] = (*this)[i - 1];
+        }
+
+        // 插入新元素
+        for (size_type i = 0; i < count; ++i) {
+            (*this)[index + i] = static_cast<value_type>(std::forward<Args>(args)...);
+        }
+
+        _size = new_size;
+        return begin() + index;
     }
 };
 
