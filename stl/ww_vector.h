@@ -1381,6 +1381,37 @@ public:
     /**
      * @brief 将值赋给容器
      */
+    vector & operator=(const vector & other)
+    {
+        if (this != &other) {
+
+        }
+        return *this;
+    }
+
+    /**
+     * @brief 将值赋给容器
+     */
+    vector & operator=(vector && other)
+    {
+        if (this != &other) {
+
+        }
+        return *this;
+    }
+
+    /**
+     * @brief 将值赋给容器
+     */
+    vector & operator=(std::initializer_list<value_type> ilist)
+    {
+        assign(ilist);
+        return *this;
+    }
+
+    /**
+     * @brief 将值赋给容器
+     */
     void assign(size_type count, const value_type & value)
     {
         clear();
