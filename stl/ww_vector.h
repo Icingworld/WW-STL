@@ -1362,7 +1362,7 @@ public:
     using allocator_type = Allocator;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using reference = _bit_proxy&;
+    using reference = _bit_proxy;
     using const_reference = bool;       // 即使修改了 bool，也对存储的位无影响
     using pointer = void;
     using const_pointer = const void;
