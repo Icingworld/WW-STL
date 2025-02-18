@@ -867,6 +867,7 @@ public:
     {
         if (count == size())
             return;
+
         if (count < size()) {
             erase(begin() + count, end());
         } else {
@@ -1757,6 +1758,29 @@ public:
     void pop_back()
     {
         erase(--end());
+    }
+
+    /**
+     * @brief 改变存储元素的个数
+     */
+    void resize(size_type count)
+    {
+        resize(count, value_type());
+    }
+
+    /**
+     * @brief 改变存储元素的个数
+     */
+    void resize(size_type count, const value_type & value)
+    {
+        if (count == size())
+            return;
+        
+        if (count < size()) {
+            erase(begin() + count, end());
+        } else {
+            insert(end(), count - size(), value);
+        }
     }
 
     /**
