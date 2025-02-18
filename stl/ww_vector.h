@@ -1696,7 +1696,16 @@ public:
      */
     iterator erase(const_iterator pos)
     {
+        difference_type index = pos - begin();
 
+        // 元素前移一位
+        for (size_type i = index; i < _size - 1; ++i) {
+            (*this)[i] = (*this)[i + 1];
+        }
+
+        --_size;
+        _shrint_to_fit();
+        return begin() + index;
     }
 
     /**
@@ -1704,7 +1713,17 @@ public:
      */
     iterator erase(const_iterator first, const_iterator last)
     {
+        difference_type index = first - begin();
+        difference_type count = last - first;  // 计算删除的元素数量
 
+        // 将后面的元素前移
+        for (size_type i = index; i < _size - count; ++i) {
+            (*this)[i] = (*this)[i + count];
+        }
+
+        _size -= count;
+        _shrint_to_fit();
+        return begin() + index;
     }
 
     /**
@@ -1801,6 +1820,19 @@ public:
 
         _size = new_size;
         return begin() + index;
+    }
+
+    /**
+     * @brief _shrint_to_fit
+     * @details 释放空闲的 bitset，需要确保元素数量减少后调用
+     */
+    void _shrint_to_fit()
+    {
+        // 计算一共需要多少个 bitset
+        size_type new_size = _size;
+        size_type bitset_require = (new_size + (sizeof(bitset) * 8 - 1)) / (sizeof(bitset) * 8);
+        // resize 底层vector
+        _data.resize(bitset_require);
     }
 };
 
