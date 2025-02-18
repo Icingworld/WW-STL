@@ -1747,6 +1747,7 @@ public:
     void clear() noexcept
     {
         _data.clear();
+        _size = 0;
     }
 
     /**
