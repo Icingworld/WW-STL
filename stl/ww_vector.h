@@ -744,7 +744,7 @@ public:
      */
     iterator insert(const_iterator pos, const value_type & value)
     {
-        return _emplace_n(pos, 1, value);
+        return insert(pos, 1, value);
     }
 
     /**
@@ -879,7 +879,7 @@ public:
      */
     void pop_back()
     {
-        erase(end() - 1);
+        erase(--end());
     }
 
     /**
@@ -1101,8 +1101,8 @@ public:
     using size_type = std::size_t;
 
 public:
-    bitset * _word;      // 位所在的 word
-    size_type _index;         // 位在 word 中的下标
+    bitset * _word;             // 位所在的 word
+    size_type _index;           // 位在 word 中的下标
 
 public:
     _bit_proxy(bitset * word, size_type index)
@@ -1145,7 +1145,7 @@ public:
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using pointer = void;                   // 不允许返回 bool*
-    using reference = const _bit_proxy;     // 返回位代理
+    using reference = bool;                 // 返回 bool
 
     using bitset = unsigned long;
     using self = _vector_bool_const_iterator;
@@ -1164,7 +1164,7 @@ public:
 public:
     reference operator*() const
     {
-        return _bit_proxy(_data, _index);
+        return static_cast<reference>(_bit_proxy(_data, _index));
     }
 
     self & operator++()
@@ -1353,7 +1353,7 @@ public:
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using reference = _bit_proxy&;
-    using const_reference = bool;
+    using const_reference = bool;       // 即使修改了 bool，也对存储的位无影响
     using pointer = void;
     using const_pointer = const void;
     using iterator = _vector_bool_iterator;
@@ -1361,9 +1361,379 @@ public:
     using reverse_iterator = wwstl::reverse_iterator<iterator>;
     using const_reverse_iterator = wwstl::reverse_iterator<const_iterator>;
 
+    using bitset = unsigned long;
+    using bitset_allocator_type = typename Allocator::template rebind<bitset>::other;
+
 public:
-    wwstl::vector<unsigned long> _data;     // 存储 bit 的 vector
+    wwstl::vector<bitset> _data;            // 存储 bit 的 vector
     size_type _size;                        // bit 的个数
+
+public:
+    allocator_type get_allocator() const
+    {
+        return 
+    }
+
+    // 元素访问
+
+    /**
+     * @brief 带越界检查访问指定的元素
+     */
+    reference at(size_type pos)
+    {
+        if (pos >= _size)
+            _throw_out_of_range();
+
+        size_type bitset_index = pos / (sizeof(bitset) * 8);
+        size_type bitset_offset = pos % (sizeof(bitset) * 8);
+        return _bit_proxy(&_data[bitset_index], bitset_offset);
+    }
+
+    /**
+     * @brief 带越界检查访问指定的元素
+     */
+    const_reference at(size_type pos) const
+    {
+        if (pos >= _size)
+            _throw_out_of_range();
+
+        size_type bitset_index = pos / (sizeof(bitset) * 8);
+        size_type bitset_offset = pos % (sizeof(bitset) * 8);
+        return static_cast<const_reference>(_bit_proxy(&_data[bitset_index], bitset_offset));
+    }
+
+    /**
+     * @brief 访问指定的元素
+     */
+    reference operator[](size_type pos)
+    {
+        size_type bitset_index = pos / (sizeof(bitset) * 8);
+        size_type bitset_offset = pos % (sizeof(bitset) * 8);
+        return _bit_proxy(&_data[bitset_index], bitset_offset);
+    }
+
+    /**
+     * @brief 访问指定的元素
+     */
+    const_reference operator[](size_type pos) const
+    {
+        size_type bitset_index = pos / (sizeof(bitset) * 8);
+        size_type bitset_offset = pos % (sizeof(bitset) * 8);
+        return static_cast<const_reference>(_bit_proxy(&_data[bitset_index], bitset_offset));
+    }
+
+    /**
+     * @brief 访问第一个元素
+     */
+    reference front()
+    {
+        return *begin();
+    }
+
+    /**
+     * @brief 访问第一个元素
+     */
+    const_reference front() const
+    {
+        return *begin();
+    }
+
+    /**
+     * @brief 访问最后一个元素
+     */
+    reference back()
+    {
+        return *(--end());
+    }
+
+    /**
+     * @brief 访问最后一个元素
+     */
+    const_reference back() const
+    {
+        return *(--end());
+    }
+
+    // 迭代器
+
+    /**
+     * @brief 返回指向起始的迭代器
+     */
+    iterator begin() noexcept
+    {
+        return iterator(&_data[0], 0);
+    }
+
+    /**
+     * @brief 返回指向起始的迭代器
+     */
+    const_iterator begin() const noexcept
+    {
+        return const_iterator(&_data[0], 0);
+    }
+
+    /**
+     * @brief 返回指向起始的迭代器
+     */
+    const_iterator cbegin() const noexcept
+    {
+        return begin();
+    }
+
+    /**
+     * @brief 返回指向末尾的迭代器
+     */
+    iterator end() noexcept
+    {
+        size_type bitset_index = _size / (sizeof(bitset) * 8);
+        size_type bitset_offset = _size % (sizeof(bitset) * 8);
+        return iterator(&_data[bitset_index], bitset_offset);
+    }
+
+    /**
+     * @brief 返回指向末尾的迭代器
+     */
+    const_iterator end() const noexcept
+    {
+        size_type bitset_index = _size / (sizeof(bitset) * 8);
+        size_type bitset_offset = _size % (sizeof(bitset) * 8);
+        return const_iterator(&_data[bitset_index], bitset_offset);
+    }
+
+    /**
+     * @brief 返回指向末尾的迭代器
+     */
+    const_iterator cend() const noexcept
+    {
+        return end();
+    }
+    
+    /**
+     * @brief 返回指向起始的逆向迭代器
+     */
+    reverse_iterator rbegin() noexcept
+    {
+        return reverse_iterator(end());
+    }
+
+    /**
+     * @brief 返回指向起始的逆向迭代器
+     */
+    const_reverse_iterator rbegin() const noexcept
+    {
+        return const_reverse_iterator(end());
+    }
+
+    /**
+     * @brief 返回指向起始的逆向迭代器
+     */
+    const_reverse_iterator crbegin() const noexcept
+    {
+        return rbegin();
+    }
+
+    /**
+     * @brief 返回指向末尾的逆向迭代器
+     */
+    reverse_iterator rend() noexcept
+    {
+        return reverse_iterator(begin());
+    }
+
+    /**
+     * @brief 返回指向末尾的逆向迭代器
+     */
+    const_reverse_iterator rend() const noexcept
+    {
+        return const_reverse_iterator(begin());
+    }
+
+    /**
+     * @brief 返回指向末尾的逆向迭代器
+     */
+    const_reverse_iterator crend() const noexcept
+    {
+        return rend();
+    }
+
+    // 容量
+
+    /**
+     * @brief 检查容器是否为空
+     */
+    bool empty() const noexcept
+    {
+        return _size == 0;
+    }
+
+    /**
+     * @brief 返回元素数
+     */
+    size_type size() const noexcept
+    {
+        return _size;
+    }
+
+    /**
+     * @brief 返回可容纳的最大元素数
+     */
+    size_type max_size() const noexcept
+    {
+        return _data.max_size();
+    }
+
+    /**
+     * @brief 预留存储空间
+     */
+    void reserve(size_type new_cap)
+    {
+        _data.reserve(new_cap);
+    }
+
+    /**
+     * @brief 返回当前存储空间能够容纳的元素数
+     */
+    size_type capacity() const noexcept
+    {
+        return _data.capacity();
+    }
+
+    // 操作
+
+    void clear() noexcept
+    {
+        _data.clear();
+    }
+
+    iterator insert(const_iterator pos, const value_type & value)
+    {
+        return insert(pos, 1, value);
+    }
+
+    iterator insert(const_iterator pos, value_type && value)
+    {
+        return insert(pos, 1, value);
+    }
+
+    iterator insert(const_iterator pos, size_type n, const value_type & value)
+    {
+        return _emplace_n(pos, n, value);
+    }
+
+    /**
+     * @brief 插入元素
+     */
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > iterator insert(const_iterator pos, InputIt first, InputIt last)
+    {
+        
+    }
+
+    /**
+     * @brief 插入元素
+     */
+    iterator insert(const_iterator pos, std::initializer_list<value_type> ilist)
+    {
+        return insert(pos, ilist.begin(), ilist.end());
+    }
+
+    /**
+     * @brief 原位构造元素
+     */
+    template <class... Args>
+    iterator emplace(const_iterator pos, Args&&... args)
+    {
+        return _emplace_n(pos, 1, std::forward<Args>(args)...);
+    }
+
+    /**
+     * @brief 擦除元素
+     */
+    iterator erase(const_iterator pos)
+    {
+
+    }
+
+    /**
+     * @brief 擦除元素
+     */
+    iterator erase(const_iterator first, const_iterator last)
+    {
+
+    }
+
+    /**
+     * @brief 将元素添加到容器末尾
+     */
+    void push_back(const value_type & value)
+    {
+        emplace_back(value);
+    }
+
+    /**
+     * @brief 将元素添加到容器末尾
+     */
+    void push_back(value_type && value)
+    {
+        emplace_back(std::move(value));
+    }
+
+    /**
+     * @brief 在容器末尾原位构造元素
+     */
+    template <class... Args>
+    void emplace_back(Args&&... args)
+    {
+        emplace(end(), std::forward<Args>(args)...);
+    }
+
+    /**
+     * @brief 移除末元素
+     */
+    void pop_back()
+    {
+        erase(--end());
+    }
+
+    /**
+     * @brief 交换内容
+     */
+    void swap(vector & other)
+    {
+        _data.swap(other._data);
+        std::swap(_size, other._size);
+    }
+
+    // 专属修改器
+
+    /**
+     * @brief 翻转所有位
+     */
+    void flip()
+    {
+        for (auto it = begin(); it != end(); ++it) {
+            *it = !static_cast<bool>(*it);
+        }
+    }
+
+    static void swap(reference x, reference y)
+    {
+        std::swap(x, y);
+    }
+
+public:
+    [[noreturn]] void _throw_out_of_range() const
+    {
+        throw std::out_of_range("invalid vector<bool> subscript");
+    }
+
+    template <class... Args>
+    iterator _emplace_n(const_iterator pos, Args&&... args)
+    {
+        
+    }
 };
 
 } // namespace wwstl
