@@ -1384,7 +1384,8 @@ public:
     vector & operator=(const vector & other)
     {
         if (this != &other) {
-
+            _data = other._data;
+            _size = other._size;
         }
         return *this;
     }
@@ -1395,7 +1396,10 @@ public:
     vector & operator=(vector && other)
     {
         if (this != &other) {
-
+            // TODO 移动策略待更新
+            _data = std::move(other._data);
+            _size = other._size;
+            other._size = 0;
         }
         return *this;
     }
