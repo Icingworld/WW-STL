@@ -1093,6 +1093,7 @@ template <
 /**
  * @brief _bit_proxy
  * @details 位代理，提供访问位的能力
+ * @link https://zh.cppreference.com/w/cpp/container/vector_bool/reference
  */
 class _bit_proxy
 {
@@ -1113,9 +1114,9 @@ public:
 
 public:
     /**
-     * @brief 写入 bool
+     * @brief 将 bool 赋给被引用位
      */
-    _bit_proxy & operator=(bool value)
+    _bit_proxy & operator=(bool value) noexcept
     {
         if (value) {
             *_word |= 1UL << _index;
@@ -1126,11 +1127,19 @@ public:
     }
 
     /**
-     * @brief 读取 bool
+     * @brief 返回被引用位
      */
-    operator bool() const
+    operator bool() const noexcept
     {
         return (*_word >> _index) & 1UL;
+    }
+
+    /**
+     * @brief 翻转被引用位
+     */
+    void flip() noexcept
+    {
+        *_word ^= 1UL << _index;
     }
 };
 
@@ -1714,10 +1723,13 @@ public:
     void flip()
     {
         for (auto it = begin(); it != end(); ++it) {
-            *it = !static_cast<bool>(*it);
+            *it.flip();
         }
     }
 
+    /**
+     * @brief 交换两个 std::vector<bool>::reference
+     */
     static void swap(reference x, reference y)
     {
         std::swap(x, y);
