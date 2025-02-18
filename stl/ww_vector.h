@@ -1187,7 +1187,7 @@ public:
         return *this;
     }
 
-    self & operator++(int n)
+    self operator++(int n)
     {
         self tmp = *this;
         ++*this;
@@ -1205,7 +1205,7 @@ public:
         return *this;
     }
 
-    self & operator--(int n)
+    self operator--(int n)
     {
         self tmp = *this;
         --*this;
