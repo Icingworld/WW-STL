@@ -1372,16 +1372,47 @@ public:
     using const_reverse_iterator = wwstl::reverse_iterator<const_iterator>;
 
     using bitset = unsigned long;
-    using bitset_allocator_type = typename Allocator::template rebind<bitset>::other;
 
 public:
     wwstl::vector<bitset> _data;            // 存储 bit 的 vector
     size_type _size;                        // bit 的个数
 
 public:
+    /**
+     * @brief 将值赋给容器
+     */
+    void assign(size_type count, const value_type & value)
+    {
+        clear();
+        insert(end(), count, value);
+    }
+
+    /**
+     * @brief 将值赋给容器
+     */
+    template<
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > void assign(InputIt first, InputIt last)
+    {
+        clear();
+        insert(end(), first, last);
+    }
+
+    /**
+     * @brief 将值赋给容器
+     */
+    void assign(std::initializer_list<value_type> ilist)
+    {
+        assign(ilist.begin(), ilist.end());
+    }
+
+    /**
+     * @brief 返回关联的分配器
+     */
     allocator_type get_allocator() const
     {
-        return 
+        return _data.get_allocator();
     }
 
     // 元素访问
