@@ -1378,6 +1378,71 @@ public:
     size_type _size;                        // bit 的个数
 
 public:
+    vector()
+        : vector(Allocator())
+    {
+    }
+
+    explicit vector(const Allocator &)
+        : _data()   // 使用默认分配器
+        , _size(0)
+    {
+    }
+
+    explicit vector(size_type count, const Allocator & alloc)
+        : vector(alloc)
+    {
+        assign(count, value_type());
+    }
+
+    vector(size_type count, value_type value, const Allocator & alloc)
+        : vector(alloc)
+    {
+        assign(count, value);
+    }
+
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > vector(InputIt first, InputIt last, const Allocator & alloc)
+        : vector(alloc)
+    {
+        assign(first, last);
+    }
+
+    vector(const vector & other)
+    {
+        _data = other._data;
+        _size = other._size;
+    }
+
+    vector(vector && other)
+    {
+        _data = std::move(other._data);
+        _size = other._size;
+        other._size = 0;
+    }
+
+    vector(const vector & other, const Allocator &)
+        : vector(other)
+    {
+    }
+
+    vector(vector && other, const Allocator &)
+        : vector(std::move(other))
+    {
+    }
+
+    vector(std::initializer_list<value_type> init, const Allocator & alloc = Allocator())
+        : vector(init.begin(), init.end(), alloc)
+    {
+    }
+
+    ~vector()
+    {
+    }
+
+public:
     /**
      * @brief 将值赋给容器
      */
