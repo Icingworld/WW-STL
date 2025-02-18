@@ -1931,7 +1931,7 @@ public:
     void flip()
     {
         for (auto it = begin(); it != end(); ++it) {
-            *it.flip();
+            (*it).flip();
         }
     }
 
