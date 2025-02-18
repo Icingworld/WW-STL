@@ -1970,7 +1970,7 @@ public:
 
         // 插入新元素
         for (size_type i = 0; i < count; ++i) {
-            (*this)[index + i] = static_cast<value_type>(std::forward<Args>(args)...);
+            (*this)[index + i] = value_type(std::forward<Args>(args)...);
         }
 
         _size = new_size;
