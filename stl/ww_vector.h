@@ -1649,7 +1649,29 @@ public:
         class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
     > iterator insert(const_iterator pos, InputIt first, InputIt last)
     {
-        
+        difference_type index = pos - begin();
+        size_type count = std::distance(first, last);
+
+        size_type new_size = _size + count;
+        size_type bitset_require = (new_size + (sizeof(bitset) * 8 - 1)) / (sizeof(bitset) * 8);
+
+        if (bitset_require > 0) {
+            // 空间不足，需要扩展 bitset_require 个 bitset
+            _data.resize(bitset_require, 0UL);
+        }
+
+        // 将原来的元素后移
+        for (size_type i = _size; i > index; --i) {
+            (*this)[i + count - 1] = (*this)[i - 1];
+        }
+
+        // 插入新元素
+        for (size_type i = 0; first != last; ++first, ++i) {
+            (*this)[index + i] = static_cast<value_type>(*first);
+        }
+
+        _size = new_size;
+        return begin() + index;
     }
 
     /**
