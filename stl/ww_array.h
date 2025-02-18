@@ -117,14 +117,14 @@ public:
 
     self operator+(const difference_type n) const
     {
-        self temp = *this;
-        return temp += n;
+        self tmp = *this;
+        return tmp += n;
     }
 
     self operator-(const difference_type n) const
     {
-        self temp = *this;
-        return temp -= n;
+        self tmp = *this;
+        return tmp -= n;
     }
 
     difference_type operator-(const self & other) const
@@ -218,14 +218,14 @@ public:
 
     self operator+(difference_type n) const
     {
-        self temp = *this;
-        return temp += n;
+        self tmp = *this;
+        return tmp += n;
     }
 
     self operator-(difference_type n) const
     {
-        self temp = *this;
-        return temp -= n;
+        self tmp = *this;
+        return tmp -= n;
     }
 
     difference_type operator-(const base & other) const
