@@ -633,7 +633,7 @@ public:
      */
     void remove(const value_type & value)
     {
-        remove_if([value](int x) {
+        remove_if([value](value_type x) {
             return x == value;
         });
     }

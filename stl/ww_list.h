@@ -787,7 +787,7 @@ public:
     {
         std::swap(_finish, other._finish);
         std::swap(_size, other._size);
-        if (std::allocator_traits<allocator_type>::propagate_on_container_swap::value) {
+        if (wwstl::allocator_traits<allocator_type>::propagate_on_container_swap::value) {
             std::swap(_node_allocator, other._node_allocator);
         }
     }
@@ -927,7 +927,7 @@ public:
      */
     void remove(const value_type & value)
     {
-        remove_if([value](int x) {
+        remove_if([value](value_type x) {
             return x == value;
         });
     }
