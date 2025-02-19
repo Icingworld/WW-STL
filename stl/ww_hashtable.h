@@ -286,7 +286,7 @@ public:
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -1079,7 +1079,8 @@ public:
      * @brief 设置最大负载因子
      */
     void max_load_factor(float ml)
-    { _max_load_factor = ml;
+    {
+        _max_load_factor = ml;
     }
 
     /**
@@ -1106,7 +1107,8 @@ public:
      * @brief 为至少指定数量的元素预留空间并重新生成散列表
      */
     void reserve(size_type count)
-    { rehash(std::ceil(count / max_load_factor()));
+    {
+        rehash(std::ceil(count / max_load_factor()));
     }
 
     // 观察器

@@ -36,18 +36,6 @@ public:
     }
 };
 
-#define _HASH_SPECIALIZATION_TEMPLATE(Key) \
-    template<> \
-    class hash<Key> \
-        : public _hash_base<std::size_t, Key> \
-    { \
-    public: \
-        result_type operator()(const argument_type & key) const \
-        { \
-            return static_cast<result_type>(key); \
-        } \
-    };
-
 /**
  * @details 以下提供必须实现的hash特化，按照C++标准定义，需要为算术类型、枚举类型和指针类型(包括nullptr_t)提供特化
  * @link https://zh.cppreference.com/w/cpp/language/types
@@ -56,29 +44,117 @@ public:
  * @link https://zh.cppreference.com/w/cpp/types/nullptr_t
  */
 
-// 这些是可以无损转换为size_t的类型
+// 可以无损转换为size_t的类型
 
-_HASH_SPECIALIZATION_TEMPLATE(signed char)
+template<>
+class hash<signed char>
+    : public _hash_base<std::size_t, signed char>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(unsigned char)
+template<>
+class hash<unsigned char>
+    : public _hash_base<std::size_t, unsigned char>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(short int)
+template<>
+class hash<short int>
+    : public _hash_base<std::size_t, short int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(unsigned short int)
+template<>
+class hash<unsigned short int>
+    : public _hash_base<std::size_t, unsigned short int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(int)
+template<>
+class hash<int>
+    : public _hash_base<std::size_t, int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(unsigned int)
+template<>
+class hash<unsigned int>
+    : public _hash_base<std::size_t, unsigned int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(long int)
+template<>
+class hash<long int>
+    : public _hash_base<std::size_t, long int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(unsigned long int)
+template<>
+class hash<unsigned long int>
+    : public _hash_base<std::size_t, unsigned long int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(long long int)
+template<>
+class hash<long long int>
+    : public _hash_base<std::size_t, long long int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
-_HASH_SPECIALIZATION_TEMPLATE(unsigned long long int)
-
-#undef _HASH_SPECIALIZATION_TEMPLATE
+template<>
+class hash<unsigned long long int>
+    : public _hash_base<std::size_t, unsigned long long int>
+{
+public:
+    result_type operator()(const argument_type & key) const
+    {
+        return static_cast<result_type>(key);
+    }
+};
 
 /**
  * @brief bool类型的hash特化
