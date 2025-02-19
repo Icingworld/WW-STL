@@ -21,12 +21,14 @@ public:
 
 public:
     _forward_list_node()
-        : _next(nullptr), _data()
+        : _next(nullptr)
+        , _data()
     { // 构造空节点
     }
 
     explicit _forward_list_node(const value_type & data)
-        : _next(nullptr), _data(data)
+        : _next(nullptr)
+        , _data(data)
     { // 以值构造节点
     }
 };
@@ -55,16 +57,24 @@ public:
 
 public:
     bool operator==(const self & other) const
-    { return _node == other._node; }
+    {
+        return _node == other._node;
+    }
 
     bool operator!=(const self & other) const
-    { return !(*this == other); }
+    {
+        return !(*this == other);
+    }
 
     reference operator*() const
-    { return _node->_data; }
+    {
+        return _node->_data;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
@@ -103,14 +113,18 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -158,18 +172,23 @@ public:
     }
 
     explicit forward_list(const Allocator & alloc)
-        : _start(nullptr), _node_allocator(alloc)
-    { _init_forward_list(); }
+        : _start(nullptr)
+        , _node_allocator(alloc)
+    {
+        _init_forward_list();
+    }
 
     explicit forward_list(size_type count, const Allocator & alloc = Allocator())
-        : _start(nullptr), _node_allocator(alloc)
+        : _start(nullptr)
+        , _node_allocator(alloc)
     {
         _init_forward_list();
         _init_with_n(count);
     }
 
     forward_list(size_type count, const value_type & value, const Allocator & alloc = Allocator())
-        : _start(nullptr), _node_allocator(alloc)
+        : _start(nullptr)
+        , _node_allocator(alloc)
     {
         _init_forward_list();
         _init_with_n(count, value);
@@ -177,31 +196,33 @@ public:
 
     template <
         class InputIt,
-        class = typename std::enable_if<wwstl::is_iterator_v<InputIt>::value>::type
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
     > forward_list(InputIt first, InputIt last, const Allocator & alloc = Allocator())
-        : _start(nullptr), _node_allocator(alloc)
+        : _start(nullptr)
+        , _node_allocator(alloc)
     {
         _init_forward_list();
         _init_with_range(first, last);
     }
 
     forward_list(const forward_list & other)
-        : _start(nullptr), _node_allocator(other._node_allocator)
+        : _start(nullptr)
+        , _node_allocator(other._node_allocator)
     {
         _init_forward_list();
         assign(other.begin(), other.end());
     }
 
     forward_list(forward_list && other)
-        : _start(other._start), _node_allocator(std::move(other._node_allocator))
+        : _start(other._start)
+        , _node_allocator(std::move(other._node_allocator))
     {
-        _start = other._start;
-        other._start = nullptr;
         other._init_forward_list();
     }
 
     forward_list(std::initializer_list<value_type> init, const Allocator & alloc = Allocator())
-        : _start(nullptr), _node_allocator(alloc)
+        : _start(nullptr)
+        , _node_allocator(alloc)
     {
         _init_forward_list();
         assign(init);
@@ -254,8 +275,10 @@ public:
     /**
      * @brief 将值赋给容器
      */
-    template <class InputIt>
-    void assign(InputIt first, InputIt last)
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > void assign(InputIt first, InputIt last)
     {
         clear();
         insert_after(before_begin(), first, last);
@@ -265,13 +288,17 @@ public:
      * @brief 将值赋给容器
      */
     void assign(std::initializer_list<value_type> ilist)
-    { assign(ilist.begin(), ilist.end()); }
+    {
+        assign(ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 返回关联的分配器
      */
     allocator_type get_allocator() const noexcept
-    { return _node_allocator; }
+    {
+        return _node_allocator;
+    }
 
     // 元素访问
 
@@ -279,13 +306,17 @@ public:
      * @brief 访问第一个元素
      */
     reference front()
-    { return *begin(); }
+    {
+        return *begin();
+    }
 
     /**
      * @brief 访问第一个元素
      */
     const_reference front() const
-    { return *begin(); }
+    {
+        return *begin();
+    }
 
     // 迭代器
 
@@ -293,55 +324,73 @@ public:
      * @brief 返回指向容器开头之前的迭代器
      */
     iterator before_begin() noexcept
-    { return iterator(_start); }
+    {
+        return iterator(_start);
+    }
 
     /**
      * @brief 返回指向容器开头之前的迭代器
      */
     const_iterator before_begin() const noexcept
-    { return const_iterator(_start); }
+    {
+        return const_iterator(_start);
+    }
 
     /**
      * @brief 返回指向容器开头之前的迭代器
      */
     const_iterator cbefore_begin() const noexcept
-    { return const_iterator(_start); }
+    {
+        return const_iterator(_start);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return iterator(_start->_next); }
+    {
+        return iterator(_start->_next);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return const_iterator(_start->_next); }
+    {
+        return const_iterator(_start->_next);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+        return begin();
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return iterator(nullptr); }
+    {
+        return iterator(nullptr);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return const_iterator(nullptr); }
+    {
+        return const_iterator(nullptr);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+        return end();
+    }
 
     // 容量
 
@@ -349,13 +398,17 @@ public:
      * @brief 检查容器是否为空
      */
     bool empty() const noexcept
-    { return begin() == end(); }
+    {
+        return begin() == end();
+    }
 
     /**
      * @brief 返回可容纳的最大元素数
      */
     size_type max_size() const noexcept
-    { return std::numeric_limits<difference_type>::max(); }
+    {
+        return std::numeric_limits<difference_type>::max();
+    }
 
     // 修改器
 
@@ -376,13 +429,17 @@ public:
      * @brief 在某个元素后插入新元素
      */
     iterator insert_after(const_iterator pos, const value_type & value)
-    { return emplace_after(pos, value); }
+    {
+        return emplace_after(pos, value);
+    }
 
     /**
      * @brief 在某个元素后插入新元素
      */
     iterator insert_after(const_iterator pos, value_type && value)
-    { return emplace_after(pos, std::move(value)); }
+    {
+        return emplace_after(pos, std::move(value));
+    }
 
     /**
      * @brief 在某个元素后插入新元素
@@ -413,14 +470,18 @@ public:
      * @brief 在某个元素后插入新元素
      */
     iterator insert_after(const_iterator pos, std::initializer_list<value_type> ilist)
-    { return insert_after(pos, ilist.begin(), ilist.end()); }
+    {
+        return insert_after(pos, ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 在元素后原位构造元素
      */
     template <class... Arg>
     iterator emplace_after(const_iterator pos, Arg&&... args)
-    { return _emplace(pos, std::forward<Arg>(args)...); }
+    {
+        return _emplace(pos, std::forward<Arg>(args)...);
+    }
 
     /**
      * @brief 擦除元素后的元素
@@ -430,7 +491,8 @@ public:
         if (pos._node->_next == nullptr)
             return end();
         
-        return erase_after(pos, std::next(pos, 2)); }
+        return erase_after(pos, std::next(pos, 2));
+    }
 
     /**
      * @brief 擦除元素后的元素
@@ -447,32 +509,42 @@ public:
      * @brief 插入元素到容器起始
      */
     void push_front(const value_type & value)
-    { emplace_front(value); }
+    {
+        emplace_front(value);
+    }
 
     /**
      * @brief 插入元素到容器起始
      */
     void push_front(value_type && value)
-    { emplace_front(std::move(value)); }
+    {
+        emplace_front(std::move(value));
+    }
 
     /**
      * @brief 在容器头部原位构造元素
      */
     template <class... Arg>
     void emplace_front(Arg&&... args)
-    { _emplace(before_begin(), std::forward<Arg>(args)...); }
+    {
+        _emplace(before_begin(), std::forward<Arg>(args)...);
+    }
 
     /**
      * @brief 移除首元素
      */
     void pop_front()
-    { erase_after(before_begin()); }
+    {
+        erase_after(before_begin());
+    }
 
     /**
      * @brief 改变存储元素的个数
      */
     void resize(size_type count)
-    { resize(count, value_type()); }
+    {
+        resize(count, value_type());
+    }
 
     /**
      * @brief 改变存储元素的个数
@@ -522,13 +594,17 @@ public:
      * @brief 合并两个有序列表
      */
     void merge(forward_list & other)
-    { merge(other, std::less<value_type>()); }
+    {
+        merge(other, std::less<value_type>());
+    }
 
     /**
      * @brief 合并两个有序列表
      */
     void merge(forward_list && other)
-    { merge(other); }
+    {
+        merge(other);
+    }
 
     /**
      * @brief 合并两个有序列表
@@ -569,7 +645,9 @@ public:
      */
     template <class Compare>
     void merge(forward_list && other, const Compare & comp)
-    { merge(other, comp); }
+    {
+        merge(other, comp);
+    }
 
     /**
      * @brief 从另一forward_list移动元素
@@ -585,7 +663,9 @@ public:
      * @brief 从另一forward_list移动元素
      */
     void splice_after(const_iterator pos, forward_list && other)
-    { splice_after(pos, other); }
+    {
+        splice_after(pos, other);
+    }
 
     /**
      * @brief 从另一forward_list移动元素
@@ -607,7 +687,9 @@ public:
      * @brief 从另一forward_list移动元素
      */
     void splice_after(const_iterator pos, forward_list && other, const_iterator it)
-    { splice_after(pos, other, it); }
+    {
+        splice_after(pos, other, it);
+    }
 
     /**
      * @brief 从另一forward_list移动元素
@@ -626,7 +708,9 @@ public:
      * @brief 从另一forward_list移动元素
      */
     void splice_after(const_iterator pos, forward_list && other, const_iterator first, const_iterator last)
-    { _splice_after(pos, other, first, last); }
+    {
+        _splice_after(pos, other, first, last);
+    }
 
     /**
      * @brief 移除满足特定标准的元素
@@ -689,7 +773,9 @@ public:
      * @brief 删除连续的重复元素
      */
     void unique()
-    { unique(std::equal_to<value_type>()); }
+    {
+        unique(std::equal_to<value_type>());
+    }
 
     /**
      * @brief 删除连续的重复元素
@@ -719,7 +805,9 @@ public:
      * @brief 对元素进行排序
      */
     void sort()
-    { sort(std::less<value_type>()); }
+    {
+        sort(std::less<value_type>());
+    }
 
     /**
      * @brief 对元素进行排序
@@ -727,20 +815,26 @@ public:
      */
     template <class Compare>
     void sort(Compare comp)
-    { _sort(before_begin(), end(), comp, std::distance(begin(), end())); }
+    {
+        _sort(before_begin(), end(), comp, std::distance(begin(), end()));
+    }
 
 public:
     /**
      * @brief 申请一个节点的空间
      */
     node_pointer _get_node()
-    { return _node_allocator.allocate(1); }
+    {
+        return _node_allocator.allocate(1);
+    }
 
     /**
      * @brief 释放一个节点
      */
     void _put_node(node_pointer p)
-    { _node_allocator.deallocate(p, 1); }
+    {
+        _node_allocator.deallocate(p, 1);
+    }
 
     /**
      * @brief 创建一个节点
@@ -866,43 +960,57 @@ template <
     class T,
     class Alloc
 > bool operator==(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return std::equal(lhs.begin(), lhs.end(), rhs.begin()); }
+{
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
 
 template <
     class T,
     class Alloc
 > bool operator!=(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return !(lhs == rhs); }
+{
+    return !(lhs == rhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator<(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); }
+{
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
 
 template <
     class T,
     class Alloc
 > bool operator>(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return rhs < lhs; }
+{
+    return rhs < lhs;
+}
 
 template <
     class T,
     class Alloc
 > bool operator<=(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return !(rhs < lhs); }
+{
+    return !(rhs < lhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator>=(const forward_list<T, Alloc> & lhs, const forward_list<T, Alloc> & rhs)
-{ return !(lhs < rhs); }
+{
+    return !(lhs < rhs);
+}
 
 template <
     class T,
     class Alloc
 > void swap(forward_list<T, Alloc> & lhs, forward_list<T, Alloc> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 
