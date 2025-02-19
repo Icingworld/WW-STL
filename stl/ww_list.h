@@ -169,7 +169,7 @@ public:
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -182,7 +182,7 @@ public:
 
     self & operator--()
     {
-        --*(base *)this;
+        base::operator--();
         return *this;
     }
 

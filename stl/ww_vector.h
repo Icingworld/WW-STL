@@ -182,7 +182,7 @@ public:
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -195,7 +195,7 @@ public:
 
     self & operator--()
     {
-        --*(base *)this;
+        base::operator--();
         return *this;
     }
 
@@ -208,13 +208,13 @@ public:
 
     self & operator+=(difference_type n)
     {
-        *(base *)this += n;
+        base::operator+=(n);
         return *this;
     }
 
     self & operator-=(difference_type n)
     {
-        *(base *)this -= n;
+        base::operator-=(n);
         return *this;
     }
 
@@ -232,7 +232,7 @@ public:
 
     difference_type operator-(const base & other) const
     {
-        return *(base *)this - other;
+        return base::operator-(other);
     }
 
     reference operator[](difference_type n) const
