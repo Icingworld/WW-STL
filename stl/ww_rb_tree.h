@@ -102,16 +102,19 @@ public:
 
 public:
     reference operator*() const
-    { return _node->_data; }
+    {
+        return _node->_data;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
         // 如果存在右子节点,则返回右子节点的最小节点
         // 这种移动方式契合了重复元素的插入和搜索，找到重复元素的第一个后，右子节点的最小节点一定还是重复的
-        // ~~想想如果重复元素是往左子树插入，迭代器要怎么移动呢~~
         if (_node->_right != nullptr) {
             _node = node::minimum(_node->_right);
         } else {
@@ -164,10 +167,14 @@ public:
     }
 
     bool operator==(const self & other) const
-    { return _node == other._node; }
+    {
+        return _node == other._node;
+    }
 
     bool operator!=(const self & other) const
-    { return !(*this == other); }
+    {
+        return !(*this == other);
+    }
 };
 
 /**
@@ -198,10 +205,14 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
@@ -279,11 +290,15 @@ public:
 
     explicit rb_tree(const key_compare & comp, const allocator_type & alloc = allocator_type())
         : _head(nullptr), _size(0), _comp(comp), _get_key(), _node_allocator(alloc)
-    { _init_rb_tree(); }
+    {
+        _init_rb_tree();
+    }
 
     explicit rb_tree(const allocator_type & alloc)
         : _head(nullptr), _size(0), _comp(), _get_key(), _node_allocator(alloc)
-    { _init_rb_tree(); }
+    {
+        _init_rb_tree();
+    }
 
     template <class InputIt>
     rb_tree(InputIt first, InputIt last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type())
@@ -376,7 +391,9 @@ public:
      * @brief 返回关联的分配器
      */
     allocator_type get_allocator() const
-    { return _node_allocator; }
+    {
+        return _node_allocator;
+    }
 
     // 迭代器
 
@@ -384,73 +401,97 @@ public:
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return iterator(_leftmost()); }
+    {
+        return iterator(_leftmost());
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return const_iterator(_leftmost()); }
+    {
+        return const_iterator(_leftmost());
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+        return begin();
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return iterator(_head); }
+    {
+        return iterator(_head);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return const_iterator(_head); }
+    {
+        return const_iterator(_head);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+        return end();
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     reverse_iterator rbegin() noexcept
-    { return reverse_iterator(end()); }
+    {
+        return reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator rbegin() const noexcept
-    { return const_reverse_iterator(end()); }
+    {
+        return const_reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator crbegin() const noexcept
-    { return rbegin(); }
+    {
+        return rbegin();
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     reverse_iterator rend() noexcept
-    { return reverse_iterator(begin()); }
+    {
+        return reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator rend() const noexcept
-    { return const_reverse_iterator(begin()); }
+    {
+        return const_reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator crend() const noexcept
-    { return rend(); }
+    {
+        return rend();
+    }
 
     // 容量
 
@@ -458,19 +499,25 @@ public:
      * @brief 检查容器是否为空
      */
     bool empty() const noexcept
-    { return _size == 0; }
+    {
+        return _size == 0;
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const noexcept
-    { return _size; }
+    {
+        return _size;
+    }
 
     /**
      * @brief 返回可容纳的最大元素数
      */
     size_type max_size() const noexcept
-    { return std::numeric_limits<difference_type>::max(); }
+    {
+        return std::numeric_limits<difference_type>::max();
+    }
 
     // 修改器
 
@@ -1018,128 +1065,170 @@ public:
      * @brief 寻找带有特定键的元素
      */
     iterator find(const key_type & key)
-    { return iterator(_find(key)); }
+    {
+        return iterator(_find(key));
+    }
 
     /**
      * @brief 寻找带有特定键的元素
      */
     const_iterator find(const key_type & key) const
-    { return const_iterator(_find(key)); }
+    {
+        return const_iterator(_find(key));
+    }
 
     /**
      * @brief 返回匹配特定键的元素范围
      */
     std::pair<iterator, iterator> equal_range(const key_type & key)
-    { return std::make_pair<iterator, iterator>(lower_bound(key), upper_bound(key)); }
+    {
+        return std::make_pair<iterator, iterator>(lower_bound(key), upper_bound(key));
+    }
 
     /**
      * @brief 返回匹配特定键的元素范围
      */
     std::pair<const_iterator, const_iterator> equal_range(const key_type & key) const
-    { return std::make_pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)); }
+    {
+        return std::make_pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
+    }
 
     /**
      * @brief 返回指向首个不小于给定键的元素的迭代器
      */
     iterator lower_bound(const key_type & key)
-    { return iterator(_find_lower(key)); }    // 由重复插入和迭代器的移动可知，通过红黑树性质找到的第一个节点一定是迭代器范围中的第一个；如果没找到返回end()
+    {
+        return iterator(_find_lower(key));
+    }    // 由重复插入和迭代器的移动可知，通过红黑树性质找到的第一个节点一定是迭代器范围中的第一个；如果没找到返回end()
 
     /**
      * @brief 返回指向首个不小于给定键的元素的迭代器
      */
     const_iterator lower_bound(const key_type & key) const
-    { return const_iterator(_find_lower(key)); }
+    {
+        return const_iterator(_find_lower(key));
+    }
 
     /**
      * @brief 返回指向首个大于给定键的元素的迭代器
      */
     iterator upper_bound(const key_type & key)
-    { return iterator(_find_upper(key)); }
+    {
+        return iterator(_find_upper(key));
+    }
 
     /**
      * @brief 返回指向首个大于给定键的元素的迭代器
      */
     const_iterator upper_bound(const key_type & key) const
-    { return const_iterator(_find_upper(key)); }
+    {
+        return const_iterator(_find_upper(key));
+    }
 
 public:
     /**
      * @brief 获取根节点
      */
     node_pointer & _root() const
-    { return _head->_parent; }
+    {
+        return _head->_parent;
+    }
 
     /**
      * @brief 获取最小的节点
      */
     node_pointer & _leftmost() const
-    { return _head->_left; }
+    {
+        return _head->_left;
+    }
 
     /**
      * @brief 获取最大的节点
      */
     node_pointer & _rightmost() const
-    { return _head->_right; }
+    {
+        return _head->_right;
+    }
 
     /**
      * @brief 获取节点x的父节点
      */
     static node_pointer & _parent(const node_pointer x)
-    { return x->_parent; }
+    {
+        return x->_parent;
+    }
 
     /**
      * @brief 获取节点x的左子节点
      */
     static node_pointer & _left(const node_pointer x)
-    { return x->_left; }
+    {
+        return x->_left;
+    }
 
     /**
      * @brief 获取节点x的右子节点
      */
     static node_pointer & _right(const node_pointer x)
-    { return x->_right; }
+    {
+        return x->_right;
+    }
 
     /**
      * @brief 获取节点x的值
      */
     static reference _data(const node_pointer x)    
-    { return x->_data; }
+    {
+        return x->_data;
+    }
 
     /**
      * @brief 获取节点x的键
      */
     static const key_type & _key(const node_pointer x)
-    { return key_extractor()(_data(x)); }
+    {
+        return key_extractor()(_data(x));
+    }
 
     /**
      * @brief 获取节点x的颜色
      */
     static color_type & _color(const node_pointer x)
-    { return x->_color; }
+    {
+        return x->_color;
+    }
 
     /**
      * @brief 获取节点x子节点中的最小节点
      */
     static node_pointer _minimum(node_pointer x)
-    { return node::minimum(x); }
+    {
+        return node::minimum(x);
+    }
 
     /**
      * @brief 获取节点x子节点中的最大节点
      */
     static node_pointer _maximum(node_pointer x)
-    { return node::maximum(x); }
+    {
+        return node::maximum(x);
+    }
 
     /**
      * @brief 申请一个节点的空间
      */
     node_pointer _get_node()
-    { return _node_allocator.allocate(1); }
+    {
+        return _node_allocator.allocate(1);
+    }
 
     /**
      * @brief 释放一个节点
      */
     void _put_node(node_pointer p)
-    { _node_allocator.deallocate(p, 1); }
+    {
+        _node_allocator.deallocate(p, 1);
+    }
 
     /**
      * @brief 创建一个节点
@@ -1456,7 +1545,9 @@ template <
     class Allocator
 > void swap(rb_tree<Key, T, Value, ExtractKey, Compare, Allocator> & lhs,
             rb_tree<Key, T, Value, ExtractKey, Compare, Allocator> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 

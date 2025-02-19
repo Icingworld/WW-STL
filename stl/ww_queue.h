@@ -84,25 +84,33 @@ public:
      * @brief 访问第一个元素
      */
     reference front()
-    { return c.front(); }
+    {
+        return c.front();
+    }
 
     /**
      * @brief 访问第一个元素
      */
     const_reference front() const
-    { return c.front(); }
+    {
+        return c.front();
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     reference back()
-    { return c.back(); }
+    {
+        return c.back();
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     const_reference back() const
-    { return c.back(); }
+    {
+        return c.back();
+    }
 
     // 容量
 
@@ -110,13 +118,17 @@ public:
      * @brief 检查容器适配器是否为空
      */
     bool empty() const
-    { return c.empty(); }
+    {
+        return c.empty();
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const
-    { return c.size(); }
+    {
+        return c.size();
+    }
 
     // 修改器
 
@@ -124,32 +136,42 @@ public:
      * @brief 向队列尾部插入元素
      */
     void push(const value_type & x)
-    { c.push_back(x); }
+    {
+        c.push_back(x);
+    }
 
     /**
      * @brief 向队列尾部插入元素
      */
     void push(value_type && x)
-    { c.push_back(std::move(x)); }
+    {
+        c.push_back(std::move(x));
+    }
 
     /**
      * @brief 在尾部原位构造元素
      */
     template <class... Args>
     void emplace(Args&&... args)
-    { c.emplace_back(std::forward<Args>(args)...); }
+    {
+        c.emplace_back(std::forward<Args>(args)...);
+    }
 
     /**
      * @brief 移除首个元素
      */
     void pop()
-    { c.pop_front(); }
+    {
+        c.pop_front();
+    }
 
     /**
      * @brief 交换内容
      */
     void swap(queue & other) noexcept
-    { c.swap(other.c); }
+    {
+        c.swap(other.c);
+    }
 };
 
 // 非成员函数
@@ -158,43 +180,57 @@ template <
     class T,
     class Container
 > bool operator==(const queue<T, Container> & x, const queue<T, Container> & y)
-{ return x.c == y.c; }
+{
+    return x.c == y.c;
+}
 
 template <
     class T,
     class Container
 > bool operator!=(const queue<T, Container> & x, const queue<T, Container> & y)
-{ return !(x == y); }
+{
+    return !(x == y);
+}
 
 template <
     class T,
     class Container
 > bool operator<(const queue<T, Container> & x, const queue<T, Container> & y)
-{ return x.c < y.c; }
+{
+    return x.c < y.c;
+}
 
 template <
     class T,
     class Container
 > bool operator>(const queue<T, Container> & x, const queue<T, Container> & y)
-{ return y < x; }
+{
+    return y < x;
+}
 
 template <
     class T,
     class Container
 > bool operator<=(const queue<T, Container> & x, const queue<T, Container> & y)
-{ return !(y < x); }
+{
+    return !(y < x);
+}
 
 template <
     class T,
     class Container
 > bool operator>=(const queue<T, Container> & x, const queue<T, Container> & y)
-{ return !(x < y); }
+{
+    return !(x < y);
+}
 
 template <
     class T,
     class Container
 > void swap(queue<T, Container> & x, queue<T, Container> & y)
-{ x.swap(y); }
+{
+    x.swap(y);
+}
 
 /**
  * @brief 优先队列
@@ -254,7 +290,9 @@ public:
     template <class InputIt>
     priority_queue(InputIt first, InputIt last, const Compare & compare = Compare())
         : c(first, last), comp(compare)
-    { wwstl::make_heap(c.begin(), c.end(), comp); }
+    {
+        wwstl::make_heap(c.begin(), c.end(), comp);
+    }
 
     template <class InputIt>
     priority_queue(InputIt first, InputIt last, const Compare & compare, const Container & cont)
@@ -293,14 +331,18 @@ public:
         typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
     > priority_queue(const Compare & compare, const Container & cont, const Alloc & alloc)
         : c(cont, alloc), comp(compare)
-    { wwstl::make_heap(c.begin(), c.end(), comp); }
+    {
+        wwstl::make_heap(c.begin(), c.end(), comp);
+    }
 
     template <
         class Alloc,
         typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
     > priority_queue(const Compare & compare, Container && cont, const Alloc & alloc)
         : c(std::move(cont), alloc), comp(compare)
-    { wwstl::make_heap(c.begin(), c.end(), comp); }
+    {
+        wwstl::make_heap(c.begin(), c.end(), comp);
+    }
 
     template <
         class Alloc,
@@ -393,7 +435,9 @@ public:
      * @brief 访问队首元素
      */
     const_reference top() const
-    { return c.front(); }
+    {
+        return c.front();
+    }
 
     // 容量
 
@@ -401,13 +445,17 @@ public:
      * @brief 检查容器适配器是否为空
      */
     bool empty() const
-    { return c.empty(); }
+    {
+        return c.empty();
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const
-    { return c.size(); }
+    {
+        return c.size();
+    }
 
     // 修改器
 
@@ -463,7 +511,9 @@ template <
     class Container,
     class Compare
 > void swap(priority_queue<T, Container, Compare> & lhs, priority_queue<T, Container, Compare> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 

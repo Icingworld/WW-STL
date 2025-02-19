@@ -69,10 +69,14 @@ public:
 
 public:
     reference operator*() const
-    { return _node->_data; }
+    {
+        return _node->_data;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
@@ -101,10 +105,14 @@ public:
     }
 
     bool operator==(const self & other) const
-    { return _node == other._node; }
+    {
+        return _node == other._node;
+    }
 
     bool operator!=(const self & other) const
-    { return !(*this == other); }
+    {
+        return !(*this == other);
+    }
 };
 
 /**
@@ -139,10 +147,14 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
@@ -206,11 +218,14 @@ public:
 public:
     list()
         : list(Allocator())
-    {}
+    {
+    }
 
     explicit list(const Allocator & alloc)
         : _finish(nullptr), _size(0), _node_allocator(alloc)
-    { _init_list(); }
+    {
+        _init_list();
+    }
 
     explicit list(size_type count, const Allocator & alloc = Allocator())
         : _finish(nullptr), _size(0), _node_allocator(alloc)
@@ -338,13 +353,17 @@ public:
      * @brief 将值赋给容器
      */
     void assign(std::initializer_list<T> ilist)
-    { assign(ilist.begin(), ilist.end()); }
+    {
+        assign(ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 返回关联的分配器
      */
     allocator_type get_allocator() const noexcept
-    { return _node_allocator; }
+    {
+        return _node_allocator;
+    }
 
     // 元素访问
 
@@ -352,25 +371,33 @@ public:
      * @brief 访问第一个元素
      */
     reference front()
-    { return *begin(); }
+    {
+        return *begin();
+    }
 
     /**
      * @brief 访问第一个元素
      */
     const_reference front() const
-    { return *begin(); }
+    {
+        return *begin();
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     reference back()
-    { return *(--end()); }
+    {
+        return *(--end());
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     const_reference back() const
-    { return *(--end()); }
+    {
+        return *(--end());
+    }
 
     // 迭代器
 
@@ -378,73 +405,97 @@ public:
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return iterator(_finish->_next); }
+    {
+        return iterator(_finish->_next);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return const_iterator(_finish->_next); }
+    {
+        return const_iterator(_finish->_next);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return const_iterator(_finish->_next); }
+    {
+        return const_iterator(_finish->_next);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return iterator(_finish); }
+    {
+        return iterator(_finish);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return const_iterator(_finish); }
+    {
+        return const_iterator(_finish);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return const_iterator(_finish); }
+    {
+        return const_iterator(_finish);
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     reverse_iterator rbegin() noexcept
-    { return reverse_iterator(end()); }
+    {
+        return reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator rbegin() const noexcept
-    { return const_reverse_iterator(end()); }
+    {
+        return const_reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator crbegin() const noexcept
-    { return rbegin(); }
+    {
+        return rbegin();
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     reverse_iterator rend() noexcept
-    { return reverse_iterator(begin()); }
+    {
+        return reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator rend() const noexcept
-    { return const_reverse_iterator(begin()); }
+    {
+        return const_reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator crend() const noexcept
-    { return rend(); }
+    {
+        return rend();
+    }
 
     // 容量
 
@@ -452,19 +503,25 @@ public:
      * @brief 检查容器是否为空
      */
     bool empty() const noexcept
-    { return begin() == end(); }
+    {
+        return begin() == end();
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const noexcept
-    { return _size; }
+    {
+        return _size;
+    }
 
     /**
      * @brief 返回可容纳的最大元素数
      */
     size_type max_size() const noexcept
-    { return std::numeric_limits<difference_type>::max(); }
+    {
+        return std::numeric_limits<difference_type>::max();
+    }
 
     // 修改器
 
@@ -488,13 +545,17 @@ public:
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, const value_type & value)
-    { return emplace(pos, value); }
+    {
+        return emplace(pos, value);
+    }
 
     /**
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, value_type && value)
-    { return emplace(pos, std::move(value)); }
+    {
+        return emplace(pos, std::move(value));
+    }
 
     /**
      * @brief 插入元素
@@ -554,7 +615,9 @@ public:
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, std::initializer_list<T> ilist)
-    { return insert(pos, ilist.begin(), ilist.end()); }
+    {
+        return insert(pos, ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 原位构造元素
@@ -615,57 +678,75 @@ public:
      * @brief 将元素添加到容器末尾
      */
     void push_back(const value_type & value)
-    { emplace_back(value); }
+    {
+        emplace_back(value);
+    }
 
     /**
      * @brief 将元素添加到容器末尾
      */
     void push_back(value_type && value)
-    { push_back(value); }
+    {
+        push_back(value);
+    }
 
     /**
      * @brief 在容器末尾原位构造元素
      */
     template <class... Arg>
     void emplace_back(Arg&&... args)
-    { emplace(end(), std::forward<Arg>(args)...); }
+    {
+        emplace(end(), std::forward<Arg>(args)...);
+    }
 
     /**
      * @brief 移除末元素
      */
     void pop_back()
-    { erase(--end()); }
+    {
+        erase(--end());
+    }
 
     /**
      * @brief 插入元素到容器起始
      */
     void push_front(const value_type & value)
-    { emplace_front(value); }
+    {
+        emplace_front(value);
+    }
 
     /**
      * @brief 插入元素到容器起始
      */
     void push_front(value_type && value)
-    { push_front(value); }
+    {
+        push_front(value);
+    }
 
     /**
      * @brief 在容器头部原位构造元素
      */
     template <class... Arg>
     void emplace_front(Arg&&... args)
-    { emplace(begin(), std::forward<Arg>(args)...); }
+    {
+        emplace(begin(), std::forward<Arg>(args)...);
+    }
 
     /**
      * @brief 移除首元素
      */
     void pop_front()
-    { erase(begin()); }
+    {
+        erase(begin());
+    }
 
     /**
      * @brief 改变存储元素的个数
      */
     void resize(size_type count)
-    { resize(count, value_type()); }
+    {
+        resize(count, value_type());
+    }
 
     /**
      * @brief 改变存储元素的个数
@@ -706,20 +787,26 @@ public:
      * @brief 合并两个有序列表
      */
     void merge(list & other)
-    { merge(other, std::less<value_type>()); }
+    {
+        merge(other, std::less<value_type>());
+    }
 
     /**
      * @brief 合并两个有序列表
      */
     void merge(list && other)
-    { merge(std::move(other), std::less<value_type>()); }
+    {
+        merge(std::move(other), std::less<value_type>());
+    }
 
     /**
      * @brief 合并两个有序列表
      */
     template <class Compare>
     void merge(list & other, Compare comp)
-    { merge(std::move(other), comp); }
+    {
+        merge(std::move(other), comp);
+    }
 
     /**
      * @brief 合并两个有序列表
@@ -763,7 +850,9 @@ public:
      * @brief 从另一个list中移动元素
      */
     void splice(const_iterator pos, list && other)
-    { splice(pos, other); }
+    {
+        splice(pos, other);
+    }
 
     /**
      * @brief 从另一个list中移动元素
@@ -785,7 +874,9 @@ public:
      * @brief 从另一个list中移动元素
      */
     void splice(const_iterator pos, list && other, const_iterator it)
-    { splice(pos, other, it); }
+    {
+        splice(pos, other, it);
+    }
 
     /**
      * @brief 从另一个list中移动元素
@@ -816,7 +907,9 @@ public:
      * @brief 从另一个list中移动元素
      */
     void splice(const_iterator pos, list && other, const_iterator first, const_iterator last)
-    { splice(pos, other, first, last); }
+    {
+        splice(pos, other, first, last);
+    }
 
     /**
      * @brief 移除满足特定标准的元素
@@ -868,7 +961,9 @@ public:
      * @brief 删除连续的重复元素
      */
     void unique()
-    { unique(std::equal_to<value_type>()); }
+    {
+        unique(std::equal_to<value_type>());
+    }
 
     /**
      * @brief 删除连续的重复元素
@@ -903,7 +998,9 @@ public:
      * @brief 对元素进行排序
      */
     void sort()
-    { sort(std::less<value_type>()); }
+    {
+        sort(std::less<value_type>());
+    }
 
     /**
      * @brief 对元素进行排序
@@ -911,20 +1008,26 @@ public:
      */
     template <class Compare>
     void sort(Compare comp)
-    { _sort(begin(), end(), comp, size()); }
+    {
+        _sort(begin(), end(), comp, size());
+    }
 
 public:
     /**
      * @brief 申请一个节点的空间
      */
     node_pointer _get_node()
-    { return _node_allocator.allocate(1); }
+    {
+        return _node_allocator.allocate(1);
+    }
 
     /**
      * @brief 释放一个节点
      */
     void _put_node(node_pointer p)
-    { _node_allocator.deallocate(p, 1); }
+    {
+        _node_allocator.deallocate(p, 1);
+    }
 
     /**
      * @brief 创建一个节点
@@ -1022,7 +1125,9 @@ public:
     }
 
     [[noreturn]] void _throw_out_of_range() const
-    { throw std::out_of_range("invalid list<T> subscript"); }
+    {
+        throw std::out_of_range("invalid list<T> subscript");
+    }
 };
 
 // 非成员函数
@@ -1031,43 +1136,57 @@ template <
     class T,
     class Alloc
 > bool operator==(const list<T, Alloc> & lhs, const list<T, Alloc> & rhs)
-{ return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()); }
+{
+    return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
 
 template <
     class T,
     class Alloc
 > bool operator!=(const list<T, Alloc> & lhs, const list<T, Alloc> & rhs)
-{ return !(lhs == rhs); }
+{
+    return !(lhs == rhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator<(const list<T, Alloc> & lhs, const list<T, Alloc> & rhs)
-{ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); }
+{
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
 
 template <
     class T,
     class Alloc
 > bool operator>(const list<T, Alloc> & lhs, const list<T, Alloc> & rhs)
-{ return rhs < lhs; }
+{
+    return rhs < lhs;
+}
 
 template <
     class T,
     class Alloc
 > bool operator<=(const list<T, Alloc> & lhs, const list<T, Alloc> & rhs)
-{ return !(rhs < lhs); }
+{
+    return !(rhs < lhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator>=(const list<T, Alloc> & lhs, const list<T, Alloc> & rhs)
-{ return !(lhs < rhs); }
+{
+    return !(lhs < rhs);
+}
 
 template <
     class T,
     class Alloc
 > void swap(list<T, Alloc> & lhs, list<T, Alloc> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 

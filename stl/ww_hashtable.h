@@ -85,10 +85,14 @@ public:
 
 public:
     reference operator*() const
-    { return _node->_data; }
+    {
+        return _node->_data;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
@@ -117,10 +121,14 @@ public:
      * @details 只有当两个迭代器指向同一个节点时才相等，因为哈希表中允许有相同键值对的节点，所以连next也需要相等
      */
     bool operator==(const self & rhs) const
-    { return _node == rhs._node; }
+    {
+        return _node == rhs._node;
+    }
 
     bool operator!=(const self & rhs) const
-    { return _node != rhs._node; }
+    {
+        return _node != rhs._node;
+    }
 };
 
 /**
@@ -157,10 +165,14 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
@@ -204,10 +216,14 @@ public:
 
 public:
     reference operator*() const
-    { return _node->_data; }
+    {
+        return _node->_data;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+        return &(operator*());
+    }
 
     self & operator++()
     {
@@ -223,10 +239,14 @@ public:
     }
 
     bool operator==(const self & rhs) const
-    { return _node == rhs._node; }
+    {
+        return _node == rhs._node;
+    }
 
     bool operator!=(const self & rhs) const
-    { return _node != rhs._node; }
+    {
+        return _node != rhs._node;
+    }
 };
 
 /**
@@ -255,10 +275,14 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+        return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+        return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
@@ -378,7 +402,9 @@ public:
     }
 
     ~hashtable()
-    { clear(); }
+    {
+        clear();
+    }
 
 public:
     /**
@@ -439,7 +465,9 @@ public:
      * @brief 返回关联的分配器
      */
     allocator_type get_allocator() const
-    { return _node_allocator; }
+    {
+        return _node_allocator;
+    }
 
     // 迭代器
 
@@ -447,37 +475,49 @@ public:
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return iterator(_begin, this); }
+    {
+        return iterator(_begin, this);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return const_iterator(_begin, this); }
+    {
+        return const_iterator(_begin, this);
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+        return begin();
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return iterator(nullptr, this); }
+    {
+        return iterator(nullptr, this);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return const_iterator(nullptr, this); }
+    {
+        return const_iterator(nullptr, this);
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+        return end();
+    }
 
     // 容量
 
@@ -485,19 +525,25 @@ public:
      * @brief 检查容器是否为空
      */
     bool empty() const noexcept
-    { return _num_elements == 0; }
+    {
+        return _num_elements == 0;
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const noexcept
-    { return _num_elements; }
+    {
+        return _num_elements;
+    }
 
     /**
      * @brief 返回可容纳的最大元素数
      */
     size_type max_size() const noexcept
-    { return std::numeric_limits<difference_type>::max(); }
+    {
+        return std::numeric_limits<difference_type>::max();
+    }
 
     // 修改器
 
@@ -873,13 +919,17 @@ public:
      * @brief 查找特定键的元素
      */
     iterator find(const key_type & key)
-    { return iterator(_find(key), this); }
+    {
+        return iterator(_find(key), this);
+    }
 
     /**
      * @brief 查找特定键的元素
      */
     const_iterator find(const key_type & key) const
-    { return const_iterator(_find(key), this); }
+    {
+        return const_iterator(_find(key), this);
+    }
 
     /**
      * @brief 返回匹配特定键的元素范围
@@ -927,49 +977,65 @@ public:
      * @brief 返回指向指定的桶的开始的迭代器
      */
     local_iterator begin(size_type n)
-    { return local_iterator(_buckets[n]); }
+    {
+        return local_iterator(_buckets[n]);
+    }
 
     /**
      * @brief 返回指向指定的桶的开始的迭代器
      */
     const_local_iterator begin(size_type n) const
-    { return const_local_iterator(_buckets[n]); }
+    {
+        return const_local_iterator(_buckets[n]);
+    }
 
     /**
      * @brief 返回指向指定的桶的开始的迭代器
      */
     const_local_iterator cbegin(size_type n) const
-    { return const_local_iterator(_buckets[n]); }
+    {
+        return const_local_iterator(_buckets[n]);
+    }
 
     /**
      * @brief 返回指向指定的桶的末尾的迭代器
      */
     local_iterator end(size_type n)
-    { return local_iterator(nullptr); }
+    {
+        return local_iterator(nullptr);
+    }
 
     /**
      * @brief 返回指向指定的桶的末尾的迭代器
      */
     const_local_iterator end(size_type n) const
-    { return const_local_iterator(nullptr); }
+    {
+        return const_local_iterator(nullptr);
+    }
 
     /**
      * @brief 返回指向指定的桶的末尾的迭代器
      */
     const_local_iterator cend(size_type n) const
-    { return const_local_iterator(nullptr); }
+    {
+        return const_local_iterator(nullptr);
+    }
 
     /**
      * @brief 返回桶数
      */
     size_type bucket_count() const
-    { return _buckets.size(); }
+    {
+        return _buckets.size();
+    }
 
     /**
      * @brief 返回桶的最大数量
      */
     size_type max_bucket_count() const
-    { return _buckets.max_size(); }
+    {
+        return _buckets.max_size();
+    }
 
     /**
      * @brief 返回特定的桶中的元素数量
@@ -987,7 +1053,9 @@ public:
      * @brief 返回带有特定键的桶
      */
     size_type bucket(const key_type & key) const
-    { return _hash_key(key); }
+    {
+        return _hash_key(key);
+    }
 
     // 散列策略
 
@@ -995,19 +1063,24 @@ public:
      * @brief 返回负载因子
      */
     float load_factor() const
-    { return static_cast<float>(size()) / static_cast<float>(bucket_count()); }
+    {
+        return static_cast<float>(size()) / static_cast<float>(bucket_count());
+    }
 
     /**
      * @brief 返回最大负载因子
      */
     float max_load_factor() const
-    { return _max_load_factor; }
+    {
+        return _max_load_factor;
+    }
 
     /**
      * @brief 设置最大负载因子
      */
     void max_load_factor(float ml)
-    { _max_load_factor = ml; }
+    { _max_load_factor = ml;
+    }
 
     /**
      * @brief 预留至少指定数量的桶并重新生成散列表
@@ -1033,7 +1106,8 @@ public:
      * @brief 为至少指定数量的元素预留空间并重新生成散列表
      */
     void reserve(size_type count)
-    { rehash(std::ceil(count / max_load_factor())); }
+    { rehash(std::ceil(count / max_load_factor()));
+    }
 
     // 观察器
 
@@ -1041,13 +1115,17 @@ public:
      * @brief 返回用于对键求散列的函数
      */
     hasher hash_function() const
-    { return _hash; }
+    {
+        return _hash;
+    }
 
     /**
      * @brief 返回用于比较键的相等性的函数
      */
     key_equal key_eq() const
-    { return _equals; }
+    {
+        return _equals;
+    }
 
 public:
     /**
@@ -1056,14 +1134,18 @@ public:
      * @param n 桶的数量
      */
     size_type _hash_key(const key_type & key, size_type n) const
-    { return _hash(key) % n; }
+    {
+        return _hash(key) % n;
+    }
 
     /**
      * @brief 计算key所在的桶
      * @param key 键
      */
     size_type _hash_key(const key_type & key) const
-    { return _hash_key(key, _buckets.size()); }
+    {
+        return _hash_key(key, _buckets.size());
+    }
 
     node_pointer _get_node()
     {
@@ -1072,7 +1154,8 @@ public:
     }
 
     void _put_node(node_pointer p)
-    { _node_allocator.deallocate(p, 1); }
+    { _node_allocator.deallocate(p, 1);
+    }
 
     template <class... Args>
     node_pointer _create_node(Args&&... args)
@@ -1139,7 +1222,9 @@ template <
     class Allocator
 > void swap(hashtable<Key, T, Value, Hash, KeyEqual, ExtractKey, Allocator> & lhs,
             hashtable<Key, T, Value, Hash, KeyEqual, ExtractKey, Allocator> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 

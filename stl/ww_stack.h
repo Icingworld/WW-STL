@@ -81,13 +81,17 @@ public:
      * @brief 访问栈顶元素
      */
     reference top()
-    { return c.back(); }
+    {
+        return c.back();
+    }
 
     /**
      * @brief 访问栈顶元素
      */
     const_reference top() const
-    { return c.back(); }
+    {
+        return c.back();
+    }
 
     // 容量
 
@@ -95,13 +99,17 @@ public:
      * @brief 检查容器适配器是否为空
      */
     bool empty() const
-    { return c.empty(); }
+    {
+        return c.empty();
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const
-    { return c.size(); }
+    {
+        return c.size();
+    }
 
     // 修改器
 
@@ -109,32 +117,42 @@ public:
      * @brief 向栈顶插入元素
      */
     void push(const value_type& x)
-    { c.push_back(x); }
+    {
+        c.push_back(x);
+    }
 
     /**
      * @brief 向栈顶插入元素
      */
     void push(value_type&& x)
-    { c.push_back(std::move(x)); }
+    {
+        c.push_back(std::move(x));
+    }
 
     /**
      * @brief 在顶部原位构造元素
      */
     template <class... Args>
     void emplace(Args&&... args)
-    { c.emplace_back(std::forward<Args>(args)...); }
+    {
+        c.emplace_back(std::forward<Args>(args)...);
+    }
 
     /**
      * @brief 移除栈顶元素
      */
     void pop()
-    { c.pop_back(); }
+    {
+        c.pop_back();
+    }
 
     /**
      * @brief 交换内容
      */
     void swap(stack& other)
-    { c.swap(other.c); }
+    {
+        c.swap(other.c);
+    }
 };
 
 // 非成员函数
@@ -143,43 +161,57 @@ template <
     class T,
     class Container
 > bool operator==(const stack<T, Container> & x, const stack<T, Container> & y)
-{ return x.c == y.c; }
+{
+    return x.c == y.c;
+}
 
 template <
     class T,
     class Container
 > bool operator!=(const stack<T, Container> & x, const stack<T, Container> & y)
-{ return !(x == y); }
+{
+    return !(x == y);
+}
 
 template <
     class T,
     class Container
 > bool operator<(const stack<T, Container> & x, const stack<T, Container> & y)
-{ return x.c < y.c; }
+{
+    return x.c < y.c;
+}
 
 template <
     class T,
     class Container
 > bool operator>(const stack<T, Container> & x, const stack<T, Container> & y)
-{ return y < x; }
+{
+    return y < x;
+}
 
 template <
     class T,
     class Container
 > bool operator<=(const stack<T, Container> & x, const stack<T, Container> & y)
-{ return !(y < x); }
+{
+    return !(y < x);
+}
 
 template <
     class T,
     class Container
 > bool operator>=(const stack<T, Container> & x, const stack<T, Container> & y)
-{ return !(x < y); }
+{
+    return !(x < y);
+}
 
 template <
     class T,
     class Container
 > void swap(stack<T, Container> & x, stack<T, Container> & y)
-{ x.swap(y); }
+{
+    x.swap(y);
+}
 
 } // namespace wwstl
 

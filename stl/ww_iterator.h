@@ -204,7 +204,8 @@ public:
     }
 
     self operator-(difference_type n) const
-    { return self(_current + n);
+    {
+        return self(_current + n);
     }
 
     self& operator-=(difference_type n)
