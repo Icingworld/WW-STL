@@ -44,11 +44,12 @@ public:
     {
     }
 
-    template <class Alloc>
-    explicit queue(const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > explicit queue(const Alloc & alloc)
         : c(alloc)
-    {   // TODO
-        // 这里需要底层容器知分配，才能参与重载决议
+    {
     }
 
     template <class Alloc>
@@ -170,7 +171,7 @@ public:
      */
     void swap(queue & other) noexcept
     {
-        c.swap(other.c);
+        std::swap(c, other.c);
     }
 };
 
@@ -268,43 +269,56 @@ public:
     }
 
     priority_queue(const Compare & compare, const Container & cont)
-        : c(cont), comp(compare)
+        : c(cont)
+        , comp(compare)
     {
     }
 
     priority_queue(const Compare & compare, Container && cont)
-        : c(std::move(cont)), comp(compare)
+        : c(std::move(cont))
+        , comp(compare)
     {
     }
 
     priority_queue(const priority_queue & other)
-        : c(other.c), comp(other.comp)
+        : c(other.c)
+        , comp(other.comp)
     {
     }
 
     priority_queue(priority_queue && other)
-        : c(std::move(other.c)), comp(std::move(other.comp))
+        : c(std::move(other.c))
+        , comp(std::move(other.comp))
     {
     }
 
-    template <class InputIt>
-    priority_queue(InputIt first, InputIt last, const Compare & compare = Compare())
-        : c(first, last), comp(compare)
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > priority_queue(InputIt first, InputIt last, const Compare & compare = Compare())
+        : c(first, last)
+        , comp(compare)
     {
         wwstl::make_heap(c.begin(), c.end(), comp);
     }
 
-    template <class InputIt>
-    priority_queue(InputIt first, InputIt last, const Compare & compare, const Container & cont)
-        : c(cont), comp(compare)
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > priority_queue(InputIt first, InputIt last, const Compare & compare, const Container & cont)
+        : c(cont)
+        , comp(compare)
     {
         c.insert(c.end(), first, last);
         wwstl::make_heap(c.begin(), c.end(), comp);
     }
 
-    template <class InputIt>
-    priority_queue(InputIt first, InputIt last, const Compare & compare, Container && cont)
-        : c(std::move(cont)), comp(compare)
+    template <
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > priority_queue(InputIt first, InputIt last, const Compare & compare, Container && cont)
+        : c(std::move(cont))
+        , comp(compare)
     {
         c.insert(c.end(), first, last);
         wwstl::make_heap(c.begin(), c.end(), comp);
@@ -312,60 +326,67 @@ public:
 
     template <
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > explicit priority_queue(const Alloc & alloc)
-        : c(alloc), comp(Compare())
+        : c(alloc)
+        , comp(Compare())
     {
     }
 
     template <
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > explicit priority_queue(const Compare & compare, const Alloc & alloc)
-        : c(alloc), comp(compare)
+        : c(alloc)
+        , comp(compare)
     {
     }
 
     template <
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(const Compare & compare, const Container & cont, const Alloc & alloc)
-        : c(cont, alloc), comp(compare)
+        : c(cont, alloc)
+        , comp(compare)
     {
         wwstl::make_heap(c.begin(), c.end(), comp);
     }
 
     template <
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(const Compare & compare, Container && cont, const Alloc & alloc)
-        : c(std::move(cont), alloc), comp(compare)
+        : c(std::move(cont), alloc)
+        , comp(compare)
     {
         wwstl::make_heap(c.begin(), c.end(), comp);
     }
 
     template <
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(const priority_queue & other, const Alloc & alloc)
-        : c(other.c, alloc), comp(other.comp)
+        : c(other.c, alloc)
+        , comp(other.comp)
     {
     }
 
     template <
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(priority_queue && other, const Alloc & alloc)
-        : c(std::move(other.c), alloc), comp(other.comp)
+        : c(std::move(other.c), alloc)
+        , comp(other.comp)
     {
     }
 
     template <
         class InputIt,
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(InputIt first, InputIt last, const Alloc & alloc)
-        : c(alloc), comp(Compare())
+        : c(alloc)
+        , comp(Compare())
     {
         c.insert(c.end(), first, last);
         wwstl::make_heap(c.begin(), c.end(), comp);
@@ -374,9 +395,10 @@ public:
     template <
         class InputIt,
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(InputIt first, InputIt last, const Compare & compare, const Alloc & alloc)
-        : c(alloc), comp(compare)
+        : c(alloc)
+        , comp(compare)
     {
         c.insert(c.end(), first, last);
         wwstl::make_heap(c.begin(), c.end(), comp);
@@ -385,9 +407,10 @@ public:
     template <
         class InputIt,
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(InputIt first, InputIt last, const Compare & compare, const Container & cont, const Alloc & alloc)
-        : c(cont, alloc), comp(compare)
+        : c(cont, alloc)
+        , comp(compare)
     {
         c.insert(c.end(), first, last);
         wwstl::make_heap(c.begin(), c.end(), comp);
@@ -396,9 +419,10 @@ public:
     template <
         class InputIt,
         class Alloc,
-        typename = std::enable_if_t<std::uses_allocator<container_type, Alloc>::value>
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > priority_queue(InputIt first, InputIt last, const Compare & compare, Container && cont, const Alloc & alloc)
-        : c(std::move(cont), alloc), comp(compare)
+        : c(std::move(cont), alloc)
+        , comp(compare)
     {
         c.insert(c.end(), first, last);
         wwstl::make_heap(c.begin(), c.end(), comp);
