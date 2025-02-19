@@ -37,12 +37,14 @@ public:
 
 public:
     _hashtable_node()
-        : _data(), _next(nullptr)
+        : _data()
+        , _next(nullptr)
     { // 构造空节点
     }
 
     explicit _hashtable_node(const value_type & data)
-        : _data(data), _next(nullptr)
+        : _data(data)
+        , _next(nullptr)
     { // 以值构造一个节点
     }
 };
@@ -67,6 +69,7 @@ public:
     using pointer = const value_type*;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
+
     using self = _hashtable_const_iterator<Key, T, Value, Hash, KeyEqual, ExtractKey, Allocator>;
     using node_pointer = _hashtable_node<value_type>*;
     using hashtable_pointer = hashtable<Key, T, Value, Hash, KeyEqual, ExtractKey, Allocator>*;
@@ -78,7 +81,8 @@ public:
 
 public:
     _hashtable_const_iterator(const node_pointer node, const_hashtable_pointer ht)
-        : _node(const_cast<node_pointer>(node)), _ht(const_cast<hashtable_pointer>(ht))
+        : _node(const_cast<node_pointer>(node))
+        , _ht(const_cast<hashtable_pointer>(ht))
     { // 以节点构造迭代器
       // 注意传入的第一个参数是const node_pointer，而第二个参数是const hashtable*，而不能使用const hashtable_pointer
     }
@@ -153,6 +157,7 @@ public:
     using pointer = value_type*;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
+
     using self = _hashtable_iterator<Key, T, Value, Hash, KeyEqual, ExtractKey, Allocator>;
     using node_pointer = _hashtable_node<value_type>*;
     using hashtable_pointer = hashtable<Key, T, Value, Hash, KeyEqual, ExtractKey, Allocator>*;
@@ -176,7 +181,7 @@ public:
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -195,13 +200,13 @@ template <class Value>
 class _hashtable_const_local_iterator
 {
 public:
-    using base = _hashtable_const_local_iterator<Value>;
     using iterator_category = std::forward_iterator_tag;
     using value_type = Value;
     using reference = const value_type&;
     using pointer = const value_type*;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
+    
     using self = _hashtable_const_local_iterator<Value>;
     using node_pointer = _hashtable_node<value_type>*;
 
@@ -264,6 +269,7 @@ public:
     using pointer = value_type*;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
+
     using self = _hashtable_local_iterator<Value>;
     using node_pointer = _hashtable_node<value_type>*;
 
