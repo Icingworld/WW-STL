@@ -233,63 +233,83 @@ public:
     }
 
     explicit list(const Allocator & alloc)
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(alloc)
     {
         _init_list();
     }
 
     explicit list(size_type count, const Allocator & alloc = Allocator())
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(alloc)
     {
         _init_list();
         insert(begin(), count, value_type());
     }
 
     list(size_type count, const value_type & value, const Allocator & alloc = Allocator())
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(alloc)
     {
         _init_list();
         insert(begin(), count, value);
     }
 
-    template< class InputIt >
-    list(InputIt first, InputIt last, const Allocator & alloc = Allocator())
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+    template<
+        class InputIt,
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
+    > list(InputIt first, InputIt last, const Allocator & alloc = Allocator())
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(alloc)
     {
         _init_list();
         insert(begin(), first, last);
     }
 
     list(const list & other)
-        : _finish(nullptr), _size(0), _node_allocator(other._node_allocator)
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(other._node_allocator)
     { 
         _init_list();
         assign(other.begin(), other.end());
     }
 
     list(list && other)
-        : _finish(other._finish), _size(other._size), _node_allocator(std::move(other._node_allocator))
+        : _finish(other._finish)
+        , _size(other._size)
+        , _node_allocator(std::move(other._node_allocator))
     {
-        other._finish = nullptr;
+        other._init_list();
         other._size = 0;
     }
 
     list(const list & other, const Allocator & alloc)
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(alloc)
     {
         _init_list();
         assign(other.begin(), other.end());
     }
 
     list(list && other, const Allocator & alloc)
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+        : _finish(other._finish)
+        , _size(other._size)
+        , _node_allocator(alloc)
     {
-        _finish = std::move(other._finish);
-        _size = other._size;
+        other._init_list();
+        other._size = 0;
     }
 
     list(std::initializer_list<T> init, const Allocator & alloc = Allocator())
-        : _finish(nullptr), _size(0), _node_allocator(alloc)
+        : _finish(nullptr)
+        , _size(0)
+        , _node_allocator(alloc)
     {
         _init_list();
         assign(init);
@@ -297,10 +317,8 @@ public:
 
     ~list()
     {
-        if (_finish != nullptr) {
-            clear();
-            _destroy_node(_finish);
-        }
+        clear();
+        _destroy_node(_finish);
     }
 
 public:
