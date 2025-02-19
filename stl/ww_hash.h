@@ -88,7 +88,7 @@ class hash<bool>
     : public _hash_base<std::size_t, bool>
 {
 public:
-    result_type operator()(const argument_type& key) const
+    result_type operator()(const argument_type & key) const
     {
         return key ? 1 : 0;
     }
@@ -102,7 +102,7 @@ public:
     using argument_type = typename _hash_base<std::size_t, T*>::argument_type;
     using result_type = typename _hash_base<std::size_t, T*>::result_type;
 public:
-    result_type operator()(const argument_type& key) const
+    result_type operator()(const argument_type & key) const
     {
         return reinterpret_cast<std::size_t>(key);  // 直接将指针的地址转换为size_t
     }
@@ -116,7 +116,7 @@ class hash<std::nullptr_t>
     : public _hash_base<std::size_t, std::nullptr_t>
 {
 public:
-    result_type operator()(const argument_type& key) const
+    result_type operator()(const argument_type & key) const
     {
         (void)key;
         return 0;   // nullptr_t的hash值为0
@@ -133,7 +133,7 @@ public:
     using typename _hash_base<std::size_t, std::string>::argument_type;
     using typename _hash_base<std::size_t, std::string>::result_type;
 
-    result_type operator()(const argument_type &key) const
+    result_type operator()(const argument_type & key) const
     {
         result_type hash = 0;
         for (char c : key)
@@ -154,7 +154,7 @@ public:
     using typename _hash_base<std::size_t, const char *>::argument_type;
     using typename _hash_base<std::size_t, const char *>::result_type;
 
-    result_type operator()(const argument_type &key) const
+    result_type operator()(const argument_type & key) const
     {
         result_type hash = 0;
         const char *p = key;
