@@ -531,7 +531,7 @@ public:
      */
     size_type max_size() const noexcept
     {
-        return std::numeric_limits<difference_type>::max();
+        return std::min(std::numeric_limits<difference_type>::max(), wwstl::allocator_traits<node_allocator_type>::max_size(_node_allocator));
     }
 
     // 修改器
@@ -1029,7 +1029,7 @@ public:
      */
     node_pointer _get_node()
     {
-        return _node_allocator.allocate(1);
+        return wwstl::allocator_traits<node_allocator_type>::allocate(_node_allocator, 1);
     }
 
     /**
@@ -1037,7 +1037,7 @@ public:
      */
     void _put_node(node_pointer p)
     {
-        _node_allocator.deallocate(p, 1);
+        wwstl::allocator_traits<node_allocator_type>::deallocate(_node_allocator, p, 1);
     }
 
     /**
@@ -1047,7 +1047,7 @@ public:
     node_pointer _create_node(Arg&&... args)
     {
         node_pointer p = _get_node();
-        _node_allocator.construct(p, std::forward<Arg>(args)...);
+        wwstl::allocator_traits<node_allocator_type>::construct(_node_allocator, p, std::forward<Arg>(args)...);
         return p;
     }
 
@@ -1056,7 +1056,7 @@ public:
      */
     void _destroy_node(node_pointer p)
     {
-        _node_allocator.destroy(p);
+        wwstl::allocator_traits<node_allocator_type>::destroy(_node_allocator, p);
         _put_node(p);
     }
 
