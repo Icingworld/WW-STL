@@ -42,32 +42,42 @@ public:
     {
     }
 
-    template <class Alloc>
-    explicit stack(const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > explicit stack(const Alloc & alloc)
         : c(alloc)
     {
     }
 
-    template <class Alloc>
-    stack(const container_type & cont, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > stack(const container_type & cont, const Alloc & alloc)
         : c(cont, alloc)
     {
     }
 
-    template <class Alloc>
-    stack(container_type && cont, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > stack(container_type && cont, const Alloc & alloc)
         : c(std::move(cont), alloc)
     {
     }
 
-    template <class Alloc>
-    stack(const stack & other, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > stack(const stack & other, const Alloc & alloc)
         : c(other.c, alloc)
     {
     }
 
-    template <class Alloc>
-    stack(stack && other, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > stack(stack && other, const Alloc & alloc)
         : c(std::move(other.c), alloc)
     {
     }
@@ -116,7 +126,7 @@ public:
     /**
      * @brief 向栈顶插入元素
      */
-    void push(const value_type& x)
+    void push(const value_type & x)
     {
         c.push_back(x);
     }
@@ -124,7 +134,7 @@ public:
     /**
      * @brief 向栈顶插入元素
      */
-    void push(value_type&& x)
+    void push(value_type && x)
     {
         c.push_back(std::move(x));
     }
@@ -149,9 +159,9 @@ public:
     /**
      * @brief 交换内容
      */
-    void swap(stack& other)
+    void swap(stack & other)
     {
-        c.swap(other.c);
+        std::swap(c, other.c);
     }
 };
 

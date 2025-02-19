@@ -52,26 +52,34 @@ public:
     {
     }
 
-    template <class Alloc>
-    queue(const container_type & cont, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > queue(const container_type & cont, const Alloc & alloc)
         : c(cont, alloc)
     {
     }
 
-    template <class Alloc>
-    queue(container_type && cont, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > queue(container_type && cont, const Alloc & alloc)
         : c(std::move(cont), alloc)
     {
     }
 
-    template <class Alloc>
-    queue(const queue & other, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > queue(const queue & other, const Alloc & alloc)
         : c(other.c, alloc)
     {
     }
 
-    template <class Alloc>
-    queue(queue && other, const Alloc & alloc)
+    template <
+        class Alloc,
+        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+    > queue(queue && other, const Alloc & alloc)
         : c(std::move(other.c), alloc)
     {
     }
