@@ -3,7 +3,6 @@
 
 #include <initializer_list>
 #include <memory>
-#include <iostream>
 #include "ww_iterator.h"
 #include "ww_memory.h"
 
@@ -439,7 +438,7 @@ public:
         size_type old_capacity = capacity();
         if (count > old_capacity) {
             // 超出了最大空间，需要重新分配
-            pointer new_start = _allocator.allocate(count);
+            pointer new_start = wwstl::allocator_traits<allocator_type>::allocate(_allocator, count);
             // 按迭代器顺序赋值
             std::uninitialized_copy(first, last, new_start);
             // 销毁原来的空间
@@ -456,7 +455,7 @@ public:
             }
             // 多余区间直接构造新的值
             for (size_type i=old_size; i<count; ++i) {
-                _allocator.construct(_start + i, *it);
+                wwstl::allocator_traits<allocator_type>::construct(_allocator, _start + i, *it);
                 ++it;
             }
             _finish = _start + count;
@@ -805,7 +804,7 @@ public:
     {
         pointer p = pos._ptr;
         std::move(p + 1, _finish, p);
-        _allocator.destroy(_finish);
+        wwstl::allocator_traits<allocator_type>::destroy(_allocator, _finish);
         --_finish;
         return iterator(p);
     }
@@ -822,7 +821,7 @@ public:
         size_type count = last._ptr - first._ptr;
         std::move(last._ptr, _finish, p);
         for (pointer q = last._ptr; q != _finish; ++q) {
-            _allocator.destroy(q);
+            wwstl::allocator_traits<allocator_type>::destroy(_allocator, q);
         }
         _finish = _finish - count;
         return iterator(p);
@@ -904,7 +903,7 @@ public:
     void _destroy_n(pointer start, size_type count)
     {
         for (size_type i = 0; i < count; ++i) {
-            _allocator.destroy(start + i);
+            wwstl::allocator_traits<allocator_type>::destroy(_allocator, start + i);
         }
     }
 
@@ -935,7 +934,7 @@ public:
     void _reallocate_aux(std::false_type, size_type new_cap)
     {
         size_type old_size = size();
-        pointer new_start = _allocator.allocate(new_cap);
+        pointer new_start = wwstl::allocator_traits<allocator_type>::allocate(_allocator, new_cap);
         std::uninitialized_copy(begin(), end(), iterator(new_start));
         _clean();
         _set_new_space(new_start, old_size, new_cap);
@@ -948,9 +947,9 @@ public:
     void _reallocate_aux(std::true_type, size_type new_cap)
     {
         size_type old_size = size();
-        pointer new_start = _allocator.allocate(new_cap);
+        pointer new_start = wwstl::allocator_traits<allocator_type>::allocate(_allocator, new_cap);
         for (size_type i = 0; i < old_size; ++i) {
-            _allocator.construct(new_start + i, std::move(*(_start + i)));
+            wwstl::allocator_traits<allocator_type>::construct(_allocator, new_start + i, std::move(*(_start + i)));
         }
         _clean();
         _set_new_space(new_start, old_size, new_cap);
@@ -1003,7 +1002,7 @@ public:
         _check_newsize(count);     // 判断是否需要扩容
         std::move_backward(begin() + offset, end(), end() + count);
         for (size_type i = 0; i < count; ++i) {
-            _allocator.construct(_start + offset + i, std::forward<Args>(args)...);
+            wwstl::allocator_traits<allocator_type>::construct(_allocator, _start + offset + i, std::forward<Args>(args)...);
         }
         _finish += count;
         return begin() + offset;
@@ -1016,9 +1015,9 @@ public:
     {
         if (_start) {
             for (pointer p = _finish; p != _start;) {
-                _allocator.destroy(--p);
+                wwstl::allocator_traits<allocator_type>::destroy(_allocator, --p);
             }
-            _allocator.deallocate(_start, _end_of_storage - _start);
+            wwstl::allocator_traits<allocator_type>::deallocate(_allocator, _start, _end_of_storage - _start);
             _start = _finish = _end_of_storage = nullptr;
         }
     }
