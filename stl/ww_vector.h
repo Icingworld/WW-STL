@@ -1789,14 +1789,14 @@ public:
         size_type new_size = _size + count;
         size_type bitset_require = (new_size + (sizeof(bitset) * 8 - 1)) / (sizeof(bitset) * 8);
 
-        if (bitset_require > 0) {
+        if (bitset_require > _data.size()) {
             // 空间不足，需要扩展 bitset_require 个 bitset
             _data.resize(bitset_require, 0UL);
         }
 
         // 将原来的元素后移
         for (size_type i = _size; i > index; --i) {
-            (*this)[i + count - 1] = (*this)[i - 1];
+            (*this)[i + count - 1] = static_cast<value_type>((*this)[i - 1]);
         }
 
         // 插入新元素
@@ -1834,7 +1834,7 @@ public:
 
         // 元素前移一位
         for (size_type i = index; i < _size - 1; ++i) {
-            (*this)[i] = (*this)[i + 1];
+            (*this)[i] = static_cast<value_type>((*this)[i + 1]);
         }
 
         --_size;
@@ -1960,7 +1960,7 @@ public:
         size_type new_size = _size + count;
         size_type bitset_require = (new_size + (sizeof(bitset) * 8 - 1)) / (sizeof(bitset) * 8);
 
-        if (bitset_require > _size) {
+        if (bitset_require > _data.size()) {
             // 空间不足，需要扩展至 bitset_require 个 bitset
             _data.resize(bitset_require, 0UL);
         }
