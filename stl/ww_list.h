@@ -26,12 +26,23 @@ public:
 
 public:
     _list_node()
-        : _prev(nullptr), _next(nullptr), _data()
+        : _prev(nullptr)
+        , _next(nullptr)
+        , _data()
     { // 空节点
     }
 
     explicit _list_node(const value_type & value)
-        : _prev(nullptr), _next(nullptr), _data(value)
+        : _prev(nullptr)
+        , _next(nullptr)
+        , _data(value)
+    { // 带数据的节点
+    }
+
+    explicit _list_node(value_type && value)
+        : _prev(nullptr)
+        , _next(nullptr)
+        , _data(std::move(value))
     { // 带数据的节点
     }
 };
