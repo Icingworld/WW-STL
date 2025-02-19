@@ -327,7 +327,7 @@ public:
      */
     template <
         class InputIterator,
-        class = std::enable_if_t<wwstl::is_iterator_v<InputIterator>>
+        class = typename std::enable_if<wwstl::is_iterator<InputIterator>::value>::type
     > void assign(InputIterator first, InputIterator last)
     {
         clear();
@@ -528,7 +528,7 @@ public:
      */
     template <
         class InputIt,
-        class = typename std::enable_if<wwstl::is_iterator_v<InputIt>>::type
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
     > iterator insert(const_iterator pos, InputIt first, InputIt last)
     {
         if (first == last)

@@ -485,7 +485,7 @@ public:
      */
     template <
         class InputIt,
-        class = std::enable_if_t<wwstl::is_iterator_v<InputIt>>
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
     > void assign(InputIt first, InputIt last)
     {
         // 清空原有元素
@@ -705,7 +705,7 @@ public:
      */
     template <
         class InputIt,
-        class = std::enable_if_t<wwstl::is_iterator_v<InputIt>>
+        class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
     > iterator insert(const_iterator pos, InputIt first, InputIt last)
     { return _emplace_it(pos, first, last); }
 

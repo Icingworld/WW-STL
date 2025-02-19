@@ -177,7 +177,7 @@ public:
 
     template <
         class InputIt,
-        class = std::enable_if_t<wwstl::is_iterator_v<InputIt>>
+        class = typename std::enable_if<wwstl::is_iterator_v<InputIt>::value>::type
     > forward_list(InputIt first, InputIt last, const Allocator & alloc = Allocator())
         : _start(nullptr), _node_allocator(alloc)
     {
