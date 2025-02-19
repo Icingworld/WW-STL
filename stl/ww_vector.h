@@ -1116,6 +1116,17 @@ public:
 
 public:
     /**
+     * @brief 将值赋给代理
+     */
+    _bit_proxy & operator=(const _bit_proxy & other) noexcept
+    {
+        if (this != &other) {
+            (*this) = static_cast<bool>(other);
+        }
+        return *this;
+    }
+
+    /**
      * @brief 将 bool 赋给被引用位
      */
     _bit_proxy & operator=(bool value) noexcept
@@ -1796,7 +1807,7 @@ public:
 
         // 将原来的元素后移
         for (size_type i = _size; i > index; --i) {
-            (*this)[i + count - 1] = static_cast<value_type>((*this)[i - 1]);
+            (*this)[i + count - 1] = (*this)[i - 1];
         }
 
         // 插入新元素
@@ -1834,7 +1845,7 @@ public:
 
         // 元素前移一位
         for (size_type i = index; i < _size - 1; ++i) {
-            (*this)[i] = static_cast<value_type>((*this)[i + 1]);
+            (*this)[i] = (*this)[i + 1];
         }
 
         --_size;
@@ -1967,7 +1978,7 @@ public:
 
         // 将原来的元素后移
         for (size_type i = _size; i > index; --i) {
-            (*this)[i + count - 1] = static_cast<value_type>((*this)[i - 1]);
+            (*this)[i + count - 1] = (*this)[i - 1];
         }
 
         // 插入新元素
