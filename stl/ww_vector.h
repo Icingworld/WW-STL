@@ -1165,8 +1165,8 @@ public:
     size_type _index;
 
 public:
-    _vector_bool_const_iterator(bitset * data, size_type index)
-        : _data(data)
+    _vector_bool_const_iterator(const bitset * data, size_type index)
+        : _data(const_cast<bitset*>(data))
         , _index(index)
     {
     }
