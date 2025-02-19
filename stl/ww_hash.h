@@ -30,7 +30,7 @@ public:
     using typename _hash_base<std::size_t, Key>::result_type;
 
 public:
-    [[noreturn]] result_type operator()(const argument_type & key) const
+    result_type operator()(const argument_type & key) const
     {
         throw std::runtime_error("type not implemented");
     }
@@ -78,7 +78,7 @@ _HASH_SPECIALIZATION_TEMPLATE(long long int)
 
 _HASH_SPECIALIZATION_TEMPLATE(unsigned long long int)
 
-#undef _HASH_SPECIALIZATION
+#undef _HASH_SPECIALIZATION_TEMPLATE
 
 /**
  * @brief bool类型的hash特化
