@@ -233,14 +233,6 @@ TEST_F(WWVectorBoolTest, Capacity)
 
 // 修改器
 
-void printVector(const vector<bool> &vec)
-{
-    for (auto it = vec.begin(); it != vec.end(); ++it) {
-        std::cout << (bool)(*it) << " ";
-    }
-    std::cout << std::endl;
-}
-
 TEST_F(WWVectorBoolTest, Clear)
 {
     vec.clear();
@@ -251,7 +243,6 @@ TEST_F(WWVectorBoolTest, Clear)
 TEST_F(WWVectorBoolTest, Insert)
 {
     vec.insert(vec.begin(), false);
-    printVector(vec);
     EXPECT_EQ(vec.size(), 5);
     EXPECT_FALSE(vec[0]);
     EXPECT_TRUE(vec[1]);
@@ -316,8 +307,8 @@ TEST_F(WWVectorBoolTest, Resize)
         EXPECT_FALSE(vec[i]);
     }
 
-    vec.resize(15, true);
-    EXPECT_TRUE(vec[12]);
+    vec.resize(128, true);
+    EXPECT_TRUE(vec[120]);
 }
 
 // 翻转
