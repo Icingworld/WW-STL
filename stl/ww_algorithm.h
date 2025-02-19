@@ -56,7 +56,9 @@ template <
  */
 template <class RandomIt>
 void make_heap(RandomIt first, RandomIt last)
-{ wwstl::make_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>()); }
+{
+    wwstl::make_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>());
+}
 
 /**
  * @brief 新元素加入堆后调整
@@ -88,7 +90,9 @@ template <
  */
 template <class RandomIt>
 void push_heap(RandomIt first, RandomIt last)
-{ wwstl::push_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>()); }
+{
+    wwstl::push_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>());
+}
 
 /**
  * @brief 删除堆顶元素后调整
@@ -113,7 +117,9 @@ template <
  */
 template <class RandomIt>
 void pop_heap(RandomIt first, RandomIt last)
-{ wwstl::pop_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>()); }
+{
+    wwstl::pop_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>());
+}
 
 template <
     class RandomIt,
@@ -131,7 +137,9 @@ template <
 
 template <class RandomIt>
 void sort_heap(RandomIt first, RandomIt last)
-{ wwstl::sort_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>()); }
+{
+    wwstl::sort_heap(first, last, std::less<typename std::iterator_traits<RandomIt>::value_type>());
+}
 
 } // namespace wwstl
 
