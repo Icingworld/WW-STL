@@ -360,18 +360,38 @@ public:
     }
 
     explicit hashtable(size_type bucket_count, const hasher & hash = hasher(), const key_equal & equals = key_equal(), const allocator_type & alloc = allocator_type())
-        : _buckets(bucket_count), _num_elements(0), _max_load_factor(1.0), _begin(nullptr), _hash(hash), _equals(equals), _get_key(), _node_allocator()
+        : _buckets(bucket_count)
+        , _num_elements(0)
+        , _max_load_factor(1.0)
+        , _begin(nullptr)
+        , _hash(hash)
+        , _equals(equals)
+        , _get_key()
+        , _node_allocator()
     {
     }
 
     explicit hashtable(const allocator_type & alloc)
-        : _buckets(8), _num_elements(0), _max_load_factor(1.0), _begin(nullptr), _hash(), _equals(), _get_key(), _node_allocator(alloc)
+        : _buckets(8)
+        , _num_elements(0)
+        , _max_load_factor(1.0)
+        , _begin(nullptr)
+        , _hash()
+        , _equals()
+        , _get_key()
+        , _node_allocator(alloc)
     {
     }
 
     hashtable(const hashtable & other)
-        : _buckets(8), _num_elements(0), _max_load_factor(1.0),
-          _begin(nullptr), _hash(other._hash), _equals(other._equals), _get_key(other._get_key), _node_allocator(other._node_allocator)
+        : _buckets(8)
+        , _num_elements(0)
+        , _max_load_factor(1.0)
+        , _begin(nullptr)
+        , _hash(other._hash)
+        , _equals(other._equals)
+        , _get_key(other._get_key)
+        , _node_allocator(other._node_allocator)
     {
         _buckets.reserve(other._buckets.size());    // 预留空间
         for (auto it = other.begin(); it != other.end(); ++it) {
@@ -380,8 +400,14 @@ public:
     }
 
     hashtable(const hashtable & other, const allocator_type & alloc)
-        : _buckets(), _num_elements(0), _max_load_factor(1.0),
-          _begin(nullptr), _hash(other._hash), _equals(other._equals), _get_key(other._get_key), _node_allocator(alloc)
+        : _buckets()
+        , _num_elements(0)
+        , _max_load_factor(1.0)
+        , _begin(nullptr)
+        , _hash(other._hash)
+        , _equals(other._equals)
+        , _get_key(other._get_key)
+        , _node_allocator(alloc)
     {
         _buckets.reserve(other._buckets.size());    // 预留空间
         for (auto it = other.begin(); it != other.end(); ++it) {
@@ -390,8 +416,14 @@ public:
     }
 
     hashtable(hashtable && other)
-        : _buckets(std::move(other._buckets)), _num_elements(other._num_elements), _max_load_factor(other._max_load_factor),
-          _begin(other._begin), _hash(other._hash), _equals(other._equals), _get_key(other._get_key), _node_allocator(std::move(other._node_allocator))
+        : _buckets(std::move(other._buckets))
+        , _num_elements(other._num_elements)
+        , _max_load_factor(other._max_load_factor)
+        , _begin(other._begin)
+        , _hash(other._hash)
+        , _equals(other._equals)
+        , _get_key(other._get_key)
+        , _node_allocator(std::move(other._node_allocator))
     {
         other._num_elements = 0;
         other._max_load_factor = 1.0;
@@ -399,8 +431,14 @@ public:
     }
 
     hashtable(hashtable && other, const allocator_type & alloc)
-        : _buckets(std::move(other._buckets)), _num_elements(other._num_elements), _max_load_factor(other._max_load_factor),
-          _begin(other._begin), _hash(other._hash), _equals(other._equals), _get_key(other._get_key), _node_allocator(alloc)
+        : _buckets(std::move(other._buckets))
+        , _num_elements(other._num_elements)
+        , _max_load_factor(other._max_load_factor)
+        , _begin(other._begin)
+        , _hash(other._hash)
+        , _equals(other._equals)
+        , _get_key(other._get_key)
+        , _node_allocator(alloc)
     {
         other._num_elements = 0;
         other._max_load_factor = 1.0;
@@ -548,7 +586,7 @@ public:
      */
     size_type max_size() const noexcept
     {
-        return std::numeric_limits<difference_type>::max();
+        return std::min(std::numeric_limits<difference_type>::max(), wwstl::allocator_traits<node_allocator_type>::max_size(_node_allocator));
     }
 
     // 修改器
@@ -852,7 +890,7 @@ public:
         std::swap(_hash, other._hash);
         std::swap(_equals, other._equals);
         std::swap(_get_key, other._get_key);
-        if (std::allocator_traits<allocator_type>::propagate_on_container_swap::value) {
+        if (wwstl::allocator_traits<allocator_type>::propagate_on_container_swap::value) {
             std::swap(_node_allocator, other._node_allocator);
         }
     }
