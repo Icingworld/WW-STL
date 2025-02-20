@@ -1227,18 +1227,6 @@ public:
         }
     }
 
-    template <typename U = mapped_type, typename = typename std::enable_if<!std::is_void<U>::value>::type>
-    U & _at(const key_type & key) const
-    {
-        const size_type n = _hash_key(key);
-        for (node_pointer cur = _buckets[n]; cur != nullptr; cur = cur->_next) {
-            if (_equals(_get_key(cur->_data), key)) {
-                return cur->_data.second;
-            }
-        }
-        throw std::out_of_range("hashtable at out of range");
-    }
-
     node_pointer _find(const key_type & key) const
     {
         const size_type n = _hash_key(key);
