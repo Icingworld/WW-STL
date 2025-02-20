@@ -133,3 +133,42 @@ TEST_F(WWMultiMapTest, upper_bound)
     EXPECT_EQ(mmap.upper_bound(4), mmap.end());
     EXPECT_EQ(mmap.upper_bound(5), mmap.end());
 }
+
+// 比较
+
+TEST_F(WWMultiMapTest, compare)
+{
+    multimap<int, std::string> mmap2 = {
+        {1, "1"},
+        {2, "2"},
+        {3, "3"},
+        {4, "4"},
+        {1, "11"},
+        {2, "22"},
+        {2, "222"}
+    };
+    EXPECT_TRUE(mmap == mmap2);
+
+    multimap<int, std::string> mmap3 = {
+        {1, "1"},
+        {2, "2"},
+        {3, "3"},
+        {4, "4"},
+        {1, "11"},
+        {2, "22"}
+    };
+    EXPECT_FALSE(mmap == mmap3);
+    EXPECT_TRUE(mmap < mmap3);
+
+    multimap<int, std::string> mmap4 = {
+        {1, "1"},
+        {2, "2"},
+        {3, "3"},
+        {4, "444"},
+        {1, "11"},
+        {2, "22"},
+        {2, "777"}
+    };
+    EXPECT_FALSE(mmap == mmap4);
+    EXPECT_TRUE(mmap < mmap4);
+}

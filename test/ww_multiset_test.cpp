@@ -123,3 +123,19 @@ TEST_F(WWMultiSetTest, upper_bound)
     EXPECT_EQ(mset.upper_bound(4), mset.end());
     EXPECT_EQ(mset.upper_bound(5), mset.end());
 }
+
+// 比较
+
+TEST_F(WWMultiSetTest, compare)
+{
+    multiset<int> mset2 = {1, 2, 3, 4, 1, 2, 2};
+    EXPECT_TRUE(mset == mset2);
+
+    multiset<int> mset3 = {1, 2, 3, 4, 1, 2, 2, 3};
+    EXPECT_FALSE(mset == mset3);
+    EXPECT_TRUE(mset > mset3);
+
+    multiset<int> mset4 = {1, 2, 3, 4, 2, 3, 2};
+    EXPECT_FALSE(mset == mset4);
+    EXPECT_TRUE(mset < mset4);
+}
