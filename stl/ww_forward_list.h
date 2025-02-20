@@ -2,6 +2,7 @@
 #define __WW_FORWARD_LIST_H__
 
 #include <initializer_list>
+#include "ww_iterator.h"
 #include "ww_type_traits.h"
 #include "ww_memory.h"
 
@@ -825,7 +826,7 @@ public:
      */
     node_pointer _get_node()
     {
-        return _node_allocator.allocate(1);
+        return allocator_traits<node_allocator_type>::allocate(_node_allocator, 1);
     }
 
     /**
@@ -833,7 +834,7 @@ public:
      */
     void _put_node(node_pointer p)
     {
-        _node_allocator.deallocate(p, 1);
+        allocator_traits<node_allocator_type>::deallocate(_node_allocator, p, 1);
     }
 
     /**
@@ -843,7 +844,7 @@ public:
     node_pointer _create_node(Arg&&... args)
     {
         node_pointer p = _get_node();
-        _node_allocator.construct(p, std::forward<Arg>(args)...);
+        allocator_traits<node_allocator_type>::construct(_node_allocator, p, std::forward<Arg>(args)...);
         return p;
     }
 
@@ -852,7 +853,7 @@ public:
      */
     void _destroy_node(node_pointer p)
     {
-        _node_allocator.destroy(p);
+        allocator_traits<node_allocator_type>::destroy(_node_allocator, p);
         _put_node(p);
     }
 

@@ -458,7 +458,7 @@ public:
             _hash = other._hash;
             _equals = other._equals;
             _get_key = other._get_key;
-            if (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value) {
+            if (allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value) {
                 _node_allocator = other._node_allocator;
             }
         }
@@ -479,7 +479,7 @@ public:
             _hash = other._hash;
             _equals = other._equals;
             _get_key = other._get_key;
-            if (std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
+            if (allocator_traits<allocator_type>::propagate_on_container_move_assignment::value) {
                 _node_allocator = std::move(other._node_allocator);
             }
             // 清空原哈希表，数组有自身的移动赋值，不需要手动清空
@@ -1151,26 +1151,26 @@ public:
 
     node_pointer _get_node()
     {
-        node_pointer p = _node_allocator.allocate(1);
+        node_pointer p = allocator_traits<node_allocator_type>::allocate(_node_allocator, 1);
         return p;
     }
 
     void _put_node(node_pointer p)
     {
-        _node_allocator.deallocate(p, 1);
+        allocator_traits<node_allocator_type>::deallocate(_node_allocator, p, 1);
     }
 
     template <class... Args>
     node_pointer _create_node(Args&&... args)
     {
         node_pointer p = _get_node();
-        _node_allocator.construct(p, std::forward<Args>(args)...);
+        allocator_traits<node_allocator_type>::construct(_node_allocator, p, std::forward<Args>(args)...);
         return p;
     }
 
     void _destroy_node(node_pointer p)
     {
-        _node_allocator.destroy(p);
+        allocator_traits<node_allocator_type>::destroy(_node_allocator, p);
         _put_node(p);
     }
 
