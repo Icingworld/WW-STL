@@ -2,6 +2,7 @@
 #define __WW_FUNCTIONAL_H__
 
 #include <utility>
+#include <functional>
 
 namespace wwstl
 {

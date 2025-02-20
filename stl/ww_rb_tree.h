@@ -2,10 +2,10 @@
 #define __WW_RB_TREE_H__
 
 #include <initializer_list>
-#include <functional>
 #include "ww_memory.h"
 #include "ww_iterator.h"
 #include "ww_functional.h"
+#include "ww_algorithm.h"
 
 namespace wwstl
 {

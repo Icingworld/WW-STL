@@ -493,7 +493,16 @@ template <
     class Allocator
 > bool operator==(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
 {
-    return lhs._tree == rhs._tree;
+    if (lhs.size() != rhs.size())
+        return false;
+    
+    for (auto it = lhs.begin(); it != lhs.end(); ++it) {
+        auto it2 = rhs.find(it->first);
+        if (it2 == rhs.end() || it->second != it2->second)
+            return false;
+    }
+
+    return true;
 }
 
 template <
@@ -513,7 +522,7 @@ template <
     class Allocator
 > bool operator<(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
 {
-    return lhs._tree < rhs._tree;
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template <
@@ -1043,7 +1052,19 @@ template <
     class Allocator
 > bool operator==(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
 {
-    return lhs._tree == rhs._tree;
+    if (lhs.size() != rhs.size())
+        return false;
+
+    for (auto it = lhs.begin(); it != lhs.end(); ) {
+        auto range_l = lhs.equal_range(it->first);
+        auto range_r = rhs.equal_range(it->first);
+        if (!std::is_permutation(range_l.first, range_l.second, range_r.first, range_r.second))
+            return false;
+        
+        it = range_l.second;
+    }
+
+    return true;
 }
 
 template <
@@ -1063,7 +1084,7 @@ template <
     class Allocator
 > bool operator<(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
 {
-    return lhs._tree < rhs._tree;
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template <
