@@ -460,10 +460,64 @@ template <
     class Key,
     class Compare,
     class Allocator
-> void swap(set<Key, Compare, Allocator> & lhs,
-            set<Key, Compare, Allocator> & rhs)
-{ lhs.swap(rhs);
-    }
+> bool operator==(const set<Key, Compare, Allocator> & lhs, const set<Key, Compare, Allocator> & rhs)
+{
+    return lhs._tree == rhs._tree;
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator!=(const set<Key, Compare, Allocator> & lhs, const set<Key, Compare, Allocator> & rhs)
+{
+    return !(lhs == rhs);
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator<(const set<Key, Compare, Allocator> & lhs, const set<Key, Compare, Allocator> & rhs)
+{
+    return lhs._tree < rhs._tree;
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator>(const set<Key, Compare, Allocator> & lhs, const set<Key, Compare, Allocator> & rhs)
+{
+    return rhs < lhs;
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator<=(const set<Key, Compare, Allocator> & lhs, const set<Key, Compare, Allocator> & rhs)
+{
+    return !(rhs < lhs);
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator>=(const set<Key, Compare, Allocator> & lhs, const set<Key, Compare, Allocator> & rhs)
+{
+    return !(lhs < rhs);
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> void swap(set<Key, Compare, Allocator> & lhs, set<Key, Compare, Allocator> & rhs)
+{
+    lhs.swap(rhs);
+}
 
 /**
  * @brief multiset
@@ -911,8 +965,61 @@ template <
     class Key,
     class Compare,
     class Allocator
-> void swap(multiset<Key, Compare, Allocator> & lhs,
-            multiset<Key, Compare, Allocator> & rhs)
+> bool operator==(const multiset<Key, Compare, Allocator> & lhs, const multiset<Key, Compare, Allocator> & rhs)
+{
+    return lhs._tree == rhs._tree;
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator!=(const multiset<Key, Compare, Allocator> & lhs, const multiset<Key, Compare, Allocator> & rhs)
+{
+    return !(lhs == rhs);
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator<(const multiset<Key, Compare, Allocator> & lhs, const multiset<Key, Compare, Allocator> & rhs)
+{
+    return lhs._tree < rhs._tree;
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator>(const multiset<Key, Compare, Allocator> & lhs, const multiset<Key, Compare, Allocator> & rhs)
+{
+    return rhs < lhs;
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator<=(const multiset<Key, Compare, Allocator> & lhs, const multiset<Key, Compare, Allocator> & rhs)
+{
+    return !(rhs < lhs);
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> bool operator>=(const multiset<Key, Compare, Allocator> & lhs, const multiset<Key, Compare, Allocator> & rhs)
+{
+    return !(lhs < rhs);
+}
+
+template <
+    class Key,
+    class Compare,
+    class Allocator
+> void swap(multiset<Key, Compare, Allocator> & lhs, multiset<Key, Compare, Allocator> & rhs)
 {
     lhs.swap(rhs);
 }

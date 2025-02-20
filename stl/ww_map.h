@@ -491,8 +491,67 @@ template <
     class T,
     class Compare,
     class Allocator
-> void swap(map<Key, T, Compare, Allocator> & lhs,
-            map<Key, T, Compare, Allocator> & rhs)
+> bool operator==(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
+{
+    return lhs._tree == rhs._tree;
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator!=(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
+{
+    return !(lhs == rhs);
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator<(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
+{
+    return lhs._tree < rhs._tree;
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator>(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
+{
+    return rhs < lhs;
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator<=(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
+{
+    return !(rhs < lhs);
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator>=(const map<Key, T, Compare, Allocator> & lhs, const map<Key, T, Compare, Allocator> & rhs)
+{
+    return !(lhs < rhs);
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> void swap(map<Key, T, Compare, Allocator> & lhs, map<Key, T, Compare, Allocator> & rhs)
 {
     lhs.swap(rhs);
 }
@@ -982,8 +1041,67 @@ template <
     class T,
     class Compare,
     class Allocator
-> void swap(multimap<Key, T, Compare, Allocator> & lhs,
-            multimap<Key, T, Compare, Allocator> & rhs)
+> bool operator==(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
+{
+    return lhs._tree == rhs._tree;
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator!=(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
+{
+    return !(lhs == rhs);
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator<(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
+{
+    return lhs._tree < rhs._tree;
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator>(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
+{
+    return rhs < lhs;
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator<=(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
+{
+    return !(rhs < lhs);
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> bool operator>=(const multimap<Key, T, Compare, Allocator> & lhs, const multimap<Key, T, Compare, Allocator> & rhs)
+{
+    return !(lhs < rhs);
+}
+
+template <
+    class Key,
+    class T,
+    class Compare,
+    class Allocator
+> void swap(multimap<Key, T, Compare, Allocator> & lhs, multimap<Key, T, Compare, Allocator> & rhs)
 {
     lhs.swap(rhs);
 }
