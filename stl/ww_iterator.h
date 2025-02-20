@@ -3,7 +3,6 @@
 
 #include <cstddef>
 #include "ww_type_traits.h"
-#include <type_traits>
 
 namespace wwstl
 {

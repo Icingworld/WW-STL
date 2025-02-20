@@ -2,7 +2,6 @@
 #define __TYPE_TRAITS_H__
 
 #include <type_traits>
-#include <iterator>
 
 namespace wwstl
 {

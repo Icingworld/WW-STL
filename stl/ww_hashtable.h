@@ -2,11 +2,11 @@
 #define __WW_HASHTABLE_H__
 
 #include <initializer_list>
-#include <type_traits>
 #include <cmath>
 #include "ww_vector.h"
 #include "ww_hash.h"
 #include "ww_functional.h"
+#include "ww_type_traits.h"
 
 namespace wwstl
 {
