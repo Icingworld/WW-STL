@@ -606,6 +606,7 @@ public:
             _buckets[n] = nullptr;
         }
         _num_elements = 0;
+        _begin = nullptr;
     }
 
     /**
@@ -930,8 +931,7 @@ public:
     template <typename U = mapped_type, typename = typename std::enable_if<!std::is_void<U>::value>::type>
     U & operator[](const key_type & key)
     {
-        auto it = emplace_unique(std::make_pair(key, mapped_type()));
-        return it.first->second;
+        return emplace_unique(key, mapped_type()).first->second;
     }
 
     /**
@@ -940,8 +940,7 @@ public:
     template <typename U = mapped_type, typename = typename std::enable_if<!std::is_void<U>::value>::type>
     U & operator[](key_type && key)
     {
-        auto it = emplace_unique(std::make_pair(std::move(key), mapped_type()));
-        return it.first->second;
+        return emplace_unique(std::move(key), mapped_type()).first->second;
     }
 
     /**
@@ -1038,7 +1037,7 @@ public:
      */
     const_local_iterator cbegin(size_type n) const
     {
-        return const_local_iterator(_buckets[n]);
+        return begin(n);
     }
 
     /**
@@ -1062,7 +1061,7 @@ public:
      */
     const_local_iterator cend(size_type n) const
     {
-        return const_local_iterator(nullptr);
+        return end(n);
     }
 
     /**
@@ -1200,7 +1199,8 @@ public:
     }
 
     void _put_node(node_pointer p)
-    { _node_allocator.deallocate(p, 1);
+    {
+        _node_allocator.deallocate(p, 1);
     }
 
     template <class... Args>
