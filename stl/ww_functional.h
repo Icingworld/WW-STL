@@ -14,7 +14,9 @@ class keyExtractor
 {
 public:
     const T & operator()(const T & key) const
-    { return key; }
+    {
+        return key;
+    }
 };
 
 /**
@@ -25,7 +27,9 @@ class keyExtractor<std::pair<const T, U>>
 {
 public:
     const T & operator()(const std::pair<const T, U> & p) const
-    { return p.first; }
+    {
+        return p.first;
+    }
 };
 
 } // namespace wwstl
