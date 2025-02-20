@@ -504,7 +504,6 @@ public:
 
 template <
     class Key,
-    class T,
     class Hash,
     class KeyEqual,
     class Allocator
@@ -513,7 +512,7 @@ template <
 {
     if (lhs.size() != rhs.size())
         return false;
-    
+
     for (auto it = lhs.begin(); it != lhs.end(); ++it) {
         auto it2 = rhs.find(*it);
         if (it2 == rhs.end())
@@ -525,7 +524,6 @@ template <
 
 template <
     class Key,
-    class T,
     class Hash,
     class KeyEqual,
     class Allocator
@@ -537,7 +535,6 @@ template <
 
 template <
     class Key,
-    class T,
     class Hash,
     class KeyEqual,
     class Allocator
@@ -1045,7 +1042,6 @@ public:
 
 template <
     class Key,
-    class T,
     class Hash,
     class KeyEqual,
     class Allocator
@@ -1069,7 +1065,6 @@ template <
 
 template <
     class Key,
-    class T,
     class Hash,
     class KeyEqual,
     class Allocator
@@ -1081,7 +1076,6 @@ template <
 
 template <
     class Key,
-    class T,
     class Hash,
     class KeyEqual,
     class Allocator
