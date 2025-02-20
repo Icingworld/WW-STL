@@ -46,7 +46,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > explicit queue(const Alloc & alloc)
         : c(alloc)
     {
@@ -54,7 +54,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > queue(const container_type & cont, const Alloc & alloc)
         : c(cont, alloc)
     {
@@ -62,7 +62,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > queue(container_type && cont, const Alloc & alloc)
         : c(std::move(cont), alloc)
     {
@@ -70,7 +70,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > queue(const queue & other, const Alloc & alloc)
         : c(other.c, alloc)
     {
@@ -78,7 +78,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > queue(queue && other, const Alloc & alloc)
         : c(std::move(other.c), alloc)
     {

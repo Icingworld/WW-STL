@@ -44,7 +44,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > explicit stack(const Alloc & alloc)
         : c(alloc)
     {
@@ -52,7 +52,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > stack(const container_type & cont, const Alloc & alloc)
         : c(cont, alloc)
     {
@@ -60,7 +60,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > stack(container_type && cont, const Alloc & alloc)
         : c(std::move(cont), alloc)
     {
@@ -68,7 +68,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > stack(const stack & other, const Alloc & alloc)
         : c(other.c, alloc)
     {
@@ -76,7 +76,7 @@ public:
 
     template <
         class Alloc,
-        class = std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
+        class = typename std::enable_if<std::uses_allocator<container_type, Alloc>::value>::type
     > stack(stack && other, const Alloc & alloc)
         : c(std::move(other.c), alloc)
     {
