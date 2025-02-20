@@ -37,17 +37,29 @@ public:
 
 public:
     _rb_tree_node()
-        : _data(), _parent(nullptr), _left(nullptr), _right(nullptr), _color(_red)
+        : _data()
+        , _parent(nullptr)
+        , _left(nullptr)
+        , _right(nullptr)
+        , _color(_red)
     { // 构造空节点
     }
 
     _rb_tree_node(const value_type & value)
-        : _data(value), _parent(nullptr), _left(nullptr), _right(nullptr), _color(_red)
+        : _data(value)
+        , _parent(nullptr)
+        , _left(nullptr)
+        , _right(nullptr)
+        , _color(_red)
     { // 以值构造一个节点
     }
 
     _rb_tree_node(value_type && value)
-        : _data(std::move(value)), _parent(nullptr), _left(nullptr), _right(nullptr), _color(_red)
+        : _data(std::move(value))
+        , _parent(nullptr)
+        , _left(nullptr)
+        , _right(nullptr)
+        , _color(_red)
     { // 以值构造一个节点
     }
 
@@ -216,7 +228,7 @@ public:
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -229,7 +241,7 @@ public:
 
     self & operator--()
     {
-        --*(base *)this;
+        base::operator--();
         return *this;
     }
 
@@ -289,20 +301,32 @@ public:
     }
 
     explicit rb_tree(const key_compare & comp, const allocator_type & alloc = allocator_type())
-        : _head(nullptr), _size(0), _comp(comp), _get_key(), _node_allocator(alloc)
+        : _head(nullptr)
+        , _size(0)
+        , _comp(comp)
+        , _get_key()
+        , _node_allocator(alloc)
     {
         _init_rb_tree();
     }
 
     explicit rb_tree(const allocator_type & alloc)
-        : _head(nullptr), _size(0), _comp(), _get_key(), _node_allocator(alloc)
+        : _head(nullptr)
+        , _size(0)
+        , _comp()
+        , _get_key()
+        , _node_allocator(alloc)
     {
         _init_rb_tree();
     }
 
     template <class InputIt>
     rb_tree(InputIt first, InputIt last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type())
-        : _head(nullptr), _size(0), _comp(comp), _get_key(), _node_allocator(alloc)
+        : _head(nullptr)
+        , _size(0)
+        , _comp(comp)
+        , _get_key()
+        , _node_allocator(alloc)
     {
         _init_rb_tree();
         for (; first != last; ++first) {
@@ -311,7 +335,11 @@ public:
     }
 
     rb_tree(const rb_tree & other)
-        : _head(nullptr), _size(0), _comp(other._comp), _get_key(other._get_key), _node_allocator(other._node_allocator)
+        : _head(nullptr)
+        , _size(0)
+        , _comp(other._comp)
+        , _get_key(other._get_key)
+        , _node_allocator(other._node_allocator)
     {
         _init_rb_tree();
         for (auto it = other.begin(); it != other.end(); ++it) {
@@ -320,7 +348,11 @@ public:
     }
 
     rb_tree(const rb_tree & other, const allocator_type & alloc)
-        : _head(nullptr), _size(0), _comp(other._comp), _get_key(other._get_key), _node_allocator(alloc)
+        : _head(nullptr)
+        , _size(0)
+        , _comp(other._comp)
+        , _get_key(other._get_key)
+        , _node_allocator(alloc)
     {
         _init_rb_tree();
         for (auto it = other.begin(); it != other.end(); ++it) {
@@ -329,14 +361,22 @@ public:
     }
 
     rb_tree(rb_tree && other)
-        : _head(other._head), _size(other._size), _comp(other._comp), _get_key(other._get_key), _node_allocator(other._node_allocator)
+        : _head(other._head)
+        , _size(other._size)
+        , _comp(other._comp)
+        , _get_key(other._get_key)
+        , _node_allocator(other._node_allocator)
     {
         other._init_rb_tree();
         other._size = 0;
     }
 
     rb_tree(rb_tree && other, const allocator_type & alloc)
-        : _head(other._head), _size(other._size), _comp(other._comp), _get_key(other._get_key), _node_allocator(alloc)
+        : _head(other._head)
+        , _size(other._size)
+        , _comp(other._comp)
+        , _get_key(other._get_key)
+        , _node_allocator(alloc)
     {
         other._init_rb_tree();
         other._size = 0;
