@@ -340,7 +340,6 @@ public:
     wwstl::vector<node_pointer> _buckets;   // 桶
     size_type _num_elements;                // 元素个数
     float _max_load_factor;                 // 最大负载因子
-    node_pointer _begin;                    // 指向头节点
     hasher _hash;                           // 哈希函数
     key_equal _equals;                      // 判断键值是否相等
     key_extractor _get_key;                 // 获取键值
@@ -363,7 +362,6 @@ public:
         : _buckets(bucket_count)
         , _num_elements(0)
         , _max_load_factor(1.0)
-        , _begin(nullptr)
         , _hash(hash)
         , _equals(equals)
         , _get_key()
@@ -375,7 +373,6 @@ public:
         : _buckets(8)
         , _num_elements(0)
         , _max_load_factor(1.0)
-        , _begin(nullptr)
         , _hash()
         , _equals()
         , _get_key()
@@ -387,7 +384,6 @@ public:
         : _buckets(8)
         , _num_elements(0)
         , _max_load_factor(1.0)
-        , _begin(nullptr)
         , _hash(other._hash)
         , _equals(other._equals)
         , _get_key(other._get_key)
@@ -403,7 +399,6 @@ public:
         : _buckets()
         , _num_elements(0)
         , _max_load_factor(1.0)
-        , _begin(nullptr)
         , _hash(other._hash)
         , _equals(other._equals)
         , _get_key(other._get_key)
@@ -419,7 +414,6 @@ public:
         : _buckets(std::move(other._buckets))
         , _num_elements(other._num_elements)
         , _max_load_factor(other._max_load_factor)
-        , _begin(other._begin)
         , _hash(other._hash)
         , _equals(other._equals)
         , _get_key(other._get_key)
@@ -427,14 +421,12 @@ public:
     {
         other._num_elements = 0;
         other._max_load_factor = 1.0;
-        other._begin = nullptr;
     }
 
     hashtable(hashtable && other, const allocator_type & alloc)
         : _buckets(std::move(other._buckets))
         , _num_elements(other._num_elements)
         , _max_load_factor(other._max_load_factor)
-        , _begin(other._begin)
         , _hash(other._hash)
         , _equals(other._equals)
         , _get_key(other._get_key)
@@ -442,7 +434,6 @@ public:
     {
         other._num_elements = 0;
         other._max_load_factor = 1.0;
-        other._begin = nullptr;
     }
 
     ~hashtable()
@@ -485,7 +476,6 @@ public:
             _buckets = std::move(other._buckets);
             _num_elements = other._num_elements;
             _max_load_factor = other._max_load_factor;
-            _begin = other._begin;
             _hash = other._hash;
             _equals = other._equals;
             _get_key = other._get_key;
@@ -495,7 +485,6 @@ public:
             // 清空原哈希表，数组有自身的移动赋值，不需要手动清空
             other._num_elements = 0;
             other._max_load_factor = 1.0;
-            other._begin = nullptr;
         }
         return *this;
     }
@@ -520,7 +509,7 @@ public:
      */
     iterator begin() noexcept
     {
-        return iterator(_begin, this);
+        return iterator(_get_begin(), this);
     }
 
     /**
@@ -528,7 +517,7 @@ public:
      */
     const_iterator begin() const noexcept
     {
-        return const_iterator(_begin, this);
+        return const_iterator(_get_begin(), this);
     }
 
     /**
@@ -606,7 +595,6 @@ public:
             _buckets[n] = nullptr;
         }
         _num_elements = 0;
-        _begin = nullptr;
     }
 
     /**
@@ -638,10 +626,6 @@ public:
         p->_next = first;
         _buckets[n] = p;
         ++_num_elements;
-        // 更新_begin
-        if (_begin == nullptr || _hash_key(_get_key(p->_data)) < _hash_key(_get_key(_begin->_data))) {
-            _begin = p;
-        }
         return std::make_pair(iterator(p, this), true);
     }
 
@@ -670,10 +654,6 @@ public:
         p->_next = first;
         _buckets[n] = p;
         ++_num_elements;
-        // 更新_begin
-        if (_begin == nullptr || _hash_key(_get_key(p->_data)) < _hash_key(_get_key(_begin->_data))) {
-            _begin = p;
-        }
         return iterator(p, this);
     }
 
@@ -727,20 +707,12 @@ public:
                 --_num_elements;
 
                 if (next != nullptr) {
-                    // 更新_begin
-                    if (_begin == cur) {
-                        _begin = next;
-                    }
                     return iterator(next, this);
                 }
                 
                 // 寻找下一个非空桶
                 for (size_type i = n + 1; i < bucket_count(); ++i) {
                     if (_buckets[i] != nullptr) {
-                        // 更新_begin
-                        if (_begin == cur) {
-                            _begin = _buckets[i];
-                        }
                         return iterator(_buckets[i], this);
                     }
                 }
@@ -761,12 +733,6 @@ public:
         size_type last_bucket = bucket_count();  // 用于区分last是否为end()，实际上不可访问
         if (last != end()) {
             last_bucket = _hash_key(_get_key(*last));
-        }
-
-        // 更新_begin
-        if (_begin == first._node) {
-            // 只有first是第一个节点时需要更新，且新_begin一定等于last._node，包括end()
-            _begin = last._node;
         }
 
         if (first_bucket == last_bucket) {
@@ -848,17 +814,7 @@ public:
     {
         const size_type n = _hash_key(key);
         size_type erased = 0;
-        // 更新_begin
-        if (_begin == _buckets[n]) {
-            // 找到下一个有效桶的头节点
-            _begin = nullptr;
-            for (size_type i = n + 1; i < _buckets.size(); ++i) {
-                if (_buckets[i] != nullptr) {
-                    _begin = _buckets[i];
-                    break;
-                }
-            }
-        }
+
         for (node_pointer cur = _buckets[n], prev = nullptr; cur != nullptr; ) {
             if (_equals(_get_key(cur->_data), key)) {
                 node_pointer next = cur->_next;
@@ -887,7 +843,6 @@ public:
         std::swap(_buckets, other._buckets);
         std::swap(_num_elements, other._num_elements);
         std::swap(_max_load_factor, other._max_load_factor);
-        std::swap(_begin, other._begin);
         std::swap(_hash, other._hash);
         std::swap(_equals, other._equals);
         std::swap(_get_key, other._get_key);
@@ -931,7 +886,8 @@ public:
     template <typename U = mapped_type, typename = typename std::enable_if<!std::is_void<U>::value>::type>
     U & operator[](const key_type & key)
     {
-        return emplace_unique(key, mapped_type()).first->second;
+        auto it = emplace_unique(std::make_pair(key, mapped_type()));
+        return it.first->second;
     }
 
     /**
@@ -940,7 +896,8 @@ public:
     template <typename U = mapped_type, typename = typename std::enable_if<!std::is_void<U>::value>::type>
     U & operator[](key_type && key)
     {
-        return emplace_unique(std::move(key), mapped_type()).first->second;
+        auto it = emplace_unique(std::make_pair(std::move(key), mapped_type()));
+        return it.first->second;
     }
 
     /**
@@ -1215,6 +1172,19 @@ public:
     {
         _node_allocator.destroy(p);
         _put_node(p);
+    }
+
+    /**
+     * @brief 返回指向第一个元素节点的指针
+     */
+    node_pointer _get_begin() const
+    {
+        for (size_type n = 0; n < _buckets.size(); ++n) {
+            if (_buckets[n] != nullptr) {
+                return _buckets[n];
+            }
+        }
+        return nullptr;
     }
 
     /**
