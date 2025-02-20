@@ -145,3 +145,17 @@ TEST_F(WWUnorderedSetTest, reserve)
     EXPECT_EQ(uset.bucket_count(), 16);
     EXPECT_EQ(uset.load_factor(), 0.25);
 }
+
+// 比较
+
+TEST_F(WWUnorderedSetTest, compare)
+{
+    unordered_set<std::string> uset2 = {"1", "2", "3", "4"};
+    EXPECT_TRUE(uset == uset2);
+
+    unordered_set<std::string> uset3 = {"1", "2", "3"};
+    EXPECT_FALSE(uset == uset3);
+
+    unordered_set<std::string> uset4 = {"1", "2", "3", "7"};
+    EXPECT_FALSE(uset == uset4);
+}

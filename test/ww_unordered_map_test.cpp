@@ -182,3 +182,17 @@ TEST_F(WWUnorderedMapTest, reserve)
     EXPECT_EQ(umap.bucket_count(), 16);
     EXPECT_EQ(umap.load_factor(), 0.25);
 }
+
+// 比较
+
+TEST_F(WWUnorderedMapTest, compare)
+{
+    unordered_map<int, std::string> umap2 = {{1, "1"}, {2, "2"}, {3, "3"}, {4, "4"}};
+    EXPECT_TRUE(umap == umap2);
+
+    unordered_map<int, std::string> umap3 = {{1, "1"}, {2, "2"}, {3, "3"}, {4, "4"}, {5, "5"}};
+    EXPECT_FALSE(umap == umap3);
+
+    unordered_map<int, std::string> umap4 = {{1, "1"}, {2, "2"}, {3, "3"}, {4, "444"}};
+    EXPECT_FALSE(umap == umap4);
+}

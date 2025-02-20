@@ -138,3 +138,50 @@ TEST_F(WWUnorderedMultiMapTest, reserve)
     EXPECT_EQ(ummap.bucket_count(), 16);
     EXPECT_EQ(ummap.load_factor(), 0.4375);
 }
+
+// 比较
+
+TEST_F(WWUnorderedMultiMapTest, compare)
+{
+    unordered_multimap<int, std::string> ummap2 = {
+        {1, "1"},
+        {2, "2"},
+        {3, "3"},
+        {4, "4"},
+        {1, "11"},
+        {2, "22"},
+        {2, "222"},
+    };
+    EXPECT_TRUE(ummap == ummap2);
+
+    unordered_multimap<int, std::string> ummap3 = {
+        {1, "1"},
+        {2, "2"},
+        {3, "3"},
+        {1, "11"},
+        {2, "22"},
+    };
+    EXPECT_FALSE(ummap == ummap3);
+
+    unordered_multimap<int, std::string> ummap4 = {
+        {1, "1"},
+        {2, "2"},
+        {3, "666"},
+        {4, "4"},
+        {1, "11"},
+        {2, "22"},
+        {2, "666"},
+    };
+    EXPECT_FALSE(ummap == ummap4);
+
+    unordered_multimap<int, std::string> ummap5 = {
+        {1, "1"},
+        {3, "3"},
+        {2, "2"},
+        {1, "11"},
+        {2, "22"},
+        {2, "222"},
+        {4, "4"}
+    };
+    EXPECT_TRUE(ummap == ummap5);
+}

@@ -140,3 +140,20 @@ TEST_F(WWUnorderedMultiSetTest, reserve)
     EXPECT_EQ(umset.bucket_count(), 16);
     EXPECT_EQ(umset.load_factor(), 0.4375);
 }
+
+// 比较
+
+TEST_F(WWUnorderedMultiSetTest, compare)
+{
+    unordered_multiset<std::string> umset2 = {"1", "2", "3", "4", "1", "2", "2"};
+    EXPECT_TRUE(umset == umset2);
+
+    unordered_multiset<std::string> umset3 = {"1", "2", "3", "4", "1", "2", "2", "5"};
+    EXPECT_FALSE(umset == umset3);
+
+    unordered_multiset<std::string> umset4 = {"1", "2", "3", "4", "1", "2", "7"};
+    EXPECT_FALSE(umset == umset4);
+
+    unordered_multiset<std::string> umset5 = {"1", "2", "2", "1", "2", "3", "4"};
+    EXPECT_TRUE(umset == umset5);
+}
