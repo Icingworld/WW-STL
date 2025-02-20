@@ -649,25 +649,14 @@ public:
         return emplace_equal(std::forward<Args>(args)...);
     }
 
-    #define wwstl_DEBUG 0
-    #if wwstl_DEBUG
-        #define my_printf(...) printf(__VA_ARGS__)
-    #else
-        #define my_printf(...)
-    #endif
-
     /**
      * @brief 擦除元素
      */
     iterator erase(const_iterator pos)
     {
-        my_printf("\n目标删除=%d\n", pos._node->_data);
         const_iterator next = std::next(pos);   // 下一个节点
         node_pointer node = pos._node;          // 要擦除的节点
         node_pointer parent = node->_parent;    // 要擦除的节点的父节点
-        my_printf("父节点=%d\n", parent->_data);
-        my_printf("父节点颜色=%d\n", parent->_color);
-        my_printf("此时根节点=%d\n", _root()->_data);
         
         /**
          * 在红黑树的删除中，可以分为三大类情况
@@ -682,20 +671,16 @@ public:
             if (_leftmost() == node) {
                 // 删除的是最后一个节点，pos无法向前移动了，直接设置
                 _rightmost() = _head;
-                my_printf("是最后一个值！\n");
             } else {
                 // 向前移动
                 const_iterator prev = std::prev(pos);
                 _rightmost() = prev._node;
             }
-            my_printf("删除了最大值\n");
         }
         if (_leftmost() == node) {
             if (next._node == _head) {
-                my_printf("是最后一个值！\n");
             }
             _leftmost() = next._node;
-            my_printf("删除了最小值\n");
         }
 
         // 1. 有两个子节点
@@ -703,7 +688,6 @@ public:
         // 这里使用直接后继，因为erase()接口的语义需要返回下一个迭代器
         if (_left(node) != nullptr && _right(node) != nullptr) {
             // 这里可以直接递归，因为有两个子节点的情况下，不可能出现next为head的情况
-            my_printf("情况1\n");
             // 将两个节点互换，这里不构造新节点替换node，而是要交换
             // 因为如果替换node，删除next，会导致next迭代器失效，在范围删除中会出bug
             node_pointer node_left_child = _left(node);
@@ -715,7 +699,6 @@ public:
             
             if (_right(node) == next._node) {
                 // 1. next就是node的右子节点
-                my_printf("next是node的右子节点\n");
                 _parent(node) = next._node;    // node->parent
                 std::swap(_left(node), _left(next._node));  // node->left, next->left
                 _right(node) = next_right_child;    // node->right
@@ -729,7 +712,6 @@ public:
                 }
             } else {
                 // 2. next不是右子节点，只是直接后继
-                my_printf("next不是右子节点, 只是直接后继\n");
                 std::swap(_left(node), _left(next._node));
                 std::swap(_right(node), _right(next._node));
                 std::swap(_parent(node), _parent(next._node));
@@ -756,24 +738,18 @@ public:
             } else {
                 _right(parent) = next._node;
             }
-            my_printf("交换完毕\n");
             erase(const_iterator(node));
             return iterator(next._node);
         }
 
         // 2. 没有子节点
         if (node->_left == nullptr && node->_right == nullptr) {
-            my_printf("没有子节点\n");
             if (_color(node) == _red) {
-                my_printf("是红节点\n");
-                my_printf("情况2.1\n");
                 // 2.1 是红节点，直接删除节点即可，不会破坏红黑树的性质
                 // 置空父节点的指针
                 if (_left(parent) == node) {
-                    my_printf("父节点左指针置空\n");
                     _left(parent) = nullptr;
                 } else {
-                    my_printf("父节点右指针置空\n");
                     _right(parent) = nullptr;
                 }
                 // 销毁当前节点
@@ -781,7 +757,6 @@ public:
                 --_size;
                 return iterator(next._node);
             } else {
-                my_printf("是黑节点\n");
                 // 2.2 是黑节点，需要查看兄弟节点的情况
                 node_pointer sibling = nullptr;
 
@@ -789,18 +764,14 @@ public:
                 for (bool is_first = true; ; is_first = false) {
                     // 找到兄弟节点
                     if (parent == _head) {
-                        my_printf("兄弟是自己！\n");
                         sibling = node;
                     } else
                     if (_right(parent) == node) {
-                        my_printf("兄弟在左边\n");
                         sibling = _left(parent);
                     } else {
-                        my_printf("兄弟在右边\n");
                         sibling = _right(parent);
                     }
                     if (_color(sibling) == _black) {
-                        my_printf("兄弟是黑色节点\n");
                         // 2.2.1 兄弟节点是黑色，需要查看兄弟节点的孩子的情况
                         // 这种情况下，兄弟节点的孩子如果存在一定是红色，否则是黑色空节点
                         // 此时可能存在node是根节点的情况，也就是说node是红黑树中最后一个节点，删除后head恢复初始化
@@ -808,8 +779,6 @@ public:
                         node_pointer right_child = _right(sibling);
 
                         if (_left(parent) == sibling && left_child != nullptr && _color(left_child) == _red) {
-                            my_printf("兄弟左孩子红色，右孩子任意\n");
-                            my_printf("情况2.2.1.1\n");
                             // 2.2.1.1 兄弟节点的左孩子是红色，则全都归为LL情况，无论右孩子是什么
                             // LL情况中，需要先变色：r变s，s变p，p变黑
                             _color(left_child) = _color(sibling);
@@ -829,8 +798,6 @@ public:
                         }
 
                         if (_left(parent) == sibling && right_child != nullptr && _color(right_child) == _red && left_child == nullptr) {
-                            my_printf("兄弟右孩子红色，左孩子黑色\n");
-                            my_printf("情况2.2.1.2\n");
                             // 2.2.1.2 兄弟节点的右孩子是红色，且左孩子是黑色，LR情况
                             // LR情况中，需要先变色：r变p，p变黑
                             _color(right_child) = _color(parent);
@@ -848,8 +815,6 @@ public:
                         }
 
                         if (_right(parent) == sibling && right_child != nullptr && _color(right_child) == _red) {
-                            my_printf("兄弟右孩子红色，左孩子任意\n");
-                            my_printf("情况2.2.1.3\n");
                             // 2.2.1.3 兄弟节点的右孩子是红色，且全部归为RR情况，无论左孩子是什么
                             // RR情况中，需要先变色：r变s，s变p，p变黑
                             _color(right_child) = _color(sibling);
@@ -867,8 +832,6 @@ public:
                         }
 
                         if (_right(parent) == sibling && left_child != nullptr && _color(left_child) == _red && right_child == nullptr) {
-                            my_printf("兄弟左孩子红色，右孩子黑色\n");
-                            my_printf("情况2.2.1.4\n");
                             // 2.2.1.4 兄弟节点的左孩子是红色，且右孩子是黑色，RL情况
                             // RL情况中，需要先变色：r变p，p变黑
                             _color(left_child) = _color(parent);
@@ -892,15 +855,12 @@ public:
                         // 此时已经不需要当前节点了，在第一次循环中直接销毁，后面还要更新node指针
                         if (is_first) {
                             if (parent == _head) {
-                                my_printf("此时是根节点，父节点为head\n");
                                 // 删除根节点，并恢复head
                                 // 一开始已经恢复过leftmost和rightmost了
                                 _root() = nullptr;
                             } else if (_left(parent) == node) {
-                                my_printf("父节点左指针置空\n");
                                 _left(parent) = nullptr;
                             } else {
-                                my_printf("父节点右指针置空\n");
                                 _right(parent) = nullptr;
                             }
                             _destroy_node(node);
@@ -912,22 +872,16 @@ public:
                             // 2.2.1.5.1 父节点是根节点，或者父节点是红色
                             // 不需要进行额外操作，将红色父节点变黑即可
                             _color(parent) = _black;
-                            my_printf("父节点是根节点，或者父节点是红色\n");
-                            my_printf("情况2.2.1.5.1\n");
                             return iterator(next._node);
                         } else {
                             // 2.2.1.5.2 父节点是黑色，且不是根节点
                             // 父节点变为新的双黑节点，更新指针继续循环
                             node = parent;
                             parent = _parent(node);
-                            my_printf("父节点不是根节点，且是黑色\n");
-                            my_printf("情况2.2.1.5.2\n");
                         }
 
                         // 继续循环调整
                     } else {
-                        my_printf("兄弟节点是红色\n");
-                        my_printf("情况2.2.2\n");
                         // 2.2.2 兄弟节点是红色
                         // 先将s和p变色
                         _color(sibling) = !_color(sibling);
@@ -944,10 +898,8 @@ public:
                         // 在第一次循环中直接销毁
                         if (is_first) {
                             if (_left(parent) == node) {
-                                my_printf("父节点左指针置空\n");
                                 _left(parent) = nullptr;
                             } else {
-                                my_printf("父节点右指针置空\n");
                                 _right(parent) = nullptr;
                             }
                             _destroy_node(node);
@@ -964,7 +916,6 @@ public:
 
         // 3. 只有一个子节点
         // node一定是黑色，子节点一定是红色，此时node可能是根节点
-        my_printf("情况3\n");
         node_pointer child = nullptr;
         if (node->_left != nullptr) {
             child = node->_left;
