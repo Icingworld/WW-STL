@@ -677,6 +677,7 @@ public:
                 _rightmost() = prev._node;
             }
         }
+        
         if (_leftmost() == node) {
             if (next._node == _head) {
             }
@@ -771,6 +772,7 @@ public:
                     } else {
                         sibling = _right(parent);
                     }
+
                     if (_color(sibling) == _black) {
                         // 2.2.1 兄弟节点是黑色，需要查看兄弟节点的孩子的情况
                         // 这种情况下，兄弟节点的孩子如果存在一定是红色，否则是黑色空节点
@@ -879,7 +881,6 @@ public:
                             node = parent;
                             parent = _parent(node);
                         }
-
                         // 继续循环调整
                     } else {
                         // 2.2.2 兄弟节点是红色
@@ -905,10 +906,6 @@ public:
                             _destroy_node(node);
                             --_size;
                         }
-
-                        // 更新双黑节点
-                        // node = parent;
-                        // parent = _parent(node);
                     }
                 }
             }
