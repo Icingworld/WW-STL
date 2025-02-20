@@ -1,6 +1,8 @@
 #ifndef __WW_ALGORITHM_H__
 #define __WW_ALGORITHM_H__
 
+#include <algorithm>
+
 namespace wwstl
 {
 

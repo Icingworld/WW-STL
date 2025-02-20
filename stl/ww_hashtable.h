@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <cmath>
+#include "ww_algorithm.h"
 #include "ww_vector.h"
 #include "ww_hash.h"
 #include "ww_functional.h"

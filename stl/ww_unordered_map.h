@@ -1097,7 +1097,7 @@ template <
     if (lhs.size() != rhs.size())
         return false;
 
-    for (auto it = lhs.begin(); it != lhs.end(); ++it) {
+    for (auto it = lhs.begin(); it != lhs.end(); ) {
         auto range_l = lhs.equal_range(it->first);
         auto range_r = rhs.equal_range(it->first);
         if (!std::is_permutation(range_l.first, range_l.second, range_r.first, range_r.second))
