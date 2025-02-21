@@ -36,12 +36,15 @@ public:
 
 public:
     _deque_const_iterator()
-        : _cur(nullptr), _first(nullptr), _last(nullptr), _node(nullptr)
+        : _cur(nullptr)
+        , _first(nullptr)
+        , _last(nullptr)
+        , _node(nullptr)
     { // 空迭代器
     }
 
     _deque_const_iterator(map_pointer node)
-        : _cur(nullptr), _first(nullptr), _last(nullptr), _node(nullptr)
+        : _deque_const_iterator()
     {
         // 初始化指向缓冲区的迭代器
         _set_node(node);
@@ -50,10 +53,14 @@ public:
 
 public:
     reference operator*() const
-    { return *_cur; }
+    {
+       return *_cur;
+    }
 
     pointer operator->() const
-    { return &(operator*()); }
+    {
+       return &(operator*());
+    }
 
     self & operator++()
     {
@@ -92,10 +99,14 @@ public:
     }
 
     bool operator==(const self & other) const
-    { return _cur == other._cur; }
+    {
+       return _cur == other._cur;
+    }
 
     bool operator!=(const self & other) const
-    { return !(*this == other); }
+    {
+       return !(*this == other);
+    }
 
     bool operator<(const self & other) const
     {
@@ -106,13 +117,19 @@ public:
     }
 
     bool operator>(const self & other) const
-    { return other < *this; }
+    {
+       return other < *this;
+    }
 
     bool operator<=(const self & other) const
-    { return !(*this > other); }
+    {
+       return !(*this > other);
+    }
 
     bool operator>=(const self & other) const
-    { return !(*this < other); }
+    {
+       return !(*this < other);
+    }
 
     self & operator+=(difference_type n)
     {
@@ -154,10 +171,14 @@ public:
     }
 
     difference_type operator-(const self & other) const
-    { return static_cast<difference_type>((_node - other._node) * _buffer_size() + (_cur - _first) - (other._cur - other._first)); }
+    {
+       return static_cast<difference_type>((_node - other._node) * _buffer_size() + (_cur - _first) - (other._cur - other._first));
+    }
 
     reference operator[](difference_type n) const
-    { return *(*this + n); }
+    {
+       return *(*this + n);
+    }
 
 public:
     /**
@@ -175,7 +196,9 @@ public:
      * @details 在本实现中设置为8个元素大小
      */
     size_type _buffer_size() const noexcept
-    { return 8 * sizeof(value_type); }
+    {
+       return 8 * sizeof(value_type);
+    }
 
     /**
      * @brief 清空迭代器
@@ -224,14 +247,18 @@ public:
 
 public:
     reference operator*() const
-    { return const_cast<reference>(base::operator*()); }
+    {
+       return const_cast<reference>(base::operator*());
+    }
 
     pointer operator->() const
-    { return const_cast<pointer>(base::operator->()); }
+    {
+       return const_cast<pointer>(base::operator->());
+    }
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -244,7 +271,7 @@ public:
 
     self & operator--()
     {
-        --*(base *)this;
+        base::operator--();
         return *this;
     }
 
@@ -257,13 +284,13 @@ public:
 
     self & operator+=(difference_type n)
     {
-        *(base *)this += n;
+        base::operator+=(n);
         return *this;
     }
 
     self & operator-=(difference_type n)
     {
-        *(base *)this -= n;
+        base::operator-=(n);
         return *this;
     }
 
@@ -280,10 +307,14 @@ public:
     }
 
     difference_type operator-(const base & other) const
-    { return *(base *)this - other; }
+    {
+       return base::operator-(other);
+    }
 
     reference operator[](difference_type n) const
-    { return *(*this + n); }
+    {
+       return *(*this + n);
+    }
 };
 
 /**
@@ -328,7 +359,9 @@ public:
 
     explicit deque(const Allocator & alloc)
         : _start(), _finish(), _map(nullptr), _map_size(0), _allocator(alloc), _map_allocator()
-    { _initialize_map(0); }
+    {
+        _initialize_map(0);
+    }
 
     explicit deque(size_type count, const Allocator & alloc = Allocator())
         : deque(alloc)
@@ -500,13 +533,17 @@ public:
      * @brief 将值赋给容器
      */
     void assign(std::initializer_list<value_type> ilist)
-    { assign(ilist.begin(), ilist.end()); }
+    {
+        assign(ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 返回关联的分配器
      */
     allocator_type get_allocator() const noexcept
-    { return _allocator; }
+    {
+       return _allocator;
+    }
 
     // 元素访问
 
@@ -536,37 +573,49 @@ public:
      * @brief 访问指定的元素
      */
     reference operator[](size_type pos)
-    { return begin()[static_cast<difference_type>(pos)]; }
+    {
+       return begin()[static_cast<difference_type>(pos)];
+    }
 
     /**
      * @brief 访问指定的元素
      */
     const_reference operator[](size_type pos) const
-    { return begin()[static_cast<difference_type>(pos)]; }
+    {
+       return begin()[static_cast<difference_type>(pos)];
+    }
 
     /**
      * @brief 访问第一个元素
      */
     reference front()
-    { return *begin(); }
+    {
+       return *begin();
+    }
 
     /**
      * @brief 访问第一个元素
      */
     const_reference front() const
-    { return *begin(); }
+    {
+       return *begin();
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     reference back()
-    { return *(--end()); }
+    {
+       return *(--end());
+    }
 
     /**
      * @brief 访问最后一个元素
      */
     const_reference back() const
-    { return *(--end()); }
+    {
+       return *(--end());
+    }
 
     // 迭代器
 
@@ -574,73 +623,97 @@ public:
      * @brief 返回指向起始的迭代器
      */
     iterator begin() noexcept
-    { return _start; }
+    {
+       return _start;
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator begin() const noexcept
-    { return _start; }
+    {
+       return _start;
+    }
 
     /**
      * @brief 返回指向起始的迭代器
      */
     const_iterator cbegin() const noexcept
-    { return begin(); }
+    {
+       return begin();
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     iterator end() noexcept
-    { return _finish; }
+    {
+       return _finish;
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator end() const noexcept
-    { return _finish; }
+    {
+       return _finish;
+    }
 
     /**
      * @brief 返回指向末尾的迭代器
      */
     const_iterator cend() const noexcept
-    { return end(); }
+    {
+       return end();
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     reverse_iterator rbegin() noexcept
-    { return reverse_iterator(end()); }
+    {
+       return reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator rbegin() const noexcept
-    { return const_reverse_iterator(end()); }
+    {
+       return const_reverse_iterator(end());
+    }
 
     /**
      * @brief 返回指向起始的逆向迭代器
      */
     const_reverse_iterator crbegin() const noexcept
-    { return rbegin(); }
+    {
+       return rbegin();
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     reverse_iterator rend() noexcept
-    { return reverse_iterator(begin()); }
+    {
+       return reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator rend() const noexcept
-    { return const_reverse_iterator(begin()); }
+    {
+       return const_reverse_iterator(begin());
+    }
 
     /**
      * @brief 返回指向末尾的逆向迭代器
      */
     const_reverse_iterator crend() const noexcept
-    { return rend(); }
+    {
+       return rend();
+    }
 
     // 容量
 
@@ -648,19 +721,25 @@ public:
      * @brief 检查容器是否为空
      */
     bool empty() const noexcept
-    { return _start == _finish; }
+    {
+       return _start == _finish;
+    }
 
     /**
      * @brief 返回元素数
      */
     size_type size() const noexcept
-    { return _finish - _start; }
+    {
+       return _finish - _start;
+    }
 
     /**
      * @brief 返回可容纳的最大元素数
      */
     size_type max_size() const noexcept
-    { return std::numeric_limits<size_type>::max() / sizeof(value_type); }
+    {
+       return std::numeric_limits<size_type>::max() / sizeof(value_type);
+    }
 
     /**
      * @brief 通过释放未使用的内存减少内存的使用
@@ -686,19 +765,25 @@ public:
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, const value_type & value)
-    { return emplace(pos, value); }
+    {
+       return emplace(pos, value);
+    }
 
     /**
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, value_type && value)
-    { return emplace(pos, std::move(value)); }
+    {
+       return emplace(pos, std::move(value));
+    }
 
     /**
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, size_type count, const value_type & value)
-    { return _emplace_n(pos, count, value); }
+    {
+       return _emplace_n(pos, count, value);
+    }
 
     /**
      * @brief 插入元素
@@ -707,13 +792,17 @@ public:
         class InputIt,
         class = typename std::enable_if<wwstl::is_iterator<InputIt>::value>::type
     > iterator insert(const_iterator pos, InputIt first, InputIt last)
-    { return _emplace_it(pos, first, last); }
+    {
+       return _emplace_it(pos, first, last);
+    }
 
     /**
      * @brief 插入元素
      */
     iterator insert(const_iterator pos, std::initializer_list<value_type> ilist)
-    { return insert(pos, ilist.begin(), ilist.end()); }
+    {
+       return insert(pos, ilist.begin(), ilist.end());
+    }
 
     /**
      * @brief 原位构造元素
@@ -795,13 +884,17 @@ public:
      * @brief 将元素添加到容器末尾
      */
     void push_back(const value_type & value)
-    { emplace_back(value); }
+    {
+        emplace_back(value);
+    }
 
     /**
      * @brief 将元素添加到容器末尾
      */
     void push_back(value_type && value)
-    { push_back(value); }
+    {
+        push_back(value);
+    }
 
     /**
      * @brief 在容器末尾原位构造元素
@@ -837,13 +930,17 @@ public:
      * @brief 插入元素到容器起始
      */
     void push_front(const value_type & value)
-    { emplace_front(value); }
+    {
+        emplace_front(value);
+    }
 
     /**
      * @brief 插入元素到容器起始
      */
     void push_front(value_type && value)
-    { push_front(value); }
+    {
+        push_front(value);
+    }
 
     /**
      * @brief 在容器头部原位构造元素
@@ -879,7 +976,9 @@ public:
      * @brief 改变存储元素的个数
      */
     void resize(size_type count)
-    { resize(count, value_type()); }
+    {
+        resize(count, value_type());
+    }
 
     /**
      * @brief 改变存储元素的个数
@@ -1210,7 +1309,9 @@ public:
     }
 
     [[noreturn]] reference _throw_out_of_range() const
-    { throw std::out_of_range("invalid deque<T, Allocator> subscript"); }
+    {
+        throw std::out_of_range("invalid deque<T, Allocator> subscript");
+    }
 };
 
 // 非成员函数
@@ -1219,43 +1320,57 @@ template <
     class T,
     class Alloc
 > bool operator==(const deque<T, Alloc> & lhs, const deque<T, Alloc> & rhs)
-{ return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()); }
+{
+    return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
 
 template <
     class T,
     class Alloc
 > bool operator!=(const deque<T, Alloc> & lhs, const deque<T, Alloc> & rhs)
-{ return !(lhs == rhs); }
+{
+    return !(lhs == rhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator<(const deque<T, Alloc> & lhs, const deque<T, Alloc> & rhs)
-{ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); }
+{
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
 
 template <
     class T,
     class Alloc
 > bool operator>(const deque<T, Alloc> & lhs, const deque<T, Alloc> & rhs)
-{ return rhs < lhs; }
+{
+    return rhs < lhs;
+}
 
 template <
     class T,
     class Alloc
 > bool operator<=(const deque<T, Alloc> & lhs, const deque<T, Alloc> & rhs)
-{ return !(rhs < lhs); }
+{
+    return !(rhs < lhs);
+}
 
 template <
     class T,
     class Alloc
 > bool operator>=(const deque<T, Alloc> & lhs, const deque<T, Alloc> & rhs)
-{ return !(lhs < rhs); }
+{
+    return !(lhs < rhs);
+}
 
 template <
     class T,
     class Alloc
 > void swap(deque<T, Alloc> & lhs, deque<T, Alloc> & rhs)
-{ lhs.swap(rhs); }
+{
+    lhs.swap(rhs);
+}
 
 } // namespace wwstl
 
