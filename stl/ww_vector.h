@@ -402,7 +402,7 @@ public:
         size_type old_capacity = capacity();
         if (count > old_capacity) {
             // 超出了最大空间，需要重新分配
-            pointer new_start = _allocator.allocate(count);
+            pointer new_start = wwstl::allocator_traits<allocator_type>::allocate(_allocator, count);
             std::uninitialized_fill_n(new_start, count, value);
             // 销毁原来的空间
             _clean();
@@ -1301,7 +1301,7 @@ public:
 
     self & operator++()
     {
-        ++*(base *)this;
+        base::operator++();
         return *this;
     }
 
@@ -1314,7 +1314,7 @@ public:
 
     self & operator--()
     {
-        --*(base *)this;
+        base::operator--();
         return *this;
     }
 
@@ -1327,13 +1327,13 @@ public:
 
     self & operator+=(difference_type n)
     {
-        *(base *)this += n;
+        base::operator+=(n);
         return *this;
     }
 
     self & operator-=(difference_type n)
     {
-        *(base *)this -= n;
+        base::operator-=(n);
         return *this;
     }
 
@@ -1351,7 +1351,7 @@ public:
 
     difference_type operator-(const base & other) const
     {
-        return *(base *)this - other;
+        return base::operator-(other);
     }
 
     reference operator[](difference_type n) const
