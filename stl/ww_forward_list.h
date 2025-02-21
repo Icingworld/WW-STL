@@ -5,6 +5,7 @@
 #include "ww_iterator.h"
 #include "ww_type_traits.h"
 #include "ww_memory.h"
+#include <iostream>
 
 namespace wwstl
 {
@@ -674,10 +675,10 @@ public:
     void splice_after(const_iterator pos, forward_list & other, const_iterator it)
     {
         // 关于判断合法性，到底是比较node == nullptr还是it == end()呢
-        if (it == other.end() || std::next(it) == other.end()) {
+        const_iterator next = std::next(it);
+        if (it == other.end() || next == other.end()) {
             throw std::out_of_range("forward_list splice_after out of range");
         } else {
-            const_iterator next = std::next(it);
             if (this != &other || (pos != it && pos != next)) {
                 _splice_after(pos, other, it, ++next);
             }
@@ -907,12 +908,11 @@ public:
         while (last_prev->_next != last._node) {
             last_prev = last_prev->_next;
         }
-        // 暂存pos的下一个节点
-        node_pointer pos_next = pos._node->_next;
+
+        // 连接last_prev的next到pos的下一个节点
+        last_prev->_next = pos._node->_next;
         // 连接pos.next到first的下一个节点
         pos._node->_next = first._node->_next;
-        // 连接last_prev的next到pos_next
-        last_prev->_next = pos_next;
         // 把first和last连接起来
         first._node->_next = last._node;
         // 返回最后一个节点
@@ -929,12 +929,12 @@ public:
         if (count < 2)
             return;
 
-        iterator mid = std::next(before_first, static_cast<difference_type>(1 + count >> 1));
-        _sort(before_first, mid, comp, count >> 1);
+        iterator mid = std::next(before_first, static_cast<difference_type>(1 + count / 2));
+        _sort(before_first, mid, comp, count / 2);
         iterator first = std::next(before_first);   // first指向第一个元素
 
-        iterator before_mid = std::next(before_first, static_cast<difference_type>(count >> 1));
-        _sort(before_mid, last, comp, count - (count >> 1));
+        iterator before_mid = std::next(before_first, static_cast<difference_type>(count / 2));
+        _sort(before_mid, last, comp, count - (count / 2));
         mid = std::next(before_mid);   // mid指向中间元素
 
         for (; ;) {
