@@ -2,13 +2,14 @@
 
 ![C++](https://img.shields.io/badge/language-C++-blue)
 ![Standard](https://img.shields.io/badge/standard-C++11-green)
-
 ![MIT License](https://img.shields.io/github/license/Icingworld/WW-STL?color=red)
+
 ![Last commit](https://img.shields.io/github/last-commit/Icingworld/WW-STL?color=yellow)
+![Release](https://img.shields.io/github/v/release/Icingworld/WW-STL?label=Release)
 
 ## 一、简介
 
-本仓库为作者在学习 STL 的过程中，对 C++11 标准下 STL 容器的一种实现。
+本仓库为作者在学习 STL 的过程中，对 C++11 标准下 STL 容器的一种实现。欢迎学习交流！
 
 根据 C++11 标准（详情见参考文献 [2]），本仓库包含了以下内容的实现：
 
@@ -38,18 +39,18 @@
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
 | set | ww_set.h | 完成 |
-| multiset | ww_multiset.h | 完成 |
+| multiset | ww_set.h | 完成 |
 | map | ww_map.h | 完成 |
-| multimap | ww_multimap.h | 完成 |
+| multimap | ww_map.h | 完成 |
 
 + 无序关联型容器：
 
 | 标准名 | 本仓库名 | 完成情况 |
 | :---: | :---: | :---: |
 | unordered_set | ww_unordered_set.h | 完成 |
-| unordered_multiset | ww_unordered_multiset.h | 完成 |
+| unordered_multiset | ww_unordered_set.h | 完成 |
 | unordered_map | ww_unordered_map.h | 完成 |
-| unordered_multimap | ww_unordered_multimap.h | 完成 |
+| unordered_multimap | ww_unordered_map.h | 完成 |
 
 + 容器适配器
 
@@ -57,7 +58,7 @@
 | :---: | :---: | :---: |
 | stack | ww_stack.h | 完成 |
 | queue | ww_queue.h | 完成 |
-| priority_queue | ww_priority_queue.h | 完成 |
+| priority_queue | ww_queue.h | 完成 |
 
 ## 二、设计理念
 
@@ -75,7 +76,6 @@
 
 | 目录 | 说明 |
 | :---: | :---: |
-| doc/ | 文档 |
 | stl/ | WW-STL实现 |
 | test/ | 测试用例 |
 | benchmark/ | 性能测试用例 |
