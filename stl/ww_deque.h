@@ -5,7 +5,6 @@
 #include "ww_type_traits.h"
 #include "ww_memory.h"
 #include "ww_iterator.h"
-#include <iostream>
 
 namespace wwstl
 {
@@ -358,7 +357,12 @@ public:
     }
 
     explicit deque(const Allocator & alloc)
-        : _start(), _finish(), _map(nullptr), _map_size(0), _allocator(alloc), _map_allocator()
+        : _start()
+        , _finish()
+        , _map(nullptr)
+        , _map_size(0)
+        , _allocator(alloc)
+        , _map_allocator()
     {
         _initialize_map(0);
     }
@@ -859,7 +863,7 @@ public:
             std::copy_backward(_start, f, l);
             // 销毁前面的元素
             for (size_type i = 0; i < n; ++i) {
-                _allocator.destroy((_start + i)._cur);
+                wwstl::allocator_traits<allocator_type>::destroy(_allocator, (_start + i)._cur);
             }
             // 释放前面的缓冲区
             _deallocate_nodes(_start._node, (_start + n)._node);  // 注意_start + n是新的起点缓冲区，不能被释放
@@ -870,7 +874,7 @@ public:
             std::copy(l, _finish, f);
             // 销毁后面的元素
             for (size_type i = 0; i < n; ++i) {
-                _allocator.destroy((_finish - i - 1)._cur);
+                wwstl::allocator_traits<allocator_type>::destroy(_allocator, (_finish - i - 1)._cur);
             }
             // 释放后面的缓冲区
             _deallocate_nodes((_finish - n + 1)._node, (_finish + 1)._node);
@@ -903,7 +907,7 @@ public:
     void emplace_back(Args&&... args)
     {
         if (_finish._cur != _finish._last - 1) {
-            _allocator.construct(_finish._cur++, std::forward<Args>(args)...);
+            wwstl::allocator_traits<allocator_type>::construct(_allocator, _finish._cur++, std::forward<Args>(args)...);
         } else {
             _emplace_back(std::forward<Args>(args)...);
         }
@@ -916,13 +920,13 @@ public:
     {
         if (_finish._cur != _finish._first) {
             // 当前位置不在缓冲区起始位置
-            _allocator.destroy(--_finish._cur);
+            wwstl::allocator_traits<allocator_type>::destroy(_allocator, --_finish._cur);
         } else {
             // 在起始位置，先移动到上一个缓冲区
             _finish._set_node(_finish._node - 1);
             _finish._cur = _finish._last - 1;
             // 再销毁
-            _allocator.destroy(_finish._cur);
+            wwstl::allocator_traits<allocator_type>::destroy(_allocator, _finish._cur);
         }
     }
 
@@ -949,7 +953,7 @@ public:
     void emplace_front(Args&&... args)
     {
         if (_start._cur != _start._first) {
-            _allocator.construct(--_start._cur, std::forward<Args>(args)...);
+            wwstl::allocator_traits<allocator_type>::construct(_allocator, --_start._cur, std::forward<Args>(args)...);
         } else {
             _emplace_front(std::forward<Args>(args)...);
         }
@@ -962,10 +966,10 @@ public:
     {
         if (_start._cur != _start._last - 1) {
             // 当前位置不在缓冲区末尾位置
-            _allocator.destroy(_start._cur++);
+            wwstl::allocator_traits<allocator_type>::destroy(_allocator, _start._cur++);
         } else {
             // 在末尾位置，先销毁
-            _allocator.destroy(_start._cur);
+            wwstl::allocator_traits<allocator_type>::destroy(_allocator, _start._cur);
             // 再移动到下一个缓冲区
             _start._set_node(_start._node + 1);
             _start._cur = _start._first;
@@ -1016,7 +1020,7 @@ public:
      */
     void _allocate_map(size_type n)
     {
-        _map = _map_allocator.allocate(n);
+        _map = wwstl::allocator_traits<map_allocator_type>::allocate(_map_allocator, n);
     }
 
     /**
@@ -1024,7 +1028,7 @@ public:
      */
     void _deallocate_map()
     {
-        _map_allocator.deallocate(_map, _map_size);
+        wwstl::allocator_traits<map_allocator_type>::deallocate(_map_allocator, _map, _map_size);
     }
 
     /**
@@ -1042,7 +1046,7 @@ public:
     pointer _allocate_node()
     {
         // 申请一个buffer_size()大小的内存
-        return _allocator.allocate(_deque_buffer_size());
+        return wwstl::allocator_traits<allocator_type>::allocate(_allocator, _deque_buffer_size());
     }
 
     /**
@@ -1050,7 +1054,7 @@ public:
      */
     void _deallocate_node(pointer p)
     {
-        _allocator.deallocate(p, _deque_buffer_size());
+        wwstl::allocator_traits<allocator_type>::deallocate(_allocator, p, _deque_buffer_size());
     }
 
     /**
@@ -1130,7 +1134,7 @@ public:
             // 预留的缓冲区不够，需要重新申请内存，并拷贝数据到新的中控器
             size_type new_map_size = _map_size + std::max(_map_size, n) + 2;    // 新空间至少是原来的两倍 + 2
             // 申请一块新内存供新中控器使用
-            map_pointer new_map = _map_allocator.allocate(new_map_size);
+            map_pointer new_map = wwstl::allocator_traits<map_allocator_type>::allocate(_map_allocator, new_map_size);
             if (is_front) {
                 new_start = new_map + (new_map_size - new_num_nodes) / 2 + n;
             } else {
@@ -1139,7 +1143,7 @@ public:
             // 拷贝数据
             std::copy(_start._node, _finish._node + 1, new_start);
             // 释放旧中控器内存
-            _map_allocator.deallocate(_map, _map_size);
+            wwstl::allocator_traits<map_allocator_type>::deallocate(_map_allocator, _map, _map_size);
             // 设置新的中控器
             _map = new_map;
             _map_size = new_map_size;
@@ -1183,7 +1187,7 @@ public:
         // 不管是否扩展，下一个缓冲区都是未申请内存的
         *(_finish._node + 1) = _allocate_node();
         // 在当前缓冲区的最后一个位置构造元素
-        _allocator.construct(_finish._cur, std::forward<Args>(args)...);
+        wwstl::allocator_traits<allocator_type>::construct(_allocator, _finish._cur, std::forward<Args>(args)...);
         // 移动到下一个位置
         _finish._set_node(_finish._node + 1);
         _finish._cur = _finish._first;
@@ -1202,7 +1206,7 @@ public:
         // 需要先移动到上一个缓冲区的最后一个位置，再构造元素
         _start._set_node(_start._node - 1);
         _start._cur = _start._last - 1;
-        _allocator.construct(_start._cur, std::forward<Args>(args)...);
+        wwstl::allocator_traits<allocator_type>::construct(_allocator, _start._cur, std::forward<Args>(args)...);
     }
 
     /**
