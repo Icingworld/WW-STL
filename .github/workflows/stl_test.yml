@@ -1,0 +1,36 @@
+name: STL Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  ENABLE_TEST: ON
+  ENABLE_BENCHMARK: ON
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ cmake
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DENABLE_TEST=${{env.ENABLE_TEST}} -DENABLE_BENCHMARK=${{env.ENABLE_BENCHMARK}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build -j4
+
+    - name: Run Test
+      working-directory: ${{github.workspace}}/build
+      run: ./test/test_all
