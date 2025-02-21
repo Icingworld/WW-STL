@@ -772,7 +772,13 @@ public:
             }
             if (prev == nullptr) {
                 // 说明first是桶的第一个节点，直接销毁链表
-                erase(_get_key(*first));
+                _buckets[first_bucket] = nullptr;
+                while (cur != nullptr) {
+                    node_pointer next = cur->_next;
+                    _destroy_node(cur);
+                    cur = next;
+                    --_num_elements;
+                }
             } else {
                 // 说明first不是桶的第一个节点，从prev开始销毁
                 node_pointer cur = first._node;
