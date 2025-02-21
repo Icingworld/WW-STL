@@ -195,9 +195,9 @@ public:
      * @brief 获取缓冲区的大小
      * @details 在本实现中设置为8个元素大小
      */
-    size_type _buffer_size() const noexcept
+    constexpr size_type _buffer_size() const noexcept
     {
-       return 8 * sizeof(value_type);
+       return 8;
     }
 
     /**
@@ -1030,10 +1030,10 @@ public:
     /**
      * @brief 获取缓冲区大小
      */
-    static size_type _deque_buffer_size()
+    constexpr size_type _deque_buffer_size() const noexcept
     {
-        // 设计为使用对象大小的8倍
-        return 8 * sizeof(value_type);
+        // 设计为可以储存8个元素
+        return 8;
     }
 
     /**
