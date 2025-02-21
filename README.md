@@ -5,7 +5,8 @@
 ![MIT License](https://img.shields.io/github/license/Icingworld/WW-STL?color=red)
 
 ![Last commit](https://img.shields.io/github/last-commit/Icingworld/WW-STL?color=yellow)
-![Release](https://img.shields.io/github/v/release/Icingworld/WW-STL?label=Release)
+![Release](https://img.shields.io/github/v/release/Icingworld/WW-STL?label=release)
+![Test](https://img.shields.io/github/actions/workflow/status/Icingworld/WW-STL/stl_test.yml)
 
 ## 一、简介
 
