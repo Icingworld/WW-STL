@@ -172,7 +172,8 @@ TEST_F(WWForwardListTest, unique)
 
 TEST_F(WWForwardListTest, sort)
 {
-    flist.sort();
-    forward_list<int> expect1 = {1, 2, 3};
-    EXPECT_EQ(flist, expect1);
+    forward_list<int> flist1 = {1, 2, 3, 3, 3, 2, 2, 3, 3, 3, 4, 5, 5, 4, 2, 1};
+    flist1.sort();
+    forward_list<int> expect1 = {1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5};
+    EXPECT_EQ(flist1, expect1);
 }
